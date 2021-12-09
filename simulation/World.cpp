@@ -28,11 +28,11 @@ World::World(int lenght, int width, int nb_ants, int nb_food) {
 }
 
 int World::get_nb_ants() {
-    return nb_ants;
+    return ants.size();
 }
 
 int World::get_nb_food() {
-    return nb_food;
+    return markers.size();
 }
 
 void World::update_ants( sf::Time dt) {

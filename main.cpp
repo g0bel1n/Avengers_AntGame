@@ -20,7 +20,7 @@ int main() {
 
 
 
-    World world(height, width, 10, 1);
+    World world(height, width, 100, 1);
     Renderer renderer(world);
 
 
@@ -35,9 +35,18 @@ int main() {
     sf::Text text;
     text.setFont(font);
     text.setString("Hello");
-    text.setPosition(10.f,10.f);
-    text.setCharacterSize(100);
+    text.setPosition(10.f,1100.f);
+    text.setCharacterSize(50);
     text.setFillColor(sf::Color::White);
+
+    sf::Text text1;
+    text1.setFont(font);
+    text1.setString("Hello");
+    text1.setPosition(300.f,1100.f);
+    text1.setCharacterSize(50);
+    text1.setFillColor(sf::Color::White);
+
+
     sf::RectangleShape circle (sf::Vector2f(50.f,10.f));
     circle.setFillColor(sf::Color::Yellow);
     //sf::CircleShape marker(50.f);
@@ -93,7 +102,9 @@ int main() {
         //if (delta_vect.x<0){
            // angle-=180;
         //}
-        text.setString(to_string(world.ants[0].get_lifetime()));
+        text.setString("Ants : " + to_string(world.get_nb_ants()));
+        text1.setString("Foods : " + to_string(world.get_nb_food()));
+
 
         /*for (int i =0;i<=4;i++){
 
@@ -139,6 +150,7 @@ int main() {
 
 
         window.draw(text);
+        window.draw(text1);
 
         window.display();
 

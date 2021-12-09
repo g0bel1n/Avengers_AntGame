@@ -7,16 +7,13 @@
 
 void Renderer::update(World &world) {
 
-
     for(int i=0; i<world.get_nb_food();i++){
         markers_graphic[i].setPosition(world.markers[i].get_position() + sf::Vector2<float>(1.0f,0.f));
     }
     for(int i=0; i<world.get_nb_ants();i++){
         ants_graphics[i].setPosition(world.ants[i].get_position());
         ants_graphics[i].setRotation(world.ants[i].get_angle()*180/PI);
-
     }
-
 }
 
 Renderer::Renderer(World& world) {
