@@ -11,10 +11,9 @@ World::World(int lenght, int width, int nb_ants, int nb_food) {
 
     this->nb_ants=nb_ants;
     this->nb_food = nb_food;
-
+    sf::Vector2<float> aleat_position ((float)(std::rand()%world_width),(float)(std::rand()%world_lenght));
     for(int i=0; i<nb_ants;i++){
-        sf::Vector2<float> aleat_position ((float)(std::rand()%world_width),(float)(std::rand()%world_lenght
-        ));
+
         Ant_ ant (aleat_position,i,world_width,world_lenght);
         ants.push_back(ant);
     }

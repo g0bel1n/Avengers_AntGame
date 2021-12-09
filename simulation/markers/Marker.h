@@ -15,7 +15,7 @@ public:
 
     sf::Vector2f get_position();
 
-    float radius = 30.f;
+    float radius = 5.f;
     int marker_type;
 
     void update(sf::Time& dt);

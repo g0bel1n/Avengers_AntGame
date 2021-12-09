@@ -23,6 +23,8 @@ public:
 
     int is_food(float radius, std::vector<Marker> markers);
 
+    int check_env(std::vector<Marker>& markers);
+
     float ant_length = 50.f;
     float ant_width = 10.f;
 
@@ -37,6 +39,7 @@ private:
 
 
     int ant_id;
+    int target =-1;
     float lifetime{};
     sf::Vector2f direction;
     sf::Vector2f position;
@@ -47,7 +50,7 @@ private:
     float direction_change_delta = 0.1f;
     sf::Time last_changed = sf::Time::Zero;
 
-    float detection_radius = 1000.f;
+    float detection_radius = 100.f;
     float eating_radius = 300.f;
 
     bool is_valid(sf::Vector2f position);

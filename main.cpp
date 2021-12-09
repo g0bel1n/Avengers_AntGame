@@ -7,20 +7,17 @@ using namespace std;
 #define PI 3.14159265
 
 
-
 int main() {
 
-
-    int height = 1200;
-    int width = 1200;
+    int height = 1000;
+    int width = 1000;
 
     sf::RenderWindow window(sf::VideoMode(width, height), "My window");
     sf::Clock clock;
     sf::Font font;
+    window.setTitle("Avengers AntGame - @G0bel1n");
 
-
-
-    World world(height, width, 100, 1);
+    World world(height, width, 20, 20);
     Renderer renderer(world);
 
 
@@ -28,9 +25,6 @@ int main() {
     {
         // error...
     }
-
-
-// create a quad
     sf::VertexArray quad(sf::Quads, 4);
     sf::Text text;
     text.setFont(font);
@@ -49,24 +43,6 @@ int main() {
 
     sf::RectangleShape circle (sf::Vector2f(50.f,10.f));
     circle.setFillColor(sf::Color::Yellow);
-    //sf::CircleShape marker(50.f);
-
-
-    /*vector<marker> all_markers;
-    vector<sf::CircleShape> markers_rep;
-
-    for (int i=0 ; i<10;i++) {
-
-        sf::Vector2<float> position ((float)(std::rand()%1000),(float)(std::rand()%1000));
-
-        std::cout<< position.x <<"\n";
-        all_markers.push_back(marker(position,1));
-        markers_rep.push_back(sf::CircleShape(30.f));
-        markers_rep[i].setPosition(position);
-        markers_rep[i].setFillColor(sf::Color::Red);
-
-
-    }*/
 
     circle.setPosition(sf::Vector2<float>(10.f,150.f));
 
@@ -105,34 +81,6 @@ int main() {
         text.setString("Ants : " + to_string(world.get_nb_ants()));
         text1.setString("Foods : " + to_string(world.get_nb_food()));
 
-
-        /*for (int i =0;i<=4;i++){
-
-            quad[i].position += (velocity_vect * dt.asSeconds());
-        }*/
-        //sf::Vector2f velocity_vect(cos(angle*PI/180)*speed, sin(angle*PI/180)*speed);
-/*        all_markers = ant.update(dt, all_markers);
-        circle.setPosition(ant.get_position());
-        circle.setRotation(ant.get_angle()*180/PI);*/
-
-
-/*        int count_marker = 10;
-        for(int i=0 ; i<10;i++){
-
-            if(all_markers[i].marker_type==0){
-
-                markers_rep[i].setFillColor(sf::Color::Yellow);
-                count_marker-=1;
-            }
-
-            window.draw(markers_rep[i]);
-        }
-        if (count_marker==0){
-            window.close();
-        }
-        window.draw(circle);*/
-
-
         world.update_ants(dt);
         renderer.update(world);
         circle.setPosition(circle.getPosition()+sf::Vector2<float>(dt.asSeconds()*500.f,0.0f));
@@ -148,13 +96,10 @@ int main() {
             window.draw(renderer.ants_graphics[i]);
         }
 
-
         window.draw(text);
         window.draw(text1);
 
         window.display();
-
-
 
     }
     return 0;

@@ -6,6 +6,9 @@
 #include <cmath>
 #include <iostream>
 #include <vector>
+
+#include "../../common/utils.h"
+
 #define PI 3.14159265
 
 
@@ -41,7 +44,7 @@ void Ant_::move_to(sf::Vector2<float> new_position, sf::Time dt) {
         this->position = new_position;
     }
     else{
-        this->angle -= PI/2;
+        this->angle -= 3*PI/4;
         this -> direction = sf::Vector2<float>(cos(angle), sin(angle));
         this->position += direction*speed*dt.asSeconds();
         times_wall_hit++;
@@ -51,7 +54,7 @@ void Ant_::move_to(sf::Vector2<float> new_position, sf::Time dt) {
 
 
 
-int Ant_::is_food(float radius, std::vector<Marker> markers){
+/*int Ant_::is_food(float radius, std::vector<Marker> markers){
     // iterate on the list
     for (int i =0; i <10;i++) {
         if (pow(markers[i].get_position().x-markers[i].radius- position.x, 2.0) + pow(markers[i].get_position()
@@ -62,7 +65,7 @@ int Ant_::is_food(float radius, std::vector<Marker> markers){
 
     }
     return -1;
-}
+}*/
 
 
 
@@ -75,27 +78,21 @@ void Ant_::update(sf::Time dt, std::vector<Marker>& markers) {
         this -> angle += (std::rand()%angular_width-angular_width/2)*(PI/180.);
         this -> direction = sf::Vector2<float>(cos(angle), sin(angle));
     }
-
-
-
-/*    else if (isfood>=0 && markers[isfood].marker_type ==1 ){
-
-        sf::Vector2f delta_vect = (markers[isfood].get_position() - position);
-        this->angle = atan(delta_vect.y/delta_vect.x);
-        if (delta_vect.x<0){angle-=PI;}
-        std::cout<<"Angle vis à vis de la target  :  " << angle << "\n";
+    else if (check_env(markers)>=0 && !(target>0)){
+        std::cout<<"seen";
+        target = check_env(markers);
+        sf::Vector2f target = markers[check_env(markers)].get_position();
+        sf::Vector2f delta_vect = target-position;
+        if ((angle>-PI/4 && angle<PI/4)||(angle>3*PI/4 && angle<5*PI/4)){
+            this-> angle += atan(abs(delta_vect.x/delta_vect.y));
+        }
+        else{
+            this-> angle += atan(abs(delta_vect.x/delta_vect.y));
+        }
         this -> direction = sf::Vector2<float>(cos(angle), sin(angle));
-        last_changed = sf::Time::Zero;
-        std::cout << "is food" << isfood << "\n";
-        hunting=true;
-        markers[isfood].marker_type=0;
+    }
 
-        position += direction*speed*dt.asSeconds();
-        move_to(position,dt);
-
-    }*/
-
-    sf::Vector2<float> new_position = this->position+direction*speed*dt.asSeconds();
+    sf::Vector2<float> new_position = this->position+this->direction*speed*dt.asSeconds();
     move_to(new_position,dt);
     lifetime += dt.asSeconds();
     last_changed+=dt;
@@ -103,6 +100,16 @@ void Ant_::update(sf::Time dt, std::vector<Marker>& markers) {
 
 float Ant_::get_angle() {
     return this->angle;
+}
+
+int Ant_::check_env(std::vector<Marker>& markers) {
+
+    for (int i = 0; i < markers.size(); i++) {
+        if (distance(markers[i].get_position(), position) <= detection_radius) {
+            return i;
+        }
+        return -1;
+    }
 }
 
 

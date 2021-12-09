@@ -35,7 +35,7 @@ Renderer::Renderer(World& world) {
         sf::Sprite ant_graphics = sf::Sprite();
         ant_graphics.setColor(sf::Color::White);
         ant_graphics.setTexture(texture);
-        ant_graphics.setScale(0.1f,0.1f);
+        ant_graphics.setScale(0.05f,0.05f);
         ants_graphics.push_back(ant_graphics);
     }
 
