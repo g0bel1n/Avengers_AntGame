@@ -21,7 +21,7 @@ void Renderer::update(World &world) {
 
 Renderer::Renderer(World& world) {
 
-    texture.loadFromFile("../ant.png");
+    texture.loadFromFile("../ressources/ant.png");
 
 
     for(int i=0; i<world.get_nb_food();i++){

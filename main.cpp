@@ -20,11 +20,11 @@ int main() {
 
 
 
-    World world(height, width, 2, 1);
+    World world(height, width, 10, 1);
     Renderer renderer(world);
 
 
-    if (!font.loadFromFile("/Users/g0bel1n/CLionProjects/ants_fight_club/Exclusive-Serif.ttf"))
+    if (!font.loadFromFile("/Users/g0bel1n/CLionProjects/ants_fight_club/ressources/Exclusive-Serif.ttf"))
     {
         // error...
     }
