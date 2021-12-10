@@ -20,7 +20,7 @@ World::World(int lenght, int width, int nb_ants, int nb_food) {
 
     for(int i=0; i<nb_food;i++){
         sf::Vector2<float> aleat_position ((float)(std::rand()%world_width),(float)(std::rand()%world_lenght));
-        Marker marker (aleat_position,i);
+        Marker marker (aleat_position,1);
         markers.push_back(marker);
     }
 

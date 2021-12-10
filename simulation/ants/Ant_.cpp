@@ -34,7 +34,7 @@ float Ant_::get_lifetime()  {
     return this->lifetime;
 }
 bool Ant_::is_valid(sf::Vector2f position){
-    float offset = 30.f;
+    float offset = 5.f;
     return (position.x>0+offset) && (position.x+offset<world_height) && (position.y>0+offset) && (position.y+offset<world_width);
 }
 
@@ -71,27 +71,54 @@ void Ant_::move_to(sf::Vector2<float> new_position, sf::Time dt) {
 
 void Ant_::update(sf::Time dt, std::vector<Marker>& markers) {
 
-    //int isfood = is_food(detection_radius, markers);
 
-    if (last_changed>sf::seconds(direction_change_delta+ (std::rand()%5)/10.)){
+    //int isfood = is_food(detection_radius, markers);
+    //std::cout<<"ant : " << ant_id <<" ->  " << target <<"\n";
+
+    if (last_changed>sf::seconds(direction_change_delta+ (std::rand()%5)/10.) && target==-1){
         last_changed = sf::Time::Zero;
         this -> angle += (std::rand()%angular_width-angular_width/2)*(PI/180.);
-        this -> direction = sf::Vector2<float>(cos(angle), sin(angle));
     }
-    else if (check_env(markers)>=0 && !(target>0)){
-        std::cout<<"seen";
-        target = check_env(markers);
-        sf::Vector2f target = markers[check_env(markers)].get_position();
-        sf::Vector2f delta_vect = target-position;
-        if ((angle>-PI/4 && angle<PI/4)||(angle>3*PI/4 && angle<5*PI/4)){
-            this-> angle += atan(abs(delta_vect.x/delta_vect.y));
+    else if (check_env(markers,detection_radius)>=0 &&  markers[check_env(markers,detection_radius)].marker_type>=0 ) {
+        if(check_env(markers,eating_radius)==target && target>=0 ){
+
+            markers[target].marker_type = -1;
+            target = -1;
+            last_changed = sf::Time::Zero;
+            this -> angle += PI;
+
         }
-        else{
-            this-> angle += atan(abs(delta_vect.x/delta_vect.y));
+
+        else if (target==-1 || target!= check_env(markers,detection_radius)){
+
+            if (target>=0){markers[target].marker_type=1;}
+            target = check_env(markers,detection_radius);
+            markers[target].marker_type=2;
+            std::cout<<"ant : " << ant_id <<" ->  " << target <<"\n";
+
+            sf::Vector2f target_position = markers[target].get_position();
+            sf::Vector2f delta_vect = target_position-position;
+
+/*            if ((angle>-PI/4 && angle<PI/4)||(angle>3*PI/4 && angle<5*PI/4)){
+                this-> angle -= atan(abs(delta_vect.x/delta_vect.y)) ;
         }
-        this -> direction = sf::Vector2<float>(cos(angle), sin(angle));
+            else{
+                this-> angle -= atan(abs(delta_vect.y/delta_vect.x));
+        }*/
+
+
+            angle = atan(delta_vect.y/delta_vect.x);
+            if (delta_vect.x<0){
+            angle-=PI;}
+        }
     }
 
+    if (markers[target].marker_type<0){
+        target=-1;
+        this -> angle += (std::rand()%angular_width-angular_width/2)*(PI/180.);
+    }
+
+    this -> direction = sf::Vector2<float>(cos(angle), sin(angle));
     sf::Vector2<float> new_position = this->position+this->direction*speed*dt.asSeconds();
     move_to(new_position,dt);
     lifetime += dt.asSeconds();
@@ -102,14 +129,20 @@ float Ant_::get_angle() {
     return this->angle;
 }
 
-int Ant_::check_env(std::vector<Marker>& markers) {
-
-    for (int i = 0; i < markers.size(); i++) {
-        if (distance(markers[i].get_position(), position) <= detection_radius) {
-            return i;
+int Ant_::check_env(std::vector<Marker>& markers, float radius) {
+    int i = 0;
+    float distance_;
+    float min_distance=400.f;
+    int min_index = -1;
+    while (markers.size() > i) {
+        distance_ = distance(markers[i].get_position(), position);
+        if ( distance_<= radius && distance_<=min_distance ) {
+            min_distance = distance_;
+            min_index =i;
         }
-        return -1;
+        i++;
     }
+    return min_index;
 }
 
 

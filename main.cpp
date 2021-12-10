@@ -9,15 +9,16 @@ using namespace std;
 
 int main() {
 
-    int height = 1000;
-    int width = 1000;
+
+    int height = 1400;
+    int width = 1400;
 
     sf::RenderWindow window(sf::VideoMode(width, height), "My window");
     sf::Clock clock;
     sf::Font font;
     window.setTitle("Avengers AntGame - @G0bel1n");
 
-    World world(height, width, 20, 20);
+    World world(height, width, 100, 50);
     Renderer renderer(world);
 
 
@@ -90,6 +91,10 @@ int main() {
 
         for(int i=0; i<world.get_nb_food();i++){
             window.draw(renderer.markers_graphic[i]);
+            if(world.markers[i].marker_type!=0){
+            //std::cout<<"food : " << i <<" ->  " << world.markers[i].marker_type <<"\n";
+            }
+
         }
 
         for(int i=0; i<world.get_nb_ants();i++){
