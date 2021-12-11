@@ -40,7 +40,7 @@ public:
     bool ToFood=true;
     sf::Vector2f home;
 
-    void AddMarker(std::vector<Marker>& markers, int type);
+    void AddMarker(std::vector<Marker>& markers, int type, float time_offset);
 
     float sampleWorld(std::vector<Marker> markers);
 
@@ -52,18 +52,20 @@ private:
     int ant_id;
     int target =-1;
     float lifetime{};
+    float time_since_quitted_home =0.;
+    float time_since_found_food =0.;
 
     float last_dropped=0.;
     sf::Vector2f direction;
     sf::Vector2f position;
-    float speed = 150.f ;
+    float speed = 300.f ;
     float angle = 0.f;
     int times_wall_hit =0;
     int angular_width = 45;
     float direction_change_delta = 0.1f;
     sf::Time last_changed = sf::Time::Zero;
 
-    float detection_radius = 500.f;
+    float detection_radius = 300.f;
     float eating_radius = 10.f;
 
     bool is_valid(sf::Vector2f position);

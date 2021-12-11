@@ -18,7 +18,7 @@ int main() {
     sf::Font font;
     window.setTitle("Avengers AntGame - @G0bel1n");
 
-    World world(height, width, 100, 100);
+    World world(height, width, 20, 300);
     Renderer renderer(world);
 
 
@@ -44,6 +44,13 @@ int main() {
 
     sf::RectangleShape circle (sf::Vector2f(50.f,10.f));
     circle.setFillColor(sf::Color::Yellow);
+
+
+    sf::CircleShape colony_base(100.);
+    colony_base.setOrigin(100.,100.);
+    colony_base.setPosition(world.ants[0].home);
+    colony_base.setFillColor(sf::Color::White);
+
 
     circle.setPosition(sf::Vector2<float>(10.f,150.f));
 
@@ -81,17 +88,15 @@ int main() {
         //}
         text.setString("Ants : " + to_string(world.ants[0].get_lifetime()));
         text1.setString("Foods : " + to_string(world.get_nb_food()));
-        std::cout << renderer.markers_graphic.size()<< "\n \n";
+        std::cout << "Size of markers graphics vectors  "<< renderer.markers_graphic.size()<< "\n \n";
 
         world.update_ants(dt);
         renderer.update(world);
         circle.setPosition(circle.getPosition()+sf::Vector2<float>(dt.asSeconds()*500.f,0.0f));
 
-
         window.clear(sf::Color(104,157,113));
-
-
-    for(int i=0; i<100;i++){;
+        window.draw(colony_base);
+    for(int i=0; i<renderer.markers_graphic.size();i++){;
         window.draw(renderer.markers_graphic[i]);
     }
 
@@ -105,6 +110,7 @@ int main() {
 
         window.draw(text);
         window.draw(text1);
+
 
         window.display();
 

@@ -8,7 +8,6 @@
 
 void Renderer::update(World &world) {
 
-    std::cout <<"arrivé ici";
     int delta = markers_graphic.size()-world.markers.size();
 
     std::cout <<"\n" << delta << "\n";
@@ -26,6 +25,11 @@ void Renderer::update(World &world) {
             markers_graphic.push_back(graph_marker);
         std::cout << "\n adder \n";}
     }
+
+
+
+
+
     for(int i=0; i<world.get_nb_food();i++){
         if (world.markers[i].marker_type==-1){
             markers_graphic[i].setFillColor(sf::Color(104,157,113));
@@ -36,12 +40,12 @@ void Renderer::update(World &world) {
         if (world.markers[i].marker_type==1){
             markers_graphic[i].setFillColor(sf::Color::Red);
         }
-        markers_graphic[i].setPosition(world.markers[i].get_position());
+        markers_graphic[i].setPosition(world.markers[i].position);
     }
     for(int i=world.get_nb_food(); i<markers_graphic.size();i++){
 
         markers_graphic[i].setRadius(world.markers[i].get_intensity()/3.);
-        markers_graphic[i].setPosition(world.markers[i].get_position());
+        markers_graphic[i].setPosition(world.markers[i].position);
 
     }
 

@@ -6,19 +6,15 @@
 #include <math.h>
 
 float Marker::get_intensity() {
-    return 30.-lifetime.asSeconds();
+    return std::max(15.-lifetime.asSeconds(),0.);
 }
-
-Marker::Marker(sf::Vector2<float> position, int marker_type) {
+Marker::Marker(sf::Vector2<float> position, int marker_type, float time_offset) {
 
     this->position = position;
     lifetime = sf::Time::Zero;
+    lifetime+=sf::seconds(time_offset*2);
     this->marker_type=marker_type;
 
-}
-
-sf::Vector2f Marker::get_position() {
-    return position;
 }
 
 void Marker::update(sf::Time& dt) {

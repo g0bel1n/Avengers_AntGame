@@ -81,8 +81,6 @@ void Ant_::update(sf::Time dt, std::vector<Marker>& markers) {
     }
 
     else if (ToFood && check_env(markers,detection_radius)>=0 &&  markers[check_env(markers,detection_radius)].marker_type>=0 ) {
-        std::cout<<"droping Markers";
-
 
         if(check_env(markers,eating_radius)==target && target>=0 ){
 
@@ -90,6 +88,7 @@ void Ant_::update(sf::Time dt, std::vector<Marker>& markers) {
             target = -1;
             have_food = true;
             ToFood = false;
+            time_since_found_food=0.;
             swith_skin=true;
             last_changed = sf::Time::Zero;
             this -> angle += PI;
@@ -101,17 +100,11 @@ void Ant_::update(sf::Time dt, std::vector<Marker>& markers) {
             if (target>=0){markers[target].marker_type=1;}
             target = check_env(markers,detection_radius);
             markers[target].marker_type=2;
-            std::cout<<"ant : " << ant_id <<" ->  " << target <<"\n";
+            //std::cout<<"ant : " << ant_id <<" ->  " << target <<"\n";
 
-            sf::Vector2f target_position = markers[target].get_position();
+            sf::Vector2f target_position = markers[target].position;
             sf::Vector2f delta_vect = target_position-position;
 
-/*            if ((angle>-PI/4 && angle<PI/4)||(angle>3*PI/4 && angle<5*PI/4)){
-                this-> angle -= atan(abs(delta_vect.x/delta_vect.y)) ;
-        }
-            else{
-                this-> angle -= atan(abs(delta_vect.y/delta_vect.x));
-        }*/
 
 
             angle = atan(delta_vect.y/delta_vect.x);
@@ -123,7 +116,7 @@ void Ant_::update(sf::Time dt, std::vector<Marker>& markers) {
     }
 
     else if (target>=0 && markers[target].marker_type<0){
-        std::cout<<"ant : " << ant_id <<" ->  " << angle <<"\n";
+        //std::cout<<"ant : " << ant_id <<" ->  " << angle <<"\n";
 
         target=-1;
         this -> angle += (std::rand()%angular_width-angular_width/2)*(PI/180.);
@@ -131,36 +124,54 @@ void Ant_::update(sf::Time dt, std::vector<Marker>& markers) {
 
     }
 
+
+
     else if (distance(home,position)<100. && !ToFood){
 
         this -> angle += PI + (std::rand()%angular_width-angular_width/2)*(PI/180.);
         last_changed=sf::Time::Zero;
         ToFood = true;
+        time_since_quitted_home=0.;
         swith_skin = true;
         have_food=false;
 
     }
 
-    else if (markers.size()>nb_food  && last_changed.asSeconds()>.1){
+    else if(distance(home,position)<detection_radius && !ToFood ){
+        sf::Vector2f delta_vect = home-position;
+        this-> angle = atan(abs(delta_vect.y/delta_vect.x));
+        if (delta_vect.x<0){
+            angle-=PI;}
+        last_changed=sf::Time::Zero;
+
+    }
+
+    else if (markers.size()>nb_food  && last_changed.asSeconds()>.1 &&target==-1){
         float new_angle = sampleWorld(markers);
-        if(!isnan(new_angle) && std::rand()%4!=0 && new_angle<PI/4&&new_angle>-PI/4 ){this -> angle =new_angle;
+/*        if(!isnan(new_angle) && std::rand()%4!=0 && new_angle<PI/4&&new_angle>-PI/4 ){this -> angle =new_angle;
             last_changed=sf::Time::Zero;}
         else{this -> angle += (std::rand()%angular_width-angular_width/2)*(PI/180);
-            last_changed=sf::Time::Zero;}
+            last_changed=sf::Time::Zero;}*/
 
+        if(!isnan(new_angle) && std::rand()%4!=0){this -> angle =new_angle;     std::cout<<"ant : " << ant_id <<" ->  " << "following markers" <<"\n";
+            ;
+            last_changed=sf::Time::Zero;}
 
     }
 
     this -> direction = sf::Vector2<float>(cos(angle), sin(angle));
     sf::Vector2<float> new_position = this->position+this->direction*speed*dt.asSeconds();
     move_to(new_position,dt);
-   if (last_dropped>.1) {
-
-       AddMarker(markers,4-(int)ToFood);
+   if (last_dropped>.05) {
+       if(ToFood){
+           AddMarker(markers,3,time_since_quitted_home);
+       }
+       else{ AddMarker(markers, 4, time_since_quitted_home);}
        last_dropped=0.;
    }
-    std::cout<<"ant : " << ant_id <<" ->  " << ToFood <<"\n";
-
+    //std::cout<<"ant : " << ant_id <<" ->  " << ToFood <<"\n";
+    if(ToFood){time_since_quitted_home+=dt.asSeconds();}
+    else{time_since_found_food+=dt.asSeconds();}
     lifetime += dt.asSeconds();
     last_changed+=dt;
     last_dropped+=dt.asSeconds();
@@ -176,7 +187,7 @@ int Ant_::check_env(std::vector<Marker>& markers, float radius) {
     float min_distance=400.f;
     int min_index = -1;
     while (nb_food > i) {
-        distance_ = distance(markers[i].get_position(), position);
+        distance_ = distance(markers[i].position, position);
         if ( distance_<= radius && distance_<=min_distance ) {
             min_distance = distance_;
             min_index =i;
@@ -186,9 +197,9 @@ int Ant_::check_env(std::vector<Marker>& markers, float radius) {
     return min_index;
 }
 
-void Ant_::AddMarker(std::vector<Marker>& markers, int type){
+void Ant_::AddMarker(std::vector<Marker>& markers, int type, float time_offset){
 
-    Marker marker (position,type);
+    Marker marker (position,type, time_offset);
     markers.push_back(marker);
 
 }
@@ -202,9 +213,9 @@ float Ant_::sampleWorld(std::vector<Marker> markers) {
     float total_intensity=0.;
     for (int i=nb_food; i< markers.size();i++){
         if (markers[i].marker_type == type){
-            float distance_ = distance(markers[i].get_position(), position);
+            float distance_ = distance(markers[i].position, position);
             if (distance_<= detection_radius) {
-                sf::Vector2f target_position = markers[i].get_position();
+                sf::Vector2f target_position = markers[i].position;
                 sf::Vector2f delta_vect = target_position-position;
                 float markers_angle = atan(delta_vect.y/delta_vect.x);
                 if (delta_vect.x<0){
