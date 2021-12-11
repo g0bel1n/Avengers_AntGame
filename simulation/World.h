@@ -27,7 +27,7 @@ public:
     std::vector<Ant_> ants;
     std::vector<Marker> markers;
 
-
+    sf::Texture texture;
     void update_ants(sf::Time dt);
 
     void update_graphics();

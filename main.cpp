@@ -10,16 +10,16 @@ using namespace std;
 int main() {
 
 
-    int height = 1400;
-    int width = 1400;
+    int height = 1000;
+    int width = 1000;
 
     sf::RenderWindow window(sf::VideoMode(width, height), "My window");
     sf::Clock clock;
     sf::Font font;
     window.setTitle("Avengers AntGame - @G0bel1n");
 
-    World world(height, width, 20, 300);
-    Renderer renderer(world);
+    World world(height, width, 50, 50);
+    //Renderer renderer(world);
 
 
     if (!font.loadFromFile("/Users/g0bel1n/CLionProjects/ants_fight_club/ressources/Exclusive-Serif.ttf"))
@@ -72,6 +72,7 @@ int main() {
                     std::cout << "the right button was pressed" << std::endl;
                     std::cout << "mouse x: " << event.mouseButton.x << std::endl;
                     std::cout << "mouse y: " << event.mouseButton.y << std::endl;
+                    std::cout<< "1 \n";
                 }
             }
         }
@@ -86,23 +87,23 @@ int main() {
         //if (delta_vect.x<0){
            // angle-=180;
         //}
-        text.setString("Ants : " + to_string(world.ants[0].get_lifetime()));
-        text1.setString("Foods : " + to_string(world.get_nb_food()));
-        std::cout << "Size of markers graphics vectors  "<< renderer.markers_graphic.size()<< "\n \n";
+        text.setString("To Food : " + to_string(world.ants[0].ToFood));
+        text1.setString("Target " + to_string(world.ants[0].target));
+        //std::cout << "Size of markers graphics vectors  "<< renderer.markers_graphic.size()<< "\n \n";
 
         world.update_ants(dt);
-        renderer.update(world);
         circle.setPosition(circle.getPosition()+sf::Vector2<float>(dt.asSeconds()*500.f,0.0f));
 
         window.clear(sf::Color(104,157,113));
         window.draw(colony_base);
-    for(int i=0; i<renderer.markers_graphic.size();i++){;
-        window.draw(renderer.markers_graphic[i]);
+        for(int i=0; i<world.markers.size();i++) {
+            window.draw(world.markers[i].graphic);
+        }
+    for(int i=0; i<world.get_nb_ants();i++){;
+        window.draw(world.ants[i].graphics);
     }
 
-    for(int i=0; i<world.get_nb_ants();i++) {
-        window.draw(renderer.ants_graphics[i]);
-    }
+
 
 
 

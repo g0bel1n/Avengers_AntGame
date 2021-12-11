@@ -12,20 +12,24 @@ World::World(int lenght, int width, int nb_ants, int nb_food) {
 
     this->nb_ants=nb_ants;
     this->nb_food = nb_food;
-    sf::Vector2<float> aleat_position (230.,230.);
+    sf::Vector2<float> aleat_position (130.,30.);
+
+
     for(int i=0; i<nb_ants;i++){
 
+        texture.loadFromFile("../ressources/ant.png");
         Ant_ ant (aleat_position,i,world_width,world_lenght,nb_food);
+        ant.graphics.setTexture(texture);
+
         ants.push_back(ant);
     }
      //aleat_position = sf::Vector2<float>((float)(std::rand()%world_width),(float)(std::rand()%world_lenght));
-    aleat_position = sf::Vector2<float>((float)(world_width/2),(float)(world_lenght/2));
+    aleat_position = sf::Vector2<float>((float)(world_width-100),(float)(world_lenght-100));
 float x_offset=10.;
     for(int i=0; i<nb_food;i++){
         if (i%10==0){
             x_offset=-x_offset;
             aleat_position += sf::Vector2f (0.,10.f);
-
         }
         Marker marker (aleat_position,1,0.);
         aleat_position += sf::Vector2f (x_offset,0.);
@@ -54,14 +58,13 @@ void World::update_ants( sf::Time dt) {
     for (int k=0; k<markers.size();k++){
 
         markers[k].update(dt);
-        if (k>nb_food && markers[k].marker_type==-1){
+        int nb_deleted =0;
+        if (k>=nb_food && markers[k].marker_type==-1){
+            nb_deleted++;
             markers.erase(markers.begin()+k);
         }
-
+        if (nb_deleted>0)std::cout<<"nb deleted : "<<nb_deleted<<"\n";
     }
 
 }
 
-void World::AddMarker(sf::Vector2f marker_position) {
-
-}

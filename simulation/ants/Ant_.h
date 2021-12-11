@@ -21,8 +21,6 @@ public:
     float get_angle() ;
     float get_lifetime() ;
 
-    int is_food(float radius, std::vector<Marker> markers);
-
     int check_env(std::vector<Marker>& markers, float radius);
 
     float ant_length = 50.f;
@@ -32,25 +30,26 @@ public:
     int world_width;
 
     sf::Vector2<float> size = sf::Vector2f(ant_length,ant_width);
-    bool hunting = false;
     void move_to(sf::Vector2<float> position, sf::Time dt);
     bool have_food = false;
-    bool deposed_food =false;
-    bool swith_skin = false;
+    bool switchSkin = false;
     bool ToFood=true;
     sf::Vector2f home;
+    sf::Sprite graphics;
 
     void AddMarker(std::vector<Marker>& markers, int type, float time_offset);
-
+    float RandomAngle();
     float sampleWorld(std::vector<Marker> markers);
 
+    sf::Texture texture;
+    sf::Texture texture_with_food;
 
-
+    int target =-1;
 private:
+
 
     int nb_food;
     int ant_id;
-    int target =-1;
     float lifetime{};
     float time_since_quitted_home =0.;
     float time_since_found_food =0.;

@@ -11,6 +11,9 @@
 
 #define PI 3.14159265
 
+float Ant_::RandomAngle(){
+    return (std::rand()%angular_width-angular_width/2)*(PI/180);
+}
 
 Ant_::Ant_(sf::Vector2<float> position, int ant_id,int width, int length, int nb_food) {
     this-> position = position;
@@ -24,6 +27,15 @@ Ant_::Ant_(sf::Vector2<float> position, int ant_id,int width, int length, int nb
 
     this->world_width = width;
     this-> world_height = length;
+
+
+
+    graphics = sf::Sprite();
+    graphics.setColor(sf::Color::White);
+    graphics.setOrigin(300.,300.f);
+
+    graphics.setScale(0.05f, 0.05f);
+    graphics.setPosition(position);
 
 }
 
@@ -53,28 +65,161 @@ void Ant_::move_to(sf::Vector2<float> new_position, sf::Time dt) {
 
 }
 
+void Ant_::update(sf::Time dt, std::vector<Marker>& markers){
+
+    // To avoid changing direction too often...
+    if (last_changed>sf::seconds(direction_change_delta+ (std::rand()%5)/10.)){
+        //If looking for food...
+        if(ToFood){
+            time_since_quitted_home+=dt.asSeconds();
+            //Looking for food and didn't see it yet
+            if (target==-1) {
+
+                target = check_env(markers, detection_radius);
+                //If it detects valid food, let's go to it
+                if (target>=0 && markers[target].marker_type == 1 ) {
+                    markers[target].changeColor =true;
+                    markers[target].marker_type = 2;
+                    sf::Vector2f delta_vect = markers[target].position-position;
+                    this -> angle = atan(delta_vect.y/delta_vect.x);
+                    last_changed=sf::Time::Zero;
+                    std::cout<< "4 \n";
 
 
-/*int Ant_::is_food(float radius, std::vector<Marker> markers){
-    // iterate on the list
-    for (int i =0; i <10;i++) {
-        if (pow(markers[i].get_position().x-markers[i].radius- position.x, 2.0) + pow(markers[i].get_position()
-        .y-markers[i].radius- position.y, 2.0) <= radius) {
+                }
+                //If the ant can't see the food, it looks for markers left by others
+                else{
+                    float new_angle = sampleWorld(markers);
+                    // 3 times out of 4, the ant takes a random direction
+                    // if new_angle is a nan it is because there is no markers in the detection radius
+                    if(!isnan(new_angle) && std::rand()%4!=0){
+                        this -> angle =new_angle;
+                    }
+                    else{
+                        this->angle += RandomAngle();
+                    }
+                        last_changed=sf::Time::Zero;
+                }
+            }
 
-            return i;
+            // If we are looking for food but already going to the target...
+            else{
+                // Just checking if arrived. If not, keep going...
+                if (target==check_env(markers,eating_radius)){
+
+                    markers[target].marker_type = -1;
+                    markers[target].changeColor =true;
+                    target = -1;
+                    have_food = true;
+                    ToFood = false;
+                    time_since_found_food=0.;
+                    switchSkin=true;
+                    last_changed = sf::Time::Zero;
+                    this -> angle += PI;
+
+                    texture_with_food.loadFromFile("../ressources/ant_with_food.png");
+                    graphics.setTexture(texture_with_food);
+                    switchSkin=false;
+
+                }
+                //if we are not there yet, lets still check if it is avalaible
+                else if (markers[target].marker_type==-1){
+                    target=-1;
+                }
+
+            }
+        }
+        //If we are going home...
+        else{
+            time_since_found_food+=dt.asSeconds();
+            //Let's look if we arrived
+            if (distance(home,position)<=eating_radius){
+
+                texture.loadFromFile("../ressources/ant.png");
+                graphics.setTexture(texture);
+                switchSkin=false;
+
+                switchSkin=true;
+                ToFood=true;
+                have_food=false;
+
+                this->angle += PI + RandomAngle();
+                last_changed=sf::Time::Zero;
+                time_since_quitted_home=0.;
+
+                std::cout<< "1 \n";
+
+            }
+
+            //If we are not arrived, we might at least see it
+            else if (distance(home,position)<=detection_radius){
+                sf::Vector2f delta_vect = home-position;
+                this -> angle = atan(delta_vect.y/delta_vect.x);
+                if (delta_vect.x<0)angle-=PI;
+                last_changed=sf::Time::Zero;
+
+                std::cout<< "2 \n";
+            }
+
+            //If we cant see it, lets look for clues
+            else{
+
+                float new_angle = sampleWorld(markers);
+                // 3 times out of 4, the ant takes a random direction
+                // if new_angle is a nan it is because there is no markers in the detection radius
+                if(!isnan(new_angle) && std::rand()%4!=0){
+                    this -> angle =new_angle;
+                    std::cout<<"Following markers \n";
+                }
+                else{
+                    this->angle += RandomAngle();
+                    std::cout<< "3 \n";
+                }
+                last_changed=sf::Time::Zero;
+
+            }
+
         }
 
     }
-    return -1;
-}*/
+
+
+    this -> direction = sf::Vector2<float>(cos(angle), sin(angle));
+    sf::Vector2<float> new_position = this->position+this->direction*speed*dt.asSeconds();
+    move_to(new_position,dt);
+    if (last_dropped>.05) {
+        if(ToFood){
+            AddMarker(markers,3,time_since_quitted_home);
+        }
+        else{ AddMarker(markers, 4, time_since_found_food);}
+        last_dropped=0.;
+    }
+
+    lifetime += dt.asSeconds();
+    last_changed+=dt;
+    last_dropped+=dt.asSeconds();
+
+    graphics.setPosition(position);
+    graphics.setRotation(angle*180/PI);
+
+    if (have_food && switchSkin){
+
+
+    }
+
+    else if (switchSkin && have_food){
+
+
+    }
+
+}
 
 
 
-void Ant_::update(sf::Time dt, std::vector<Marker>& markers) {
+
+/*void Ant_::update(sf::Time dt, std::vector<Marker>& markers) {
 
 
-    //int isfood = is_food(detection_radius, markers);
-    //std::cout<<"ant : " << ant_id <<" ->  " << target <<"\n";
     if (last_changed>sf::seconds(direction_change_delta+ (std::rand()%5)/10.) && target==-1){
         last_changed = sf::Time::Zero;
         this -> angle += (std::rand()%angular_width-angular_width/2)*(PI/180);
@@ -85,11 +230,12 @@ void Ant_::update(sf::Time dt, std::vector<Marker>& markers) {
         if(check_env(markers,eating_radius)==target && target>=0 ){
 
             markers[target].marker_type = -1;
+            markers[target].changeColor =true;
             target = -1;
             have_food = true;
             ToFood = false;
             time_since_found_food=0.;
-            swith_skin=true;
+            switchSkin=true;
             last_changed = sf::Time::Zero;
             this -> angle += PI;
 
@@ -100,13 +246,11 @@ void Ant_::update(sf::Time dt, std::vector<Marker>& markers) {
             if (target>=0){markers[target].marker_type=1;}
             target = check_env(markers,detection_radius);
             markers[target].marker_type=2;
+            markers[target].changeColor =true;
             //std::cout<<"ant : " << ant_id <<" ->  " << target <<"\n";
 
-            sf::Vector2f target_position = markers[target].position;
-            sf::Vector2f delta_vect = target_position-position;
-
-
-
+            sf::Vector2f target_position = ;
+            sf::Vector2f delta_vect = markers[target].position-position;
             angle = atan(delta_vect.y/delta_vect.x);
             if (delta_vect.x<0){
             angle-=PI;}
@@ -132,7 +276,7 @@ void Ant_::update(sf::Time dt, std::vector<Marker>& markers) {
         last_changed=sf::Time::Zero;
         ToFood = true;
         time_since_quitted_home=0.;
-        swith_skin = true;
+        switchSkin = true;
         have_food=false;
 
     }
@@ -141,17 +285,17 @@ void Ant_::update(sf::Time dt, std::vector<Marker>& markers) {
         sf::Vector2f delta_vect = home-position;
         this-> angle = atan(abs(delta_vect.y/delta_vect.x));
         if (delta_vect.x<0){
-            angle-=PI;}
+            angle-=PI/2;}
         last_changed=sf::Time::Zero;
 
     }
 
     else if (markers.size()>nb_food  && last_changed.asSeconds()>.1 &&target==-1){
         float new_angle = sampleWorld(markers);
-/*        if(!isnan(new_angle) && std::rand()%4!=0 && new_angle<PI/4&&new_angle>-PI/4 ){this -> angle =new_angle;
+*//*        if(!isnan(new_angle) && std::rand()%4!=0 && new_angle<PI/4&&new_angle>-PI/4 ){this -> angle =new_angle;
             last_changed=sf::Time::Zero;}
         else{this -> angle += (std::rand()%angular_width-angular_width/2)*(PI/180);
-            last_changed=sf::Time::Zero;}*/
+            last_changed=sf::Time::Zero;}*//*
 
         if(!isnan(new_angle) && std::rand()%4!=0){this -> angle =new_angle;     std::cout<<"ant : " << ant_id <<" ->  " << "following markers" <<"\n";
             ;
@@ -166,7 +310,7 @@ void Ant_::update(sf::Time dt, std::vector<Marker>& markers) {
        if(ToFood){
            AddMarker(markers,3,time_since_quitted_home);
        }
-       else{ AddMarker(markers, 4, time_since_quitted_home);}
+       else{ AddMarker(markers, 4, time_since_found_food);}
        last_dropped=0.;
    }
     //std::cout<<"ant : " << ant_id <<" ->  " << ToFood <<"\n";
@@ -175,7 +319,24 @@ void Ant_::update(sf::Time dt, std::vector<Marker>& markers) {
     lifetime += dt.asSeconds();
     last_changed+=dt;
     last_dropped+=dt.asSeconds();
-}
+
+    graphics.setPosition(position);
+    graphics.setRotation(angle*180/PI);
+
+    if (have_food && switchSkin){
+        texture_with_food.loadFromFile("../ressources/ant_with_food.png");
+        graphics.setTexture(texture_with_food);
+        switchSkin=false;
+
+    }
+
+    else if (switchSkin && have_food){
+        texture.loadFromFile("../ressources/ant.png");
+        graphics.setTexture(texture);
+        switchSkin=false;
+
+    }
+}*/
 
 float Ant_::get_angle() {
     return this->angle;
@@ -184,14 +345,15 @@ float Ant_::get_angle() {
 int Ant_::check_env(std::vector<Marker>& markers, float radius) {
     int i = 0;
     float distance_;
-    float min_distance=400.f;
+    float min_distance=1000.f;
     int min_index = -1;
     while (nb_food > i) {
-        distance_ = distance(markers[i].position, position);
-        if ( distance_<= radius && distance_<=min_distance ) {
-            min_distance = distance_;
-            min_index =i;
-        }
+        if(markers[i].marker_type>=0){
+            distance_ = distance(markers[i].position, position);
+            if ( distance_<= radius && distance_<=min_distance ) {
+                min_distance = distance_;
+                min_index =i;
+            }}
         i++;
     }
     return min_index;
@@ -214,15 +376,17 @@ float Ant_::sampleWorld(std::vector<Marker> markers) {
     for (int i=nb_food; i< markers.size();i++){
         if (markers[i].marker_type == type){
             float distance_ = distance(markers[i].position, position);
-            if (distance_<= detection_radius) {
+            if (distance_<= detection_radius&& distance_>eating_radius) {
                 sf::Vector2f target_position = markers[i].position;
                 sf::Vector2f delta_vect = target_position-position;
-                float markers_angle = atan(delta_vect.y/delta_vect.x);
-                if (delta_vect.x<0){
-                    markers_angle-=PI;}
+                float markers_angle = atan(abs(delta_vect.y/delta_vect.x));
+                if(delta_vect.x<0)markers_angle-=PI;
 
-                bary_angle+=markers[i].get_intensity()*markers_angle;
-                total_intensity+=markers[i].get_intensity();
+                if(markers_angle<=angle+PI/2 && markers_angle>=angle-PI/2){
+                    bary_angle+=markers[i].get_intensity()*markers_angle;
+                    total_intensity+=markers[i].get_intensity();
+                }
+
 
 
             }

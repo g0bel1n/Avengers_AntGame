@@ -18,6 +18,9 @@ public:
 
     sf::Vector2<float> position;
 
+    sf::CircleShape graphic;
+    bool changeColor=false;
+
 
     void update(sf::Time& dt);
     float death_threshold = 0.;
