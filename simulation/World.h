@@ -17,10 +17,6 @@ public:
     int get_nb_ants();
     int get_nb_food();
 
-    void AddMarker(sf::Vector2f marker_position);
-
-
-
     int world_lenght;
     int world_width;
 
@@ -29,10 +25,6 @@ public:
 
     sf::Texture texture;
     void update_ants(sf::Time dt);
-
-    void update_graphics();
-
-
 
 private:
 
