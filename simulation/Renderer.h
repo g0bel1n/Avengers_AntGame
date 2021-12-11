@@ -25,6 +25,9 @@ public:
 
     sf::Texture texture;
 
+    sf::Texture texture_with_food;
+
+
 
 
 

@@ -13,7 +13,7 @@
 class Ant_ {
 
 public:
-    Ant_(sf::Vector2<float> position,int ant_id, int width, int length);
+    Ant_(sf::Vector2<float> position,int ant_id, int width, int length, int nb_food);
 
     void update(sf::Time dt, std::vector<Marker>& markers);
 
@@ -34,23 +34,36 @@ public:
     sf::Vector2<float> size = sf::Vector2f(ant_length,ant_width);
     bool hunting = false;
     void move_to(sf::Vector2<float> position, sf::Time dt);
+    bool have_food = false;
+    bool deposed_food =false;
+    bool swith_skin = false;
+    bool ToFood=true;
+    sf::Vector2f home;
+
+    void AddMarker(std::vector<Marker>& markers, int type);
+
+    float sampleWorld(std::vector<Marker> markers);
+
+
 
 private:
 
-
+    int nb_food;
     int ant_id;
     int target =-1;
     float lifetime{};
+
+    float last_dropped=0.;
     sf::Vector2f direction;
     sf::Vector2f position;
-    float speed = 50.f ;
+    float speed = 150.f ;
     float angle = 0.f;
     int times_wall_hit =0;
     int angular_width = 45;
     float direction_change_delta = 0.1f;
     sf::Time last_changed = sf::Time::Zero;
 
-    float detection_radius = 50.f;
+    float detection_radius = 500.f;
     float eating_radius = 10.f;
 
     bool is_valid(sf::Vector2f position);

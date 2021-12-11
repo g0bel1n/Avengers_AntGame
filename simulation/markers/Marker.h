@@ -19,14 +19,16 @@ public:
     int marker_type;
 
     void update(sf::Time& dt);
+    float death_threshold = 0.;
 
 
 
 private:
 
+    float intensity;
     sf::Vector2<float> position;
     sf::Time lifetime;
-    float coef = 10.f;
+    float coef = 10000.f;
 
 
 };

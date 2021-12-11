@@ -18,7 +18,7 @@ int main() {
     sf::Font font;
     window.setTitle("Avengers AntGame - @G0bel1n");
 
-    World world(height, width, 100, 50);
+    World world(height, width, 100, 100);
     Renderer renderer(world);
 
 
@@ -30,14 +30,14 @@ int main() {
     sf::Text text;
     text.setFont(font);
     text.setString("Hello");
-    text.setPosition(10.f,1100.f);
+    text.setPosition(width/4, height-100.);
     text.setCharacterSize(50);
     text.setFillColor(sf::Color::White);
 
     sf::Text text1;
     text1.setFont(font);
     text1.setString("Hello");
-    text1.setPosition(300.f,1100.f);
+    text1.setPosition(width*3./4, height-100.);
     text1.setCharacterSize(50);
     text1.setFillColor(sf::Color::White);
 
@@ -79,8 +79,9 @@ int main() {
         //if (delta_vect.x<0){
            // angle-=180;
         //}
-        text.setString("Ants : " + to_string(world.get_nb_ants()));
+        text.setString("Ants : " + to_string(world.ants[0].get_lifetime()));
         text1.setString("Foods : " + to_string(world.get_nb_food()));
+        std::cout << renderer.markers_graphic.size()<< "\n \n";
 
         world.update_ants(dt);
         renderer.update(world);
@@ -89,17 +90,18 @@ int main() {
 
         window.clear(sf::Color(104,157,113));
 
-        for(int i=0; i<world.get_nb_food();i++){
-            window.draw(renderer.markers_graphic[i]);
-            if(world.markers[i].marker_type!=0){
-            //std::cout<<"food : " << i <<" ->  " << world.markers[i].marker_type <<"\n";
-            }
 
-        }
+    for(int i=0; i<100;i++){;
+        window.draw(renderer.markers_graphic[i]);
+    }
 
-        for(int i=0; i<world.get_nb_ants();i++){
-            window.draw(renderer.ants_graphics[i]);
-        }
+    for(int i=0; i<world.get_nb_ants();i++) {
+        window.draw(renderer.ants_graphics[i]);
+    }
+
+
+
+
 
         window.draw(text);
         window.draw(text1);

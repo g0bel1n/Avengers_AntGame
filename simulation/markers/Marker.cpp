@@ -6,7 +6,7 @@
 #include <math.h>
 
 float Marker::get_intensity() {
-    return exp(-lifetime.asSeconds()*coef);
+    return 30.-lifetime.asSeconds();
 }
 
 Marker::Marker(sf::Vector2<float> position, int marker_type) {
@@ -22,5 +22,11 @@ sf::Vector2f Marker::get_position() {
 }
 
 void Marker::update(sf::Time& dt) {
+    lifetime+=dt;
+    if (marker_type==3 || marker_type == 4){
+        if (get_intensity() < death_threshold){
+            marker_type=-1;
+        };
+    }
 
 }

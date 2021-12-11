@@ -17,6 +17,8 @@ public:
     int get_nb_ants();
     int get_nb_food();
 
+    void AddMarker(sf::Vector2f marker_position);
+
 
 
     int world_lenght;
@@ -24,9 +26,6 @@ public:
 
     std::vector<Ant_> ants;
     std::vector<Marker> markers;
-
-    std::vector<sf::RectangleShape> ants_graphics;
-    std::vector<sf::CircleShape> markers_graphics;
 
     void update_ants(sf::Time dt);
 
