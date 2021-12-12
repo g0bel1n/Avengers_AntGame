@@ -31,7 +31,7 @@ Ant_::Ant_(sf::Vector2<float> position, int ant_id,int width, int length, int nb
 
 
     graphics = sf::Sprite();
-    graphics.setColor(sf::Color::White);
+    graphics.setColor(sf::Color::Red);
     graphics.setOrigin(300.,300.f);
 
     graphics.setScale(0.05f, 0.05f);

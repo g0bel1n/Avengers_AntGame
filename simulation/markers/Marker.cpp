@@ -20,7 +20,7 @@ Marker::Marker(sf::Vector2<float> position, int marker_type, float time_offset) 
 
     this->position = position;
     lifetime = sf::Time::Zero;
-    lifetime+=sf::seconds(time_offset*2);
+    lifetime+=sf::seconds(time_offset*10);
     this->marker_type=marker_type;
 
     graphic = sf::CircleShape(get_intensity()/4.);

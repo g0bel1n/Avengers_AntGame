@@ -65,7 +65,7 @@ private:
     float direction_change_delta = 0.1f;
     sf::Time last_changed = sf::Time::Zero;
 
-    float detection_radius = 300.f;
+    float detection_radius = 100.f;
     float eating_radius = 10.f;
 
     bool is_valid(sf::Vector2f position, std::vector<Obstacle>& obstacles);

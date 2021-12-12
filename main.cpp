@@ -19,7 +19,7 @@ int main() {
     sf::Font font;
     window.setTitle("Avengers AntGame - @G0bel1n");
 
-    World world(height, width, 50, 100);
+    World world(height, width, 10, 100);
 
     if (!font.loadFromFile("/Users/g0bel1n/CLionProjects/ants_fight_club/ressources/Exclusive-Serif.ttf"))
     {
@@ -49,10 +49,15 @@ int main() {
     circle.setFillColor(sf::Color::Yellow);
 
 
-    sf::CircleShape colony_base(100.);
-    colony_base.setOrigin(100.,100.);
+    sf::Texture colony_hole;
+    colony_hole.loadFromFile("../ressources/Hole.PNG");
+
+    sf::Sprite colony_base ;
     colony_base.setPosition(world.ants[0].home);
-    colony_base.setFillColor(sf::Color::White);
+    colony_base.setOrigin(536./2.,204.);
+    colony_base.setTexture(colony_hole);
+    colony_base.setScale(0.2,0.2);
+    cout<<colony_base.getLocalBounds().width;
 
     std::vector<Obstacle> obstacles;
     for (int i=0; i<3;i++)
