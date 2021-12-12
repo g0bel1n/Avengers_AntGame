@@ -72,6 +72,8 @@ void Ant_::update(sf::Time dt, std::vector<Marker>& markers){
         //If looking for food...
         if(ToFood){
             time_since_quitted_home+=dt.asSeconds();
+
+            if (time_since_quitted_home>10){ToFood=false;}
             //Looking for food and didn't see it yet
             if (target==-1) {
 
@@ -125,6 +127,13 @@ void Ant_::update(sf::Time dt, std::vector<Marker>& markers){
                 //if we are not there yet, lets still check if it is avalaible
                 else if (markers[target].marker_type==-1){
                     target=-1;
+
+                }
+
+                else if (check_env(markers,detection_radius)!=target){
+
+                    markers[target].marker_type = 1;
+                    target=-1;
                 }
 
             }
@@ -165,11 +174,11 @@ void Ant_::update(sf::Time dt, std::vector<Marker>& markers){
             else{
 
                 float new_angle = sampleWorld(markers);
-                // 3 times out of 4, the ant takes a random direction
+                // 9 times out of 10, the ant takes a random direction
                 // if new_angle is a nan it is because there is no markers in the detection radius
-                if(!isnan(new_angle) && std::rand()%4!=0){
+                if(!isnan(new_angle) && std::rand()%10!=0){
                     this -> angle =new_angle;
-                    std::cout<<"Following markers \n";
+                    //std::cout<<"Following markers \n";
                 }
                 else{
                     this->angle += RandomAngle();

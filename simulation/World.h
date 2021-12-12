@@ -23,6 +23,9 @@ public:
     std::vector<Ant_> ants;
     std::vector<Marker> markers;
 
+    int get_food_available();
+
+
     sf::Texture texture;
     void update_ants(sf::Time dt);
 

@@ -17,7 +17,7 @@ int main() {
     sf::Font font;
     window.setTitle("Avengers AntGame - @G0bel1n");
 
-    World world(height, width, 50, 50);
+    World world(height, width, 50, 100);
 
     if (!font.loadFromFile("/Users/g0bel1n/CLionProjects/ants_fight_club/ressources/Exclusive-Serif.ttf"))
     {
@@ -27,14 +27,14 @@ int main() {
     sf::Text text;
     text.setFont(font);
     text.setString("Hello");
-    text.setPosition(width/4, (float)height-100.);
+    text.setPosition(100, (float)height-100.);
     text.setCharacterSize(50);
     text.setFillColor(sf::Color::White);
 
     sf::Text text1;
     text1.setFont(font);
     text1.setString("Hello");
-    text1.setPosition(width*3./4, height-100.);
+    text1.setPosition(width*3./6, height-100.);
     text1.setCharacterSize(50);
     text1.setFillColor(sf::Color::White);
 
@@ -77,8 +77,8 @@ int main() {
         sf::Time dt = clock.restart();
 
 
-        text.setString("To Food : " + to_string(world.ants[0].ToFood));
-        text1.setString("Target " + to_string(world.ants[0].target));
+        text.setString("Food available : " + to_string(world.get_food_available()));
+        text1.setString("Time elapsed " + to_string(world.ants[0].get_lifetime()).substr(0,4));
 
         world.update_ants(dt);
         circle.setPosition(circle.getPosition()+sf::Vector2<float>(dt.asSeconds()*500.f,0.0f));
@@ -87,7 +87,7 @@ int main() {
         window.draw(colony_base);
         for(auto & marker : world.markers) {window.draw(marker.graphic);}
         for(auto & ant : world.ants){window.draw(ant.graphics);}
-
+        cout<<"Nb of markers  : "<< world.markers.size()<<"\n";
         window.draw(text);
         window.draw(text1);
         window.display();

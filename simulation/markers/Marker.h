@@ -13,7 +13,7 @@ public:
 
     float get_intensity();
 
-    float radius = 5.f;
+    float radius = 2.f;
     int marker_type;
 
     sf::Vector2<float> position;

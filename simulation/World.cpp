@@ -24,7 +24,7 @@ World::World(int lenght, int width, int nb_ants, int nb_food) {
         ants.push_back(ant);
     }
      //aleat_position = sf::Vector2<float>((float)(std::rand()%world_width),(float)(std::rand()%world_lenght));
-    aleat_position = sf::Vector2<float>((float)(world_width-100),(float)(world_lenght-100));
+    aleat_position = sf::Vector2<float>((float)(world_width-200),(float)(world_lenght-200));
 float x_offset=10.;
     for(int i=0; i<nb_food;i++){
         if (i%10==0){
@@ -63,8 +63,15 @@ void World::update_ants( sf::Time dt) {
             nb_deleted++;
             markers.erase(markers.begin()+k);
         }
-        if (nb_deleted>0)std::cout<<"nb deleted : "<<nb_deleted<<"\n";
     }
 
+}
+
+int World::get_food_available() {
+    int food_avalaible = 0;
+    for(int i=0; i<nb_food; i++){
+        if(markers[i].marker_type==1)food_avalaible++;
+    }
+    return food_avalaible;
 }
 

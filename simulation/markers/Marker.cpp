@@ -14,7 +14,7 @@ sf::Color marker_color(int marker_type){
 }
 
 float Marker::get_intensity() {
-    return std::max(30.-lifetime.asSeconds(),0.);
+    return std::max(10.-lifetime.asSeconds(),0.);
 }
 Marker::Marker(sf::Vector2<float> position, int marker_type, float time_offset) {
 
