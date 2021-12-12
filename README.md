@@ -7,4 +7,12 @@ Generic ants are independently generated. They follow some basic rules, are attr
 
 It can be implemented to solve TSP Problems
 
+
+## An example
+<div align="center"> 
+  
 ![git_Antgame_vid_1](https://user-images.githubusercontent.com/73651505/145711984-b85e2779-89a0-418c-9aba-cc30f836213d.gif)
+
+</div>
+
+Below, in a very simple configuration, we can see that the ants are following markers to find their direction.
