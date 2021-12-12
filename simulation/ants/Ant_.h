@@ -9,13 +9,14 @@
 
 #include <SFML/Graphics.hpp>
 #include "../markers/Marker.h"
+#include "../obstacles/Obstacle.h"
 
 class Ant_ {
 
 public:
     Ant_(sf::Vector2<float> position,int ant_id, int width, int length, int nb_food);
 
-    void update(sf::Time dt, std::vector<Marker>& markers);
+    void update(sf::Time dt, std::vector<Marker>& markers, std::vector<Obstacle>& obstacles);
 
     sf::Vector2f get_position();
     float get_angle() ;
@@ -30,7 +31,7 @@ public:
     int world_width;
 
     sf::Vector2<float> size = sf::Vector2f(ant_length,ant_width);
-    void move_to(sf::Vector2<float> position, sf::Time dt);
+    void move_to(sf::Vector2<float> position, sf::Time dt, std::vector<Obstacle>& obstacles);
     bool have_food = false;
     bool switchSkin = false;
     bool ToFood=true;
@@ -67,7 +68,7 @@ private:
     float detection_radius = 300.f;
     float eating_radius = 10.f;
 
-    bool is_valid(sf::Vector2f position);
+    bool is_valid(sf::Vector2f position, std::vector<Obstacle>& obstacles);
 };
 
 

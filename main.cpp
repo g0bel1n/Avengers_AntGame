@@ -1,6 +1,8 @@
 #include <SFML/Window.hpp>
 #include <iostream>
 #include "simulation/World.h"
+#include "simulation/obstacles/Obstacle.h"
+
 using namespace std;
 
 #define PI 3.14159265
@@ -23,11 +25,15 @@ int main() {
     {
         // error...
     }
+
+
+
     sf::VertexArray quad(sf::Quads, 4);
     sf::Text text;
+
     text.setFont(font);
     text.setString("Hello");
-    text.setPosition(100, (float)height-100.);
+    text.setPosition(50, (float)height-100.);
     text.setCharacterSize(50);
     text.setFillColor(sf::Color::White);
 
@@ -47,6 +53,20 @@ int main() {
     colony_base.setOrigin(100.,100.);
     colony_base.setPosition(world.ants[0].home);
     colony_base.setFillColor(sf::Color::White);
+
+    std::vector<Obstacle> obstacles;
+    for (int i=0; i<3;i++)
+    {
+    Obstacle obstacle(sf::Vector2f(300., i*100.), 100.);
+    obstacle.texture.loadFromFile("../ressources/rock.jpeg");
+    obstacles.push_back(obstacle);}
+    for (int i=5; i<8;i++)
+    {
+        Obstacle obstacle(sf::Vector2f(300., i*100.), 100.);
+        obstacle.texture.loadFromFile("../ressources/rock.jpeg");
+        obstacles.push_back(obstacle);}
+
+
 
 
     circle.setPosition(sf::Vector2<float>(10.f,150.f));
@@ -78,18 +98,26 @@ int main() {
 
 
         text.setString("Food available : " + to_string(world.get_food_available()));
-        text1.setString("Time elapsed " + to_string(world.ants[0].get_lifetime()).substr(0,4));
 
-        world.update_ants(dt);
+        float time = world.ants[0].get_lifetime();
+        int minutes=0;
+        while(time>60.){
+            time-=60.;
+            minutes+=1;
+        }
+        text1.setString("Time elapsed :  " + to_string(minutes) + "  min  " + to_string(time).substr(0,3));
+        world.update_ants(dt,obstacles);
         circle.setPosition(circle.getPosition()+sf::Vector2<float>(dt.asSeconds()*500.f,0.0f));
 
         window.clear(sf::Color(104,157,113));
         window.draw(colony_base);
         for(auto & marker : world.markers) {window.draw(marker.graphic);}
         for(auto & ant : world.ants){window.draw(ant.graphics);}
+        for(auto & obstacle : obstacles){window.draw(obstacle.graphics, &obstacle.texture);}
         cout<<"Nb of markers  : "<< world.markers.size()<<"\n";
         window.draw(text);
         window.draw(text1);
+
         window.display();
     }
     return 0;

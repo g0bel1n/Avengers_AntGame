@@ -3,7 +3,7 @@ project(ants_fight_club)
 
 set(CMAKE_CXX_STANDARD 14)
 
-add_executable(ants_fight_club main.cpp simulation/ants/Ant_.cpp simulation/ants/Ant_.h simulation/World.cpp simulation/World.h simulation/markers/Marker.cpp simulation/markers/Marker.h simulation/synch.cpp common/utils.h simulation/markers/MarkersPile.cpp simulation/markers/MarkersPile.h)
+add_executable(ants_fight_club main.cpp simulation/ants/Ant_.cpp simulation/ants/Ant_.h simulation/World.cpp simulation/World.h simulation/markers/Marker.cpp simulation/markers/Marker.h simulation/synch.cpp common/utils.h simulation/obstacles/Obstacle.cpp simulation/obstacles/Obstacle.h)
 find_package(PkgConfig REQUIRED)
 
 pkg_check_modules(SFML REQUIRED sfml-graphics)

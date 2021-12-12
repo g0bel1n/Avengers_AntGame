@@ -47,11 +47,11 @@ int World::get_nb_food() {
     return nb_food;
 }
 
-void World::update_ants( sf::Time dt) {
+void World::update_ants( sf::Time dt, std::vector<Obstacle>& obstacles) {
 
     for (int k=0; k<nb_ants;k++){
 
-        ants[k].update(dt,markers);
+        ants[k].update(dt,markers, obstacles);
 
     }
 

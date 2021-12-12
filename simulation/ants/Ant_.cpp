@@ -46,26 +46,34 @@ sf::Vector2<float> Ant_::get_position() {
 float Ant_::get_lifetime()  {
     return this->lifetime;
 }
-bool Ant_::is_valid(sf::Vector2f position){
+bool Ant_::is_valid(sf::Vector2f position, std::vector<Obstacle>& obstacles){
     float offset = 5.f;
-    return (position.x>0+offset) && (position.x+offset<world_height) && (position.y>0+offset) && (position.y+offset<world_width);
+    if(!((position.x>0+offset) && (position.x+offset<world_height) && (position.y>0+offset) && (position.y+offset<world_width)))return false;
+    for(auto & obstacle: obstacles){
+        if(position.x>=obstacle.graphics[0].position.x && position.x<=obstacle.graphics[1].position.x && position.y>=obstacle.graphics[0].position.y && position.y<=obstacle.graphics[2].position.y)
+        {
+            return false;
+        };
+
+    } ;
+    return true;
 }
 
-void Ant_::move_to(sf::Vector2<float> new_position, sf::Time dt) {
+void Ant_::move_to(sf::Vector2<float> new_position, sf::Time dt, std::vector<Obstacle>& obstacles) {
 
-  if (is_valid(new_position)) {
+  if (is_valid(new_position, obstacles)) {
         this->position = new_position;
     }
-    else{
-        this->angle -= 3*PI/4;
+  else{
+        this->angle +=PI/2;
         this -> direction = sf::Vector2<float>(cos(angle), sin(angle));
         this->position += direction*speed*dt.asSeconds();
         times_wall_hit++;
-        }
+  }
 
 }
 
-void Ant_::update(sf::Time dt, std::vector<Marker>& markers){
+void Ant_::update(sf::Time dt, std::vector<Marker>& markers, std::vector<Obstacle>& obstacles){
 
     // To avoid changing direction too often...
     if (last_changed>sf::seconds(direction_change_delta+ (std::rand()%5)/10.)){
@@ -195,7 +203,7 @@ void Ant_::update(sf::Time dt, std::vector<Marker>& markers){
 
     this -> direction = sf::Vector2<float>(cos(angle), sin(angle));
     sf::Vector2<float> new_position = this->position+this->direction*speed*dt.asSeconds();
-    move_to(new_position,dt);
+    move_to(new_position,dt, obstacles);
     if (last_dropped>.05) {
         if(ToFood){
             AddMarker(markers,3,time_since_quitted_home);

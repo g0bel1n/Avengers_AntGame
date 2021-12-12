@@ -7,7 +7,7 @@
 
 #include <vector>
 #include "ants/Ant_.h"
-
+#include "obstacles/Obstacle.h"
 class World {
 
 public:
@@ -27,7 +27,7 @@ public:
 
 
     sf::Texture texture;
-    void update_ants(sf::Time dt);
+    void update_ants(sf::Time dt, std::vector<Obstacle>& obstacles);
 
 private:
 
