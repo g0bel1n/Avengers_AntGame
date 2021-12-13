@@ -94,6 +94,7 @@ void Ant_::update(sf::Time dt, std::vector<Marker>& markers, std::vector<Obstacl
                     markers[target].marker_type = 2;
                     sf::Vector2f delta_vect = markers[target].position-position;
                     this -> angle = atan(delta_vect.y/delta_vect.x);
+                    if (delta_vect.x<0)angle-=PI;
                     last_changed=sf::Time::Zero;
                     std::cout<< "4 \n";
 
