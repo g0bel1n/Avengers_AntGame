@@ -22,12 +22,16 @@ public:
 
     std::vector<Ant_> ants;
     std::vector<Marker> markers;
+    std::vector<Marker> foods;
+
 
     int get_food_available();
 
 
     sf::Texture texture;
     void update_ants(sf::Time dt, std::vector<Obstacle>& obstacles);
+
+    void AddMarker(sf::Vector2f position, int type);
 
 private:
 

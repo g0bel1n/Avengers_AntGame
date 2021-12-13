@@ -75,10 +75,10 @@ void Ant_::move_to(sf::Vector2<float> new_position, sf::Time dt, std::vector<Obs
 
 }
 
-void Ant_::update(sf::Time dt, std::vector<Marker>& markers, std::vector<Obstacle>& obstacles){
+void Ant_::update(sf::Time dt, std::vector<Marker>& markers, std::vector<Obstacle>& obstacles, std::vector<Marker>& foods){
 
     // To avoid changing direction too often...
-    if (last_changed>sf::seconds(direction_change_delta+ (std::rand()%5)/10.)){
+    if (last_changed>sf::seconds(direction_change_delta+ (std::rand()%5)/100.)){
         //If looking for food...
         if(ToFood){
             time_since_quitted_home+=dt.asSeconds();
@@ -87,12 +87,12 @@ void Ant_::update(sf::Time dt, std::vector<Marker>& markers, std::vector<Obstacl
             //Looking for food and didn't see it yet
             if (target==-1) {
 
-                target = check_env(markers, detection_radius);
+                target = check_env(foods, detection_radius);
                 //If it detects valid food, let's go to it
-                if (target>=0 && markers[target].marker_type == 1 ) {
-                    markers[target].changeColor =true;
-                    markers[target].marker_type = 2;
-                    sf::Vector2f delta_vect = markers[target].position-position;
+                if (target>=0 && foods[target].marker_type == 1 ) {
+                    foods[target].changeColor =true;
+                    foods[target].marker_type = 2;
+                    sf::Vector2f delta_vect = foods[target].position-position;
                     this -> angle = atan(delta_vect.y/delta_vect.x);
                     if (delta_vect.x<0)angle-=PI;
                     last_changed=sf::Time::Zero;
@@ -118,10 +118,10 @@ void Ant_::update(sf::Time dt, std::vector<Marker>& markers, std::vector<Obstacl
             // If we are looking for food but already going to the target...
             else{
                 // Just checking if arrived. If not, keep going...
-                if (target==check_env(markers,eating_radius)){
+                if (target==check_env(foods,eating_radius)){
 
-                    markers[target].marker_type = -1;
-                    markers[target].changeColor =true;
+                    foods[target].marker_type = -1;
+                    foods[target].changeColor =true;
                     target = -1;
                     have_food = true;
                     ToFood = false;
@@ -136,14 +136,14 @@ void Ant_::update(sf::Time dt, std::vector<Marker>& markers, std::vector<Obstacl
 
                 }
                 //if we are not there yet, lets still check if it is avalaible
-                else if (markers[target].marker_type==-1){
+                else if (foods[target].marker_type==-1){
                     target=-1;
 
                 }
 
-                else if (check_env(markers,detection_radius)!=target){
+                else if (check_env(foods,detection_radius)!=target){
 
-                    markers[target].marker_type = 1;
+                    foods[target].marker_type = 1;
                     target=-1;
                 }
 
@@ -230,14 +230,14 @@ float Ant_::get_angle() {
     return this->angle;
 }
 
-int Ant_::check_env(std::vector<Marker>& markers, float radius) {
+int Ant_::check_env(std::vector<Marker>& foods, float radius) {
     int i = 0;
     float distance_;
     float min_distance=1000.f;
     int min_index = -1;
-    while (nb_food > i) {
-        if(markers[i].marker_type>=0){
-            distance_ = distance(markers[i].position, position);
+    while (foods.size() > i) {
+        if(foods[i].marker_type>=0){
+            distance_ = distance(foods[i].position, position);
             if ( distance_<= radius && distance_<=min_distance ) {
                 min_distance = distance_;
                 min_index =i;
@@ -261,7 +261,7 @@ float Ant_::sampleWorld(std::vector<Marker> markers) {
 
     float bary_angle = 0.;
     float total_intensity=0.;
-    for (int i=nb_food; i< markers.size();i++){
+    for (int i=0; i< markers.size();i++){
         if (markers[i].marker_type == type || markers[i].marker_type == 5){
             float distance_ = distance(markers[i].position, position);
             if (distance_<= detection_radius&& distance_>eating_radius) {
@@ -276,8 +276,6 @@ float Ant_::sampleWorld(std::vector<Marker> markers) {
                     bary_angle+=markers[i].get_intensity()*markers_angle;
                     total_intensity+=markers[i].get_intensity();
                 }
-
-
 
             }
         }

@@ -16,7 +16,7 @@ class Ant_ {
 public:
     Ant_(sf::Vector2<float> position,int ant_id, int width, int length, int nb_food);
 
-    void update(sf::Time dt, std::vector<Marker>& markers, std::vector<Obstacle>& obstacles);
+    void update(sf::Time dt, std::vector<Marker>& markers, std::vector<Obstacle>& obstacles, std::vector<Marker>& foods);
 
     sf::Vector2f get_position();
     float get_angle() ;
@@ -62,7 +62,7 @@ private:
     float angle = 0.f;
     int times_wall_hit =0;
     int angular_width = 45;
-    float direction_change_delta = .05f;
+    float direction_change_delta = .01f;
     sf::Time last_changed = sf::Time::Zero;
 
     float detection_radius = 200.f;
