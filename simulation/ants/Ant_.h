@@ -31,7 +31,7 @@ public:
     int world_width;
 
     sf::Vector2<float> size = sf::Vector2f(ant_length,ant_width);
-    void move_to(sf::Vector2<float> position, sf::Time dt, std::vector<Obstacle>& obstacles);
+    void move_to(sf::Vector2<float> position, sf::Time dt, std::vector<Obstacle>& obstacles, std::vector<Marker>& markers);
     bool have_food = false;
     bool switchSkin = false;
     bool ToFood=true;
@@ -62,10 +62,10 @@ private:
     float angle = 0.f;
     int times_wall_hit =0;
     int angular_width = 45;
-    float direction_change_delta = 0.1f;
+    float direction_change_delta = .05f;
     sf::Time last_changed = sf::Time::Zero;
 
-    float detection_radius = 100.f;
+    float detection_radius = 200.f;
     float eating_radius = 10.f;
 
     bool is_valid(sf::Vector2f position, std::vector<Obstacle>& obstacles);

@@ -11,16 +11,17 @@ sf::Color marker_color(int marker_type){
     else if (marker_type == 4){return sf::Color::Green;}
     else if (marker_type == 2){return sf::Color::Yellow;}
     else if (marker_type==-1){return sf::Color(104, 157, 113);}
+    else if (marker_type==5){return sf::Color::Black;}
 }
 
 float Marker::get_intensity() {
-    return std::max(10.-lifetime.asSeconds(),0.);
+    return std::max(20.-lifetime.asSeconds(),0.);
 }
 Marker::Marker(sf::Vector2<float> position, int marker_type, float time_offset) {
 
     this->position = position;
     lifetime = sf::Time::Zero;
-    lifetime+=sf::seconds(time_offset*10);
+    lifetime+=sf::seconds(time_offset*2);
     this->marker_type=marker_type;
 
     graphic = sf::CircleShape(get_intensity()/4.);

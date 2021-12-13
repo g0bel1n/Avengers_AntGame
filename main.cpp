@@ -8,7 +8,9 @@ using namespace std;
 #define PI 3.14159265
 
 
+
 int main() {
+
 
 
     int height = 1000;
@@ -19,7 +21,7 @@ int main() {
     sf::Font font;
     window.setTitle("Avengers AntGame - @G0bel1n");
 
-    World world(height, width, 10, 100);
+    World world(height, width, 5, 100);
 
     if (!font.loadFromFile("/Users/g0bel1n/CLionProjects/ants_fight_club/ressources/Exclusive-Serif.ttf"))
     {
@@ -60,12 +62,12 @@ int main() {
     cout<<colony_base.getLocalBounds().width;
 
     std::vector<Obstacle> obstacles;
-    for (int i=0; i<3;i++)
+    for (int i=0; i<2;i++)
     {
-    Obstacle obstacle(sf::Vector2f(300., i*100.), 100.);
+    Obstacle obstacle(sf::Vector2f(300.+i*100.,300. ), 100.);
     obstacle.texture.loadFromFile("../ressources/rock.jpeg");
     obstacles.push_back(obstacle);}
-    for (int i=5; i<8;i++)
+    for (int i=4; i<10;i++)
     {
         Obstacle obstacle(sf::Vector2f(300., i*100.), 100.);
         obstacle.texture.loadFromFile("../ressources/rock.jpeg");
@@ -102,7 +104,7 @@ int main() {
         sf::Time dt = clock.restart();
 
 
-        text.setString("Food available : " + to_string(world.get_food_available()));
+        text.setString("Angle: " + to_string(world.ants[0].get_angle()*180/PI));
 
         float time = world.ants[0].get_lifetime();
         int minutes=0;

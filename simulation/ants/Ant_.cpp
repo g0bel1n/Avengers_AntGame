@@ -59,15 +59,17 @@ bool Ant_::is_valid(sf::Vector2f position, std::vector<Obstacle>& obstacles){
     return true;
 }
 
-void Ant_::move_to(sf::Vector2<float> new_position, sf::Time dt, std::vector<Obstacle>& obstacles) {
+void Ant_::move_to(sf::Vector2<float> new_position, sf::Time dt, std::vector<Obstacle>& obstacles, std::vector<Marker>& markers) {
 
   if (is_valid(new_position, obstacles)) {
         this->position = new_position;
     }
   else{
-        this->angle +=PI/2;
+        this->angle +=PI;
         this -> direction = sf::Vector2<float>(cos(angle), sin(angle));
         this->position += direction*speed*dt.asSeconds();
+        //AddMarker(markers, 5,10.);
+        //last_changed=sf::seconds(direction_change_delta+0.5);
         times_wall_hit++;
   }
 
@@ -81,7 +83,7 @@ void Ant_::update(sf::Time dt, std::vector<Marker>& markers, std::vector<Obstacl
         if(ToFood){
             time_since_quitted_home+=dt.asSeconds();
 
-            if (time_since_quitted_home>10){ToFood=false;}
+            //if (time_since_quitted_home>10){ToFood=false;}
             //Looking for food and didn't see it yet
             if (target==-1) {
 
@@ -102,7 +104,7 @@ void Ant_::update(sf::Time dt, std::vector<Marker>& markers, std::vector<Obstacl
                     float new_angle = sampleWorld(markers);
                     // 3 times out of 4, the ant takes a random direction
                     // if new_angle is a nan it is because there is no markers in the detection radius
-                    if(!isnan(new_angle) && std::rand()%4!=0){
+                    if(!isnan(new_angle)){
                         this -> angle =new_angle;
                     }
                     else{
@@ -201,9 +203,11 @@ void Ant_::update(sf::Time dt, std::vector<Marker>& markers, std::vector<Obstacl
     }
 
 
+
+    this->angle=normalise_angle(angle);
     this -> direction = sf::Vector2<float>(cos(angle), sin(angle));
     sf::Vector2<float> new_position = this->position+this->direction*speed*dt.asSeconds();
-    move_to(new_position,dt, obstacles);
+    move_to(new_position,dt, obstacles,markers);
     if (last_dropped>.05) {
         if(ToFood){
             AddMarker(markers,3,time_since_quitted_home);
@@ -257,15 +261,17 @@ float Ant_::sampleWorld(std::vector<Marker> markers) {
     float bary_angle = 0.;
     float total_intensity=0.;
     for (int i=nb_food; i< markers.size();i++){
-        if (markers[i].marker_type == type){
+        if (markers[i].marker_type == type || markers[i].marker_type == 5){
             float distance_ = distance(markers[i].position, position);
             if (distance_<= detection_radius&& distance_>eating_radius) {
                 sf::Vector2f target_position = markers[i].position;
                 sf::Vector2f delta_vect = target_position-position;
                 float markers_angle = atan(abs(delta_vect.y/delta_vect.x));
                 if(delta_vect.x<0)markers_angle-=PI;
+                markers_angle = normalise_angle(markers_angle);
 
                 if(markers_angle<=angle+PI/2 && markers_angle>=angle-PI/2){
+                    if (markers[i].marker_type == 5){markers_angle+=PI;}
                     bary_angle+=markers[i].get_intensity()*markers_angle;
                     total_intensity+=markers[i].get_intensity();
                 }
