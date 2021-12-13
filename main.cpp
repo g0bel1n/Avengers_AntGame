@@ -21,7 +21,7 @@ int main() {
     sf::Font font;
     window.setTitle("Avengers AntGame - @G0bel1n");
 
-    World world(height, width, 5, 100);
+    World world(height, width, 15, 100);
 
     if (!font.loadFromFile("/Users/g0bel1n/CLionProjects/ants_fight_club/ressources/Exclusive-Serif.ttf"))
     {
@@ -97,6 +97,10 @@ int main() {
                     std::cout << "mouse x: " << event.mouseButton.x << std::endl;
                     std::cout << "mouse y: " << event.mouseButton.y << std::endl;
                     std::cout<< "1 \n";
+
+                    Obstacle obstacle(sf::Vector2f(event.mouseButton.x-50.,event.mouseButton.y-50. ), 100.);
+                    obstacle.texture.loadFromFile("../ressources/rock.jpeg");
+                    obstacles.push_back(obstacle);
                 }
             }
         }
