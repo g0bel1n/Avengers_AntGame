@@ -12,16 +12,16 @@ using namespace std;
 int main() {
 
 
-    int height = 1000;
-    int width = 1000;
+    int height = 1400;
+    int width = 1400;
 
 
     sf::RenderWindow window(sf::VideoMode(width, height), "My window");
     sf::Clock clock;
     sf::Font font;
     window.setTitle("Avengers AntGame - @G0bel1n");
-    int total_food = 100;
-    World world(height, width, 15, total_food);
+    int total_food = 0;
+    World world(height, width, 20, total_food);
 
 
     if (!font.loadFromFile("../ressources/pricedown.otf")) {
@@ -59,11 +59,6 @@ int main() {
     text3.setFillColor(sf::Color::White);
     text3.setPosition(10, 10);
 
-
-    sf::RectangleShape circle(sf::Vector2f(50.f, 10.f));
-    circle.setFillColor(sf::Color::Yellow);
-
-
     sf::Texture colony_hole;
     colony_hole.loadFromFile("../ressources/Hole.PNG");
 
@@ -85,11 +80,6 @@ int main() {
         Obstacle obstacle(sf::Vector2f(300., i*100.), 100.);
         obstacle.texture.loadFromFile("../ressources/rock.jpeg");
         obstacles.push_back(obstacle);}*/
-
-
-
-
-    circle.setPosition(sf::Vector2<float>(10.f, 150.f));
 
     while (window.isOpen()) {
         // check all the window's events that were triggered since the last iteration of the loop
@@ -116,7 +106,6 @@ int main() {
 
                 if (event.mouseButton.button == sf::Mouse::Right) {
 
-
                     std::cout << "the right button was pressed" << std::endl;
                     std::cout << "mouse x: " << event.mouseButton.x << std::endl;
                     std::cout << "mouse y: " << event.mouseButton.y << std::endl;
@@ -142,12 +131,8 @@ int main() {
 
                         world.AddMarker(to_pos, 1);
                     }
-
                     total_food += 10;
-
-
                 }
-
             }
         }
         sf::Time dt = clock.restart();

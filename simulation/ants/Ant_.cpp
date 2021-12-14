@@ -62,7 +62,7 @@ void Ant_::move_to(sf::Vector2<float> new_position, sf::Time dt, std::vector<Obs
     if (is_valid(new_position, obstacles)) {
         this->position = new_position;
     } else {
-        this->angle += PI;
+        this->angle += PI/2;
         this->direction = sf::Vector2<float>(cos(angle), sin(angle));
         this->position += direction * speed * dt.asSeconds();
         //AddMarker(markers, 5,10.);
@@ -180,7 +180,7 @@ Ant_::update(sf::Time dt, std::vector<Marker> &markers, std::vector<Obstacle> &o
                 float new_angle = sampleWorld(markers);
                 // 9 times out of 10, the ant takes a random direction
                 // if new_angle is a nan it is because there is no markers in the detection radius
-                if (!isnan(new_angle) && std::rand() % 10 != 0) {
+                if (!isnan(new_angle)) {
                     this->angle = new_angle;
                     //std::cout<<"Following markers \n";
                 } else {
