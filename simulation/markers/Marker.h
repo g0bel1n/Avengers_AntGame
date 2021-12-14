@@ -4,6 +4,7 @@
 
 #ifndef ANTS_FIGHT_CLUB_MARKER_H
 #define ANTS_FIGHT_CLUB_MARKER_H
+
 #include <SFML/Graphics.hpp>
 
 class Marker {
@@ -19,23 +20,20 @@ public:
     sf::Vector2<float> position;
 
     sf::CircleShape graphic;
-    bool changeColor=false;
+    bool changeColor = false;
 
 
-    void update(sf::Time& dt);
+    void update(sf::Time &dt);
+
     float death_threshold = 0.;
-
 
 
 private:
 
-    float intensity;
     sf::Time lifetime;
-    float coef = 10000.f;
 
 
 };
-
 
 
 #endif //ANTS_FIGHT_CLUB_MARKER_H

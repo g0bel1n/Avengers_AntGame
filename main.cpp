@@ -9,14 +9,11 @@ using namespace std;
 #define PI 3.14159265
 
 
-
 int main() {
-
 
 
     int height = 1000;
     int width = 1000;
-
 
 
     sf::RenderWindow window(sf::VideoMode(width, height), "My window");
@@ -27,12 +24,9 @@ int main() {
     World world(height, width, 15, total_food);
 
 
-
-    if (!font.loadFromFile("/Users/g0bel1n/CLionProjects/ants_fight_club/ressources/Exclusive-Serif.ttf"))
-    {
+    if (!font.loadFromFile("../ressources/pricedown.otf")) {
         // error...
     }
-
 
 
     sf::VertexArray quad(sf::Quads, 4);
@@ -41,44 +35,44 @@ int main() {
     bool pause = true;
     text.setFont(font);
     text.setString("Hello");
-    text.setPosition(50, (float)height-100.);
+    text.setPosition(50, (float) height - 100.);
     text.setCharacterSize(50);
     text.setFillColor(sf::Color::White);
 
     sf::Text text1;
     text1.setFont(font);
     text1.setString("Hello");
-    text1.setPosition(width*3./6, height-100.);
-    text1.setCharacterSize(50);
+    text1.setPosition(width * 3. / 6, height - 100.);
+    text1.setCharacterSize(40);
     text1.setFillColor(sf::Color::White);
 
     sf::Text text2;
     text2.setFont(font);
     text2.setString("Hello");
-    text2.setCharacterSize(50);
+    text2.setCharacterSize(40);
     text2.setFillColor(sf::Color::White);
 
     sf::Text text3;
     text3.setFont(font);
-    text3.setString("SPACE to start/Pause \nLeft Clic to add food \nRight clic to add obstacles" );
-    text3.setCharacterSize(100);
+    text3.setString("SPACE to start/Pause \nLeft Click to add food \nRight click to add obstacles");
+    text3.setCharacterSize(40);
     text3.setFillColor(sf::Color::White);
-    text3.setPosition(10 ,100);
+    text3.setPosition(10, 10);
 
 
-    sf::RectangleShape circle (sf::Vector2f(50.f,10.f));
+    sf::RectangleShape circle(sf::Vector2f(50.f, 10.f));
     circle.setFillColor(sf::Color::Yellow);
 
 
     sf::Texture colony_hole;
     colony_hole.loadFromFile("../ressources/Hole.PNG");
 
-    sf::Sprite colony_base ;
+    sf::Sprite colony_base;
     colony_base.setPosition(world.ants[0].home);
-    colony_base.setOrigin(536./2.,204.);
+    colony_base.setOrigin(536. / 2., 204.);
     colony_base.setTexture(colony_hole);
-    colony_base.setScale(0.2,0.2);
-    cout<<colony_base.getLocalBounds().width;
+    colony_base.setScale(0.2, 0.2);
+    cout << colony_base.getLocalBounds().width;
 
     std::vector<Obstacle> obstacles;
     /*for (int i=0; i<2;i++)
@@ -95,7 +89,7 @@ int main() {
 
 
 
-    circle.setPosition(sf::Vector2<float>(10.f,150.f));
+    circle.setPosition(sf::Vector2<float>(10.f, 150.f));
 
     while (window.isOpen()) {
         // check all the window's events that were triggered since the last iteration of the loop
@@ -108,13 +102,11 @@ int main() {
             if (event.type == sf::Event::KeyPressed) {
                 if (event.key.code == sf::Keyboard::Space && !pause) {
 
-                    cout<<"PAUSSING";
+                    cout << "PAUSSING";
 
                     pause = true;
 
-                }
-
-                else if (event.key.code == sf::Keyboard::Space && pause) {
+                } else if (event.key.code == sf::Keyboard::Space && pause) {
 
                     pause = false;
 
@@ -176,22 +168,22 @@ int main() {
             text1.setString("Time elapsed :  " + to_string(minutes) + "  min  " + to_string(time).substr(0, 3));
 
             text2.setString("Food accumulated to colonie : " + to_string(total_food - world.get_food_available()));
-            world.update_ants(dt, obstacles);}
+            world.update_ants(dt, obstacles);
+        }
 
 
+        window.clear(sf::Color(104, 157, 113));
+        window.draw(colony_base);
+        for (auto &marker: world.markers) { window.draw(marker.graphic); }
+        for (auto &ant: world.ants) { window.draw(ant.graphics); }
+        for (auto &food: world.foods) { window.draw(food.graphic); }
+        for (auto &obstacle: obstacles) { window.draw(obstacle.graphics, &obstacle.texture); }
+        // cout << "Nb of markers  : " << world.markers.size() << "\n";
+        window.draw(text);
+        window.draw(text1);
 
-            window.clear(sf::Color(104, 157, 113));
-            window.draw(colony_base);
-            for (auto &marker: world.markers) { window.draw(marker.graphic); }
-            for (auto &ant: world.ants) { window.draw(ant.graphics); }
-            for (auto &food: world.foods) { window.draw(food.graphic); }
-            for (auto &obstacle: obstacles) { window.draw(obstacle.graphics, &obstacle.texture); }
-            // cout << "Nb of markers  : " << world.markers.size() << "\n";
-            window.draw(text);
-            window.draw(text1);
-
-            if(pause)window.draw(text3);
-            window.display();
+        if (pause)window.draw(text3);
+        window.display();
 
     }
     return 0;
