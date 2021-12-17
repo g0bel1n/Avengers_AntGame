@@ -91,7 +91,7 @@ Ant_::update(sf::Time dt, std::vector<Marker> &markers, std::vector<Obstacle> &o
                     foods[target].changeColor = true;
                     foods[target].marker_type = 2;
                     sf::Vector2f delta_vect = foods[target].position - position;
-                    this->angle = atan(delta_vect.y / delta_vect.x);
+                    this->angle = atan(delta_vect.x / delta_vect.y);
                     if (delta_vect.x < 0)angle -= PI;
                     last_changed = sf::Time::Zero;
                     std::cout << "4 \n";
@@ -167,8 +167,8 @@ Ant_::update(sf::Time dt, std::vector<Marker> &markers, std::vector<Obstacle> &o
                 //If we are not arrived, we might at least see it
             else if (distance(home, position) <= detection_radius) {
                 sf::Vector2f delta_vect = home - position;
-                this->angle = atan(delta_vect.y / delta_vect.x);
-                if (delta_vect.x < 0)angle -= PI;
+                this->angle = atan(abs(delta_vect.x / delta_vect.y));
+                if (delta_vect.y < 0)angle -= PI;
                 last_changed = sf::Time::Zero;
 
                 std::cout << "2 \n";
@@ -258,7 +258,7 @@ float Ant_::sampleWorld(std::vector<Marker> markers) {
             if (distance_ <= detection_radius && distance_ > eating_radius) {
                 sf::Vector2f target_position = markers[i].position;
                 sf::Vector2f delta_vect = target_position - position;
-                float markers_angle = atan(abs(delta_vect.y / delta_vect.x));
+                float markers_angle = atan(abs(delta_vect.x / delta_vect.y));
                 if (delta_vect.x < 0)markers_angle -= PI;
                 markers_angle = normalise_angle(markers_angle);
 
