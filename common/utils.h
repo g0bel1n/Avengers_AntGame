@@ -29,6 +29,9 @@ float normalise_angle(float angle){
     return n_angle;
 }
 
+float scalar_product(sf::Vector2f vect1, sf::Vector2f vect2){
+    return vect1.x*vect2.x + vect1.y*vect2.y;
+}
 
 
 

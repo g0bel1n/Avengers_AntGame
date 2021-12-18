@@ -1,5 +1,6 @@
 #include <SFML/Window.hpp>
 #include <iostream>
+#include <cmath>
 #include "simulation/World.h"
 #include "simulation/obstacles/Obstacle.h"
 
@@ -58,6 +59,17 @@ int main() {
     text3.setCharacterSize(40);
     text3.setFillColor(sf::Color::White);
     text3.setPosition(10, 10);
+
+
+    sf::Text text4;
+    text4.setFont(font);
+    text4.setString("Hello");
+    text4.setCharacterSize(40);
+    text4.setFillColor(sf::Color::White);
+    text4.setPosition(width/2.,width/2.);
+    text4.setOrigin(-10,-10);
+
+
 
     sf::Texture colony_hole;
     colony_hole.loadFromFile("../ressources/Hole.PNG");
@@ -157,6 +169,15 @@ int main() {
         }
 
 
+        sf::Vector2f delta_vect = world.ants[0].get_position()-world.ants[0].home;
+        float new_angle = std::atan(delta_vect.x/ delta_vect.y);
+
+        //text4.setString(to_string(world.ants[0].get_angle()*180/PI));
+        text4.setString(to_string(new_angle*180/PI).substr(0,4));
+
+        text4.setRotation(new_angle*180/PI);
+
+
         window.clear(sf::Color(104, 157, 113));
         window.draw(colony_base);
         for (auto &marker: world.markers) { window.draw(marker.graphic); }
@@ -166,6 +187,7 @@ int main() {
         // cout << "Nb of markers  : " << world.markers.size() << "\n";
         window.draw(text);
         window.draw(text1);
+        //window.draw(text4);
 
         if (pause)window.draw(text3);
         window.display();

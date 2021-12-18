@@ -21,6 +21,8 @@ public:
 
     float get_angle();
 
+    sf::Vector2f get_position();
+
     float get_lifetime();
 
     int check_env(std::vector<Marker> &markers, float radius);
@@ -66,7 +68,7 @@ private:
     float angle = 0.f;
     int times_wall_hit = 0;
     int angular_width = 45;
-    float direction_change_delta = .01f;
+    float direction_change_delta = .1f;
     sf::Time last_changed = sf::Time::Zero;
 
     float detection_radius = 300.f;

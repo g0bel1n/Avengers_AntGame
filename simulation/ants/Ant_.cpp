@@ -91,8 +91,20 @@ Ant_::update(sf::Time dt, std::vector<Marker> &markers, std::vector<Obstacle> &o
                     foods[target].changeColor = true;
                     foods[target].marker_type = 2;
                     sf::Vector2f delta_vect = foods[target].position - position;
-                    this->angle = atan(delta_vect.x / delta_vect.y);
-                    if (delta_vect.x < 0)angle -= PI;
+                    float new_angle = atan2(delta_vect.y , delta_vect.x);
+                   /*if (delta_vect.x<0){
+                       std::cout << "4.0 \n" << angle*180/PI << "    et    " << new_angle*180/PI <<"\n";
+                       this->angle = new_angle + PI;
+                       std::cout << "4.0 \n";
+                   }
+                    else {
+
+                       std::cout << "4.1 \n" << angle*180/PI << "    et    " << new_angle*180/PI <<"\n";
+                        this->angle= new_angle;
+
+                       std::cout << "4.1 \n";
+                    }*/
+                    this->angle = new_angle;
                     last_changed = sf::Time::Zero;
                     std::cout << "4 \n";
 
@@ -105,8 +117,10 @@ Ant_::update(sf::Time dt, std::vector<Marker> &markers, std::vector<Obstacle> &o
                     // if new_angle is a nan it is because there is no markers in the detection radius
                     if (!isnan(new_angle)) {
                         this->angle = new_angle;
+                        std::cout << "5 \n";
                     } else {
                         this->angle += RandomAngle();
+                        std::cout << "6 \n";
                     }
                     last_changed = sf::Time::Zero;
                 }
@@ -116,6 +130,7 @@ Ant_::update(sf::Time dt, std::vector<Marker> &markers, std::vector<Obstacle> &o
             else {
                 // Just checking if arrived. If not, keep going...
                 if (target == check_env(foods, eating_radius)) {
+                    std::cout << "8 \n";
 
                     foods[target].marker_type = -1;
                     foods[target].changeColor = true;
@@ -167,9 +182,11 @@ Ant_::update(sf::Time dt, std::vector<Marker> &markers, std::vector<Obstacle> &o
                 //If we are not arrived, we might at least see it
             else if (distance(home, position) <= detection_radius) {
                 sf::Vector2f delta_vect = home - position;
-                this->angle = atan(abs(delta_vect.x / delta_vect.y));
-                if (delta_vect.y < 0)angle -= PI;
+                float new_angle = atan2(delta_vect.y , delta_vect.x);
+                /*if (new_angle <= angle + PI / 2 && new_angle >= angle - PI / 2)this->angle = new_angle;
+                else this->angle= new_angle +PI  ;*/
                 last_changed = sf::Time::Zero;
+                this->angle = new_angle;
 
                 std::cout << "2 \n";
             }
@@ -182,7 +199,7 @@ Ant_::update(sf::Time dt, std::vector<Marker> &markers, std::vector<Obstacle> &o
                 // if new_angle is a nan it is because there is no markers in the detection radius
                 if (!isnan(new_angle)) {
                     this->angle = new_angle;
-                    //std::cout<<"Following markers \n";
+                    std::cout<<"Following markers \n";
                 } else {
                     this->angle += RandomAngle();
                     std::cout << "3 \n";
@@ -245,6 +262,7 @@ void Ant_::AddMarker(std::vector<Marker> &markers, int type, float time_offset) 
 
 }
 
+
 float Ant_::sampleWorld(std::vector<Marker> markers) {
     int type;
     if (ToFood) { type = 4; }
@@ -258,16 +276,15 @@ float Ant_::sampleWorld(std::vector<Marker> markers) {
             if (distance_ <= detection_radius && distance_ > eating_radius) {
                 sf::Vector2f target_position = markers[i].position;
                 sf::Vector2f delta_vect = target_position - position;
-                float markers_angle = atan(abs(delta_vect.x / delta_vect.y));
-                if (delta_vect.x < 0)markers_angle -= PI;
+                float markers_angle = atan2(delta_vect.y , delta_vect.x);
+                //if (!(scalar_product(delta_vect,sf::Vector2f(100.*cos(angle), 100.* sin(angle)))>0.))markers_angle+=PI;
                 markers_angle = normalise_angle(markers_angle);
 
                 if (markers_angle <= angle + PI / 2 && markers_angle >= angle - PI / 2) {
-                    if (markers[i].marker_type == 5) { markers_angle += PI; }
+                    // if (markers[i].marker_type == 5) { markers_angle += PI; }
                     bary_angle += markers[i].get_intensity() * markers_angle;
                     total_intensity += markers[i].get_intensity();
                 }
-
             }
         }
     }
@@ -275,6 +292,9 @@ float Ant_::sampleWorld(std::vector<Marker> markers) {
     return bary_angle / (total_intensity);
 }
 
+sf::Vector2f Ant_::get_position() {
+    return position;
+}
 
 
 
