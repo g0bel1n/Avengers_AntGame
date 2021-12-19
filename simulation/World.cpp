@@ -12,7 +12,7 @@ World::World(int lenght, int width, int nb_ants, int nb_food) {
 
     this->nb_ants=nb_ants;
     this->nb_food = nb_food;
-    sf::Vector2<float> aleat_position (lenght/2.,width/10.);
+    sf::Vector2<float> aleat_position (50.,width/2.);
 
 
     for(int i=0; i<nb_ants;i++){
