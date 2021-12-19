@@ -13,8 +13,8 @@ using namespace std;
 int main() {
 
 
-    int height = 1400;
-    int width = 1400;
+    int height = 1500;
+    int width = 2400;
 
 
     sf::RenderWindow window(sf::VideoMode(width, height), "My window");
@@ -22,7 +22,7 @@ int main() {
     sf::Font font;
     window.setTitle("Avengers AntGame - @G0bel1n");
     int total_food = 0;
-    World world(height, width, 20, total_food);
+    World world(width, height, 20, total_food);
 
 
     if (!font.loadFromFile("../ressources/pricedown.otf")) {
@@ -32,7 +32,9 @@ int main() {
 
     sf::VertexArray quad(sf::Quads, 4);
     sf::Text text;
-
+sf::Texture SoilTex;
+SoilTex
+.loadFromFile("../ressources/soil.jpeg");
     bool pause = true;
     text.setFont(font);
     text.setString("Hello");
@@ -82,6 +84,12 @@ int main() {
     cout << colony_base.getLocalBounds().width;
 
     std::vector<Obstacle> obstacles;
+
+    sf::Sprite Backgroung(SoilTex);
+    Backgroung.setPosition(0,0);
+    //Backgroung.setOrigin(1024/2,-1024/2);
+    Backgroung.setScale(width/3448.,height/3448.);
+
     /*for (int i=0; i<2;i++)
     {
     Obstacle obstacle(sf::Vector2f(300.+i*100.,300. ), 100.);
@@ -178,7 +186,9 @@ int main() {
         text4.setRotation(new_angle*180/PI);
 
 
-        window.clear(sf::Color(104, 157, 113));
+
+        window.clear();
+        window.draw(Backgroung);
         window.draw(colony_base);
         for (auto &marker: world.markers) { window.draw(marker.graphic); }
         for (auto &ant: world.ants) { window.draw(ant.graphics); }
