@@ -18,4 +18,4 @@ target_compile_definitions(Avengers_AntGame PRIVATE ${SFML_CFLAGS_OTHER})
 target_include_directories(Avengers_AntGame PRIVATE ${SFML_INCLUDE_DIRS})
 target_link_directories(Avengers_AntGame PRIVATE ${SFML_LIBRARY_DIRS})
 
-add_subdirectory(tests)
+#add_subdirectory(tests)
