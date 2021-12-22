@@ -4,6 +4,7 @@
 
 #include "Marker.h"
 #include <math.h>
+#include <iostream>
 
 sf::Color marker_color(int marker_type){
     if (marker_type == 1){return sf::Color::Red;}
@@ -15,7 +16,7 @@ sf::Color marker_color(int marker_type){
 }
 
 float Marker::get_intensity() {
-    return std::max(15.-lifetime.asSeconds(),0.);
+    return fmax(marker_lifetime-lifetime.asSeconds(),0.);
 }
 Marker::Marker(sf::Vector2<float> position, int marker_type, float time_offset) {
 

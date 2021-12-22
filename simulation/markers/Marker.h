@@ -27,6 +27,8 @@ public:
 
     float death_threshold = 0.;
 
+    float marker_lifetime = 15.f;
+
 
 private:
 

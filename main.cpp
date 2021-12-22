@@ -15,33 +15,44 @@ int main() {
 
     int height = 1500;
     int width = 2400;
+    bool pause = true;
+    int total_food = 0;
 
 
     sf::RenderWindow window(sf::VideoMode(width, height), "My window");
     sf::Clock clock;
     sf::Font font;
     window.setTitle("Avengers AntGame - @G0bel1n");
-    int total_food = 0;
+
+
+    //Generating the world
     World world(width, height, 20, total_food);
 
 
     if (!font.loadFromFile("../ressources/pricedown.otf")) {
-        // error...
+        cout<<"Could not load the font...";
     }
 
+    //Loading the grass background
+    sf::Texture SoilTex;
+    SoilTex.loadFromFile("../ressources/soil.jpeg");
 
-    sf::VertexArray quad(sf::Quads, 4);
+    sf::Sprite Background(SoilTex);
+    Background.setPosition(0,0);
+    Background.setScale(width/3448.,height/3448.);
+
+
+    //Text SFML-Objects that will display :
+
+    // the amount of food available
     sf::Text text;
-sf::Texture SoilTex;
-SoilTex
-.loadFromFile("../ressources/soil.jpeg");
-    bool pause = true;
     text.setFont(font);
     text.setString("Hello");
     text.setPosition(50, (float) height - 100.);
     text.setCharacterSize(50);
     text.setFillColor(sf::Color::White);
 
+    // The time elapsed
     sf::Text text1;
     text1.setFont(font);
     text1.setString("Hello");
@@ -49,12 +60,16 @@ SoilTex
     text1.setCharacterSize(40);
     text1.setFillColor(sf::Color::White);
 
+    // The amount of food in the colonie
     sf::Text text2;
     text2.setFont(font);
     text2.setString("Hello");
     text2.setCharacterSize(40);
+    text2.setPosition(world.ants[0].home + sf::Vector2f(50., 0.));
     text2.setFillColor(sf::Color::White);
 
+
+    //Basic commands
     sf::Text text3;
     text3.setFont(font);
     text3.setString("SPACE to start/Pause \nLeft Click to add food \nRight click to add obstacles");
@@ -63,19 +78,12 @@ SoilTex
     text3.setPosition(10, 10);
 
 
-    sf::Text text4;
-    text4.setFont(font);
-    text4.setString("Hello");
-    text4.setCharacterSize(40);
-    text4.setFillColor(sf::Color::White);
-    text4.setPosition(width/2.,width/2.);
-    text4.setOrigin(-10,-10);
 
-
-
+    // Texture of the colony Hole
     sf::Texture colony_hole;
     colony_hole.loadFromFile("../ressources/Hole.PNG");
 
+    //Colony Graphic object
     sf::Sprite colony_base;
     colony_base.setPosition(world.ants[0].home);
     colony_base.setOrigin(536. / 2., 204.);
@@ -83,24 +91,11 @@ SoilTex
     colony_base.setScale(0.2, 0.2);
     cout << colony_base.getLocalBounds().width;
 
+    // The vector Obstacle (Reminder : send it to World.h)
     std::vector<Obstacle> obstacles;
 
-    sf::Sprite Backgroung(SoilTex);
-    Backgroung.setPosition(0,0);
-    //Backgroung.setOrigin(1024/2,-1024/2);
-    Backgroung.setScale(width/3448.,height/3448.);
 
-    /*for (int i=0; i<2;i++)
-    {
-    Obstacle obstacle(sf::Vector2f(300.+i*100.,300. ), 100.);
-    obstacle.texture.loadFromFile("../ressources/rock.jpeg");
-    obstacles.push_back(obstacle);}
-    for (int i=4; i<10;i++)
-    {
-        Obstacle obstacle(sf::Vector2f(300., i*100.), 100.);
-        obstacle.texture.loadFromFile("../ressources/rock.jpeg");
-        obstacles.push_back(obstacle);}*/
-
+    //Main Loop
     while (window.isOpen()) {
         // check all the window's events that were triggered since the last iteration of the loop
         sf::Event event;
@@ -112,7 +107,7 @@ SoilTex
             if (event.type == sf::Event::KeyPressed) {
                 if (event.key.code == sf::Keyboard::Space && !pause) {
 
-                    cout << "PAUSSING";
+                    cout << "PAUSING";
 
                     pause = true;
 
@@ -126,11 +121,6 @@ SoilTex
 
                 if (event.mouseButton.button == sf::Mouse::Right) {
 
-                    std::cout << "the right button was pressed" << std::endl;
-                    std::cout << "mouse x: " << event.mouseButton.x << std::endl;
-                    std::cout << "mouse y: " << event.mouseButton.y << std::endl;
-                    std::cout << "1 \n";
-
                     Obstacle obstacle(sf::Vector2f(event.mouseButton.x - 50., event.mouseButton.y - 50.), 100.);
                     obstacle.texture.loadFromFile("../ressources/rock.jpeg");
                     obstacles.push_back(obstacle);
@@ -138,6 +128,9 @@ SoilTex
 
                 if (event.mouseButton.button == sf::Mouse::Left) {
 
+
+
+                    // The following for-loop is there to add a "block" of food, instead of a line
                     sf::Vector2f to_pos = sf::Vector2f(event.mouseButton.x, event.mouseButton.y);
                     float x_offset = 10.;
 
@@ -155,40 +148,32 @@ SoilTex
                 }
             }
         }
+
         sf::Time dt = clock.restart();
         if (!pause) {
-
-
-            text2.setPosition(world.ants[0].home + sf::Vector2f(50., 0.));
-
 
             text.setString("Food available: " + to_string(world.get_food_available()));
 
             float time = world.ants[0].get_lifetime();
+
+            //To display a time in minutes
             int minutes = 0;
             while (time > 60.) {
                 time -= 60.;
                 minutes += 1;
             }
-            text1.setString("Time elapsed :  " + to_string(minutes) + "  min  " + to_string(time).substr(0, 3));
 
-            text2.setString("Food accumulated to colonie : " + to_string(total_food - world.get_food_available()));
+            //These objects need to be updated only when the simulation is running
+            text1.setString("Time elapsed :  " + to_string(minutes) + "  min  " + to_string(time).substr(0, 3));
+            text2.setString(to_string(total_food - world.get_food_available()));
             world.update_ants(dt, obstacles);
         }
 
 
-        sf::Vector2f delta_vect = world.ants[0].get_position()-world.ants[0].home;
-        float new_angle = std::atan(delta_vect.x/ delta_vect.y);
-
-        //text4.setString(to_string(world.ants[0].get_angle()*180/PI));
-        text4.setString(to_string(new_angle*180/PI).substr(0,4));
-
-        text4.setRotation(new_angle*180/PI);
-
-
 
         window.clear();
-        window.draw(Backgroung);
+
+        window.draw(Background);
         window.draw(colony_base);
         for (auto &marker: world.markers) { window.draw(marker.graphic); }
         for (auto &ant: world.ants) { window.draw(ant.graphics); }
@@ -197,9 +182,10 @@ SoilTex
         // cout << "Nb of markers  : " << world.markers.size() << "\n";
         window.draw(text);
         window.draw(text1);
-        //window.draw(text4);
+        window.draw(text2);
 
-        if (pause)window.draw(text3);
+        if (pause) window.draw(text3);
+
         window.display();
 
     }

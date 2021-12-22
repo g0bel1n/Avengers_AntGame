@@ -92,18 +92,6 @@ Ant_::update(sf::Time dt, std::vector<Marker> &markers, std::vector<Obstacle> &o
                     foods[target].marker_type = 2;
                     sf::Vector2f delta_vect = foods[target].position - position;
                     float new_angle = atan2(delta_vect.y , delta_vect.x);
-                   /*if (delta_vect.x<0){
-                       std::cout << "4.0 \n" << angle*180/PI << "    et    " << new_angle*180/PI <<"\n";
-                       this->angle = new_angle + PI;
-                       std::cout << "4.0 \n";
-                   }
-                    else {
-
-                       std::cout << "4.1 \n" << angle*180/PI << "    et    " << new_angle*180/PI <<"\n";
-                        this->angle= new_angle;
-
-                       std::cout << "4.1 \n";
-                    }*/
                     this->angle = new_angle;
                     last_changed = sf::Time::Zero;
                     std::cout << "4 \n";
@@ -113,7 +101,6 @@ Ant_::update(sf::Time dt, std::vector<Marker> &markers, std::vector<Obstacle> &o
                     //If the ant can't see the food, it looks for markers left by others
                 else {
                     float new_angle = sampleWorld(markers);
-                    // 3 times out of 4, the ant takes a random direction
                     // if new_angle is a nan it is because there is no markers in the detection radius
                     if (!isnan(new_angle)) {
                         this->angle = new_angle;
