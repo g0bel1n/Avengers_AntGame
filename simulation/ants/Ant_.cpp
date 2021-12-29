@@ -49,9 +49,9 @@ bool Ant_::is_valid(sf::Vector2f position, std::vector<Obstacle> &obstacles) {
         if (position.x >= obstacle.graphics[0].position.x && position.x <= obstacle.graphics[1].position.x &&
             position.y >= obstacle.graphics[0].position.y && position.y <= obstacle.graphics[2].position.y) {
             return false;
-        };
+        }
 
-    };
+    }
     return true;
 }
 
