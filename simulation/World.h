@@ -7,7 +7,6 @@
 
 #include <vector>
 #include "ants/Ant_.h"
-#include "obstacles/Obstacle.h"
 
 class World {
 

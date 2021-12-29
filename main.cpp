@@ -1,9 +1,6 @@
 #include <SFML/Window.hpp>
 #include <iostream>
-#include <cmath>
 #include "simulation/World.h"
-#include "simulation/obstacles/Obstacle.h"
-
 
 using namespace std;
 

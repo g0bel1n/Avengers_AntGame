@@ -4,7 +4,6 @@
 
 #include "Marker.h"
 #include <math.h>
-#include <iostream>
 
 sf::Color marker_color(int marker_type){
     if (marker_type == 1){return sf::Color::Red;}
