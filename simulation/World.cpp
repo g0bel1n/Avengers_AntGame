@@ -5,6 +5,9 @@
 #include <iostream>
 #include "World.h"
 
+#define MY_PATH std::string ("/Users/g0bel1n/CLionProjects/Avengers_AntGame")
+
+
 World::World(int lenght, int width, int nb_ants, int nb_food) {
 
     world_lenght = lenght;
@@ -17,41 +20,12 @@ World::World(int lenght, int width, int nb_ants, int nb_food) {
 
     for(int i=0; i<nb_ants;i++){
 
-        texture.loadFromFile("../ressources/ant.png");
+        texture.loadFromFile(MY_PATH+"/ressources/ant.png");
         Ant_ ant (aleat_position,i,world_width,world_lenght,nb_food);
         ant.graphics.setTexture(texture);
 
         ants.push_back(ant);
     }
-     //aleat_position = sf::Vector2<float>((float)(std::rand()%world_width),(float)(std::rand()%world_lenght));
-    aleat_position = sf::Vector2<float>((float)(world_width-200),(float)(world_lenght-200));
-/*
-float x_offset=10.;
-    for(int i=0; i<nb_food/2;i++){
-        if (i%10==0){
-            x_offset=-x_offset;
-            aleat_position += sf::Vector2f (0.,10.f);
-        }
-        Marker food (aleat_position,1,0.);
-        aleat_position += sf::Vector2f (x_offset,0.);
-
-        foods.push_back(food);
-    }
-
-    aleat_position = sf::Vector2<float>((float)(200),(float)(world_lenght-200));
-
-    for(int i=0; i<nb_food/2;i++){
-        if (i%10==0){
-            x_offset=-x_offset;
-            aleat_position += sf::Vector2f (0.,10.f);
-        }
-        Marker marker (aleat_position,1,0.);
-        aleat_position += sf::Vector2f (x_offset,0.);
-
-        foods.push_back(marker);
-    }
-*/
-
 }
 
 int World::get_nb_ants() {
