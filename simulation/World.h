@@ -5,6 +5,7 @@
 #ifndef ANTS_FIGHT_CLUB_WORLD_H
 #define ANTS_FIGHT_CLUB_WORLD_H
 
+#pragma once
 #include <vector>
 #include "ants/Ant_.h"
 

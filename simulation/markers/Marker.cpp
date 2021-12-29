@@ -2,6 +2,7 @@
 // Created by g0bel1n on 08/12/2021.
 //
 
+#pragma once
 #include "Marker.h"
 #include <math.h>
 
@@ -12,6 +13,7 @@ sf::Color marker_color(int marker_type){
     else if (marker_type == 2){return sf::Color::Yellow;}
     else if (marker_type==-1){return sf::Color(104, 157, 113);}
     else if (marker_type==5){return sf::Color::Black;}
+    else return sf::Color::Transparent;
 }
 
 float Marker::get_intensity() {

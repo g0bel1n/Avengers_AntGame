@@ -5,6 +5,7 @@
 #ifndef ANTS_FIGHT_CLUB_MARKER_H
 #define ANTS_FIGHT_CLUB_MARKER_H
 
+#pragma once
 #include <SFML/Graphics.hpp>
 
 class Marker {

@@ -1,7 +1,4 @@
-//
-// Created by g0bel1n on 12/12/2021.
-//
-
+#pragma once
 #include "Obstacle.h"
 
 Obstacle::Obstacle(sf::Vector2f position, float length) {

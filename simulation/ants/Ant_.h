@@ -7,6 +7,8 @@
 #ifndef ANTS_FIGHT_CLUB_ANTS_H
 #define ANTS_FIGHT_CLUB_ANTS_H
 
+
+#pragma once
 #include "../markers/Marker.h"
 #include "../obstacles/Obstacle.h"
 

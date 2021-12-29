@@ -1,12 +1,10 @@
 //
 // Created by g0bel1n on 07/12/2021.
 //
-
+#pragma once
 #include "Ant_.h"
 #include <cmath>
 #include <iostream>
-#include <vector>
-
 #include "../../common/utils.h"
 
 #define PI 3.14159265

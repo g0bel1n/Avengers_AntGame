@@ -1,7 +1,4 @@
-//
-// Created by g0bel1n on 07/12/2021.
-//
-
+#pragma once
 #include <iostream>
 #include "World.h"
 
