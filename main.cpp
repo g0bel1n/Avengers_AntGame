@@ -2,14 +2,15 @@
 #include <iostream>
 #include "simulation/World.h"
 
+
 using namespace std;
 
 #define PI 3.14159265
 
-#define MY_PATH string ("/Users/g0bel1n/CLionProjects/Avengers_AntGame")
+#define MY_PATH string ("/Users/thomaskientz/Documents/Github/Avengers_AntGame")
+
 
 int main() {
-
 
     int height = 1500;
     int width = 2400;
@@ -58,7 +59,7 @@ int main() {
     text1.setCharacterSize(40);
     text1.setFillColor(sf::Color::White);
 
-    // The amount of food in the colonie
+    // The amount of food in the colony
     sf::Text text2;
     text2.setFont(font);
     text2.setString("Hello");

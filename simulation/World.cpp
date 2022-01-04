@@ -5,9 +5,9 @@
 #define MY_PATH std::string ("/Users/g0bel1n/CLionProjects/Avengers_AntGame")
 
 
-World::World(int lenght, int width, int nb_ants, int nb_food) {
+World::World(int length, int width, int nb_ants, int nb_food) {
 
-    world_lenght = lenght;
+    world_length = length;
     world_width = width;
 
     this->nb_ants=nb_ants;
@@ -18,7 +18,7 @@ World::World(int lenght, int width, int nb_ants, int nb_food) {
     for(int i=0; i<nb_ants;i++){
 
         texture.loadFromFile(MY_PATH+"/ressources/ant.png");
-        Ant_ ant (aleat_position,i,world_width,world_lenght,nb_food);
+        Ant_ ant (aleat_position, i, world_width, world_length, nb_food);
         ant.graphics.setTexture(texture);
 
         ants.push_back(ant);

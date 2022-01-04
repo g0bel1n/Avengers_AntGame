@@ -13,13 +13,13 @@ class World {
 
 public:
 
-    World(int lenght, int width, int nb_ants, int nb_food);
+    World(int length, int width, int nb_ants, int nb_food);
 
     int get_nb_ants();
 
     int get_nb_food();
 
-    int world_lenght;
+    int world_length;
     int world_width;
 
     std::vector<Ant_> ants;
