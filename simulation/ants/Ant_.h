@@ -9,16 +9,21 @@
 
 
 #pragma once
+#include "../food/Food.h"
 #include "../markers/Marker.h"
 #include "../obstacles/Obstacle.h"
+#include "../simulation_parameters.h"
+
+using namespace parameters;
+
 
 class Ant_ {
 
 public:
-    Ant_(sf::Vector2<float> position, int ant_id, int width, int length, int nb_food);
+    Ant_(sf::Vector2<float> position, int ant_id, int nb_food);
 
     void
-    update(sf::Time dt, std::vector<Marker> &markers, std::vector<Obstacle> &obstacles, std::vector<Marker> &foods);
+    update(sf::Time dt, Marker markers [LENGTH][WIDTH], std::vector<Obstacle> &obstacles, std::vector<Food> &foods);
 
     float get_angle();
 
@@ -26,29 +31,25 @@ public:
 
     float get_lifetime();
 
-    int check_env(std::vector<Marker> &markers, float radius);
+    int food_search(std::vector<Food> &foods, float radius);
 
     float ant_length = 10.f;
     float ant_width = 2.f;
 
-    int world_height;
-    int world_width;
-
     sf::Vector2<float> size = sf::Vector2f(ant_length, ant_width);
 
     void
-    move_to(sf::Vector2<float> position, sf::Time dt, std::vector<Obstacle> &obstacles, std::vector<Marker> &markers);
+    move_to(sf::Vector2<float> position, sf::Time dt, std::vector<Obstacle> &obstacles, Marker markers [LENGTH][WIDTH]);
 
     bool switchSkin = false;
     bool ToFood = true;
     sf::Vector2f home;
     sf::Sprite graphics;
 
-    void AddMarker(std::vector<Marker> &markers, int type, float time_offset);
 
     float RandomAngle();
 
-    float sampleWorld(std::vector<Marker> markers);
+    float MarkersDetection(Marker markers [LENGTH][WIDTH]);
 
     sf::Texture texture;
     sf::Texture texture_with_food;
@@ -65,17 +66,15 @@ private:
     float last_dropped = 0.;
     sf::Vector2f direction;
     sf::Vector2f position;
-    float speed = 300.f;
+
     float angle = 0.f;
     int times_wall_hit = 0;
     int angular_width = 45;
     float direction_change_delta = .1f;
     sf::Time last_changed = sf::Time::Zero;
 
-    float detection_radius = 300.f;
-    float eating_radius = 10.f;
 
-    bool is_valid(sf::Vector2f position, std::vector<Obstacle> &obstacles);
+    bool is_valid(sf::Vector2f position_to_test, std::vector<Obstacle> &obstacles);
 };
 
 

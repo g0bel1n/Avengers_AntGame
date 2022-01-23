@@ -1,28 +1,36 @@
 #pragma once
 #include <iostream>
 #include "World.h"
+#include "../simulation/simulation_parameters.h"
 
-#define MY_PATH std::string ("/Users/g0bel1n/CLionProjects/Avengers_AntGame")
 
+using namespace parameters;
 
-World::World(int length, int width, int nb_ants, int nb_food) {
+void update_markers(sf::Time dt, Marker grid [LENGTH][WIDTH]){
+    for(int i=0; i<LENGTH;i++){
+        for(int j=0;j<WIDTH;j++){
+            grid[i][j].update(dt);
+        }
+    }
+}
 
-    world_length = length;
-    world_width = width;
+World::World(int LENGTH, int WIDTH, int nb_ants, int nb_food) {
 
     this->nb_ants=nb_ants;
     this->nb_food = nb_food;
-    sf::Vector2<float> aleat_position (50.,width/2.);
+    sf::Vector2<float> aleat_position (50.,WIDTH/2.);
 
 
     for(int i=0; i<nb_ants;i++){
 
-        texture.loadFromFile(MY_PATH+"/ressources/ant.png");
-        Ant_ ant (aleat_position, i, world_width, world_length, nb_food);
+        texture.loadFromFile("../ressources/ant.png");
+        Ant_ ant (aleat_position, i, nb_food);
         ant.graphics.setTexture(texture);
 
         ants.push_back(ant);
     }
+
+
 }
 
 int World::get_nb_ants() {
@@ -33,38 +41,26 @@ int World::get_nb_food() {
     return foods.size();
 }
 
-void World::update_ants( sf::Time dt, std::vector<Obstacle>& obstacles) {
+void World::update_world( sf::Time dt, std::vector<Obstacle>& obstacles,Marker markers [LENGTH][WIDTH]) {
 
     for (int k=0; k<nb_ants;k++){
         ants[k].update(dt,markers, obstacles,foods);
     }
-
-    for (int k=0; k<markers.size();k++){
-        markers[k].update(dt);
-        if (markers[k].marker_type==-1)markers.erase(markers.begin()+k);
-    }
-
-    for (int k=0; k<foods.size();k++){
-        foods[k].update(dt);
-    }
+    update_markers(dt, markers);
 
 }
 
 int World::get_food_available() {
     int food_avalaible = 0;
     for(int i=0; i<foods.size(); i++){
-        if(foods[i].marker_type==1)food_avalaible++;
+        if(foods[i].is_active)food_avalaible++;
     }
     return food_avalaible;
 }
 
-void World::AddMarker(sf::Vector2f position, int type) {
-
-    Marker marker_ (position, type, 0.);
-
-    if(type==1)foods.push_back(marker_);
-    else markers.push_back(marker_);
-
+void World::add_food(sf::Vector2f position) {
+    Food food_ (position);
+    foods.push_back(food_);
 
 }
 

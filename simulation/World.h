@@ -19,12 +19,10 @@ public:
 
     int get_nb_food();
 
-    int world_length;
-    int world_width;
-
     std::vector<Ant_> ants;
-    std::vector<Marker> markers;
-    std::vector<Marker> foods;
+    std::vector<Food> foods;
+
+    void add_food(sf::Vector2f position);
 
 
     int get_food_available();
@@ -32,15 +30,14 @@ public:
 
     sf::Texture texture;
 
-    void update_ants(sf::Time dt, std::vector<Obstacle> &obstacles);
-
-    void AddMarker(sf::Vector2f position, int type);
+    void update_world(sf::Time dt, std::vector<Obstacle> &obstacles,Marker markers [LENGTH][WIDTH]);
 
 private:
 
 
     int nb_ants;
     int nb_food;
+
 
 
 };

@@ -1,30 +1,32 @@
 #include <SFML/Window.hpp>
 #include <iostream>
 #include "simulation/World.h"
+#include "simulation/simulation_parameters.h"
 
-// test branche v2
+
+// /usr/local/Cellar/sfmltest branche v2
 
 using namespace std;
+using namespace parameters;
 
-#define PI 3.14159265
+
+
 
 
 int main() {
-
-    int height = 800;
-    int width = 1200;
     bool pause = true;
     int total_food = 0;
 
+    Marker grid [1200][800];
 
-    sf::RenderWindow window(sf::VideoMode(width, height), "My window");
+    sf::RenderWindow window(sf::VideoMode(WIDTH, LENGTH), "My window");
     sf::Clock clock;
     sf::Font font;
     window.setTitle("Avengers AntGame - @G0bel1n");
 
 
     //Generating the world
-    World world(width, height, 20, total_food);
+    World world(WIDTH,LENGTH, 20, total_food);
 
 
     if (!font.loadFromFile( "../ressources/pricedown.otf")) {
@@ -37,16 +39,16 @@ int main() {
 
     sf::Sprite Background(SoilTex);
     Background.setPosition(0,0);
-    Background.setScale(width/3448.,height/3448.);
+    Background.setScale(WIDTH/3448.,LENGTH/3448.);
 
 
-    //Text SFML-Objects that will display :
+    //Text SFML-Objects that will be displayed :
 
     // the amount of food available
     sf::Text text;
     text.setFont(font);
     text.setString("Hello");
-    text.setPosition(50, (float) height - 100.);
+    text.setPosition(50, (float) LENGTH - 100.);
     text.setCharacterSize(50);
     text.setFillColor(sf::Color::White);
 
@@ -54,7 +56,7 @@ int main() {
     sf::Text text1;
     text1.setFont(font);
     text1.setString("Hello");
-    text1.setPosition(width * 3. / 6, height - 100.);
+    text1.setPosition(WIDTH * 3. / 6, LENGTH - 100.);
     text1.setCharacterSize(40);
     text1.setFillColor(sf::Color::White);
 
@@ -140,7 +142,7 @@ int main() {
 
                         to_pos += sf::Vector2f(x_offset, 0.);
 
-                        world.AddMarker(to_pos, 1);
+                        world.add_food(to_pos);
                     }
                     total_food += 10;
                 }
@@ -164,7 +166,7 @@ int main() {
             //These objects need to be updated only when the simulation is running
             text1.setString("Time elapsed :  " + to_string(minutes) + "  min  " + to_string(time).substr(0, 3));
             text2.setString(to_string(total_food - world.get_food_available()));
-            world.update_ants(dt, obstacles);
+            //world.update_world(dt, obstacles, grid);
         }
 
 
@@ -173,7 +175,7 @@ int main() {
 
         window.draw(Background);
         window.draw(colony_base);
-        for (auto &marker: world.markers) { window.draw(marker.graphic); }
+        //for (auto &marker: grid) { if (marker->show)window.draw(marker->graphic); }
         for (auto &ant: world.ants) { window.draw(ant.graphics); }
         for (auto &food: world.foods) { window.draw(food.graphic); }
         for (auto &obstacle: obstacles) { window.draw(obstacle.graphics, &obstacle.texture); }

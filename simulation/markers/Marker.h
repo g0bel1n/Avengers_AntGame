@@ -7,33 +7,30 @@
 
 #pragma once
 #include <SFML/Graphics.hpp>
+#include "../simulation_parameters.h"
 
 class Marker {
 
 public:
-    Marker(sf::Vector2<float> position, int marker_type, float time_offset);
 
-    float get_intensity();
+    Marker();
+    void add_intensity_ToHome(float incr);
+    void add_intensity_ToFood(float incr);
 
-    float radius = 2.f;
-    int marker_type;
-
-    sf::Vector2<float> position;
+    float get_intensity_ToHome();
+    float get_intensity_ToFood();
 
     sf::CircleShape graphic;
-    bool changeColor = false;
-
 
     void update(sf::Time &dt);
-
-    float death_threshold = 0.;
-
-    float marker_lifetime = 15.f;
-
+    bool show;
 
 private:
 
-    sf::Time lifetime;
+
+    float intensity_ToHome =0.;
+    float intensity_ToFood=0.;
+
 
 
 };
