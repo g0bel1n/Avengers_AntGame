@@ -1,30 +1,27 @@
 #include <SFML/Window.hpp>
 #include <iostream>
 #include "simulation/World.h"
+#include "simulation/parameters.h"
 
-// test branche
+
+using namespace parameters;
 
 using namespace std;
 
-#define PI 3.14159265
-
-
 int main() {
-
-    int height = 800;
-    int width = 1200;
+    
     bool pause = true;
     int total_food = 0;
 
 
-    sf::RenderWindow window(sf::VideoMode(width, height), "My window");
+    sf::RenderWindow window(sf::VideoMode(WIDTH, LENGTH), "My window");
     sf::Clock clock;
     sf::Font font;
     window.setTitle("Avengers AntGame - @G0bel1n");
 
 
     //Generating the world
-    World world(width, height, 20, total_food);
+    World world(20, total_food);
 
 
     if (!font.loadFromFile( "../ressources/pricedown.otf")) {
@@ -37,7 +34,7 @@ int main() {
 
     sf::Sprite Background(SoilTex);
     Background.setPosition(0,0);
-    Background.setScale(width/3448.,height/3448.);
+    Background.setScale(WIDTH/3448.,LENGTH/3448.);
 
 
     //Text SFML-Objects that will display :
@@ -46,7 +43,7 @@ int main() {
     sf::Text text;
     text.setFont(font);
     text.setString("Hello");
-    text.setPosition(50, (float) height - 100.);
+    text.setPosition(50, (float) LENGTH - 100.);
     text.setCharacterSize(50);
     text.setFillColor(sf::Color::White);
 
@@ -54,7 +51,7 @@ int main() {
     sf::Text text1;
     text1.setFont(font);
     text1.setString("Hello");
-    text1.setPosition(width * 3. / 6, height - 100.);
+    text1.setPosition(WIDTH * 3. / 6, LENGTH - 100.);
     text1.setCharacterSize(40);
     text1.setFillColor(sf::Color::White);
 

@@ -11,11 +11,13 @@
 #pragma once
 #include "../markers/Marker.h"
 #include "../obstacles/Obstacle.h"
+#include "../parameters.h"
+
 
 class Ant_ {
 
 public:
-    Ant_(sf::Vector2<float> position, int ant_id, int width, int length, int nb_food);
+    Ant_(sf::Vector2<float> position, int ant_id, int nb_food);
 
     void
     update(sf::Time dt, std::vector<Marker> &markers, std::vector<Obstacle> &obstacles, std::vector<Marker> &foods);
@@ -28,13 +30,8 @@ public:
 
     int check_env(std::vector<Marker> &markers, float radius);
 
-    float ant_length = 10.f;
-    float ant_width = 2.f;
 
-    int world_height;
-    int world_width;
-
-    sf::Vector2<float> size = sf::Vector2f(ant_length, ant_width);
+    sf::Vector2<float> size = sf::Vector2f(parameters::ANT_LENGTH, parameters::ANT_WIDTH);
 
     void
     move_to(sf::Vector2<float> position, sf::Time dt, std::vector<Obstacle> &obstacles, std::vector<Marker> &markers);
@@ -65,15 +62,12 @@ private:
     float last_dropped = 0.;
     sf::Vector2f direction;
     sf::Vector2f position;
-    float speed = 300.f;
     float angle = 0.f;
     int times_wall_hit = 0;
     int angular_width = 45;
     float direction_change_delta = .1f;
     sf::Time last_changed = sf::Time::Zero;
 
-    float detection_radius = 300.f;
-    float eating_radius = 10.f;
 
     bool is_valid(sf::Vector2f position, std::vector<Obstacle> &obstacles);
 };

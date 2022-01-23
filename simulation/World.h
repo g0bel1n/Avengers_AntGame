@@ -13,14 +13,12 @@ class World {
 
 public:
 
-    World(int length, int width, int nb_ants, int nb_food);
+    World(int nb_ants, int nb_food);
 
     int get_nb_ants();
 
     int get_nb_food();
 
-    int world_length;
-    int world_width;
 
     std::vector<Ant_> ants;
     std::vector<Marker> markers;
@@ -28,7 +26,6 @@ public:
 
 
     int get_food_available();
-
 
     sf::Texture texture;
 

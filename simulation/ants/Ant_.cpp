@@ -6,6 +6,10 @@
 #include <cmath>
 #include <iostream>
 #include "../../common/utils.h"
+#include "../parameters.h"
+
+
+using namespace parameters;
 
 #define PI 3.14159265
 
@@ -13,7 +17,7 @@ float Ant_::RandomAngle() {
     return (std::rand() % angular_width - angular_width / 2) * (PI / 180);
 }
 
-Ant_::Ant_(sf::Vector2<float> position, int ant_id, int width, int length, int nb_food) {
+Ant_::Ant_(sf::Vector2<float> position, int ant_id,  int nb_food) {
     this->position = position;
     this->lifetime = 0;
     this->angle = (std::rand() % 360 - 180) * (PI / 180);
@@ -21,10 +25,6 @@ Ant_::Ant_(sf::Vector2<float> position, int ant_id, int width, int length, int n
 
     this->ant_id = ant_id;
     this->home = position;
-
-    this->world_width = width;
-    this->world_height = length;
-
 
     graphics = sf::Sprite();
     graphics.setColor(sf::Color::Red);
@@ -41,8 +41,8 @@ float Ant_::get_lifetime() {
 
 bool Ant_::is_valid(sf::Vector2f position, std::vector<Obstacle> &obstacles) {
     float offset = 5.f;
-    if (!((position.x > 0 + offset) && (position.x + offset < world_height) && (position.y > 0 + offset) &&
-          (position.y + offset < world_width)))
+    if (!((position.x > 0 + offset) && (position.x + offset < WIDTH ) && (position.y > 0 + offset) &&
+          (position.y + offset < LENGTH)))
         return false;
     for (auto &obstacle: obstacles) {
         if (position.x >= obstacle.graphics[0].position.x && position.x <= obstacle.graphics[1].position.x &&
@@ -62,7 +62,7 @@ void Ant_::move_to(sf::Vector2<float> new_position, sf::Time dt, std::vector<Obs
     } else {
         this->angle += PI/2;
         this->direction = sf::Vector2<float>(cos(angle), sin(angle));
-        this->position += direction * speed * dt.asSeconds();
+        this->position += direction * ANT_SPEED * dt.asSeconds();
         //AddMarker(markers, 5,10.);
         //last_changed=sf::seconds(direction_change_delta+0.5);
         times_wall_hit++;
@@ -83,7 +83,7 @@ Ant_::update(sf::Time dt, std::vector<Marker> &markers, std::vector<Obstacle> &o
             //Looking for food and didn't see it yet
             if (target == -1) {
 
-                target = check_env(foods, detection_radius);
+                target = check_env(foods, DETECTION_RADIUS);
                 //If it detects valid food, let's go to it
                 if (target >= 0 && foods[target].marker_type == 1) {
                     foods[target].changeColor = true;
@@ -114,7 +114,7 @@ Ant_::update(sf::Time dt, std::vector<Marker> &markers, std::vector<Obstacle> &o
                 // If we are looking for food but already going to the target...
             else {
                 // Just checking if arrived. If not, keep going...
-                if (target == check_env(foods, eating_radius)) {
+                if (target == check_env(foods, EATING_RADIUS)) {
                     std::cout << "8 \n";
 
                     foods[target].marker_type = -1;
@@ -135,7 +135,7 @@ Ant_::update(sf::Time dt, std::vector<Marker> &markers, std::vector<Obstacle> &o
                 else if (foods[target].marker_type == -1) {
                     target = -1;
 
-                } else if (check_env(foods, detection_radius) != target) {
+                } else if (check_env(foods, DETECTION_RADIUS) != target) {
 
                     foods[target].marker_type = 1;
                     target = -1;
@@ -147,7 +147,7 @@ Ant_::update(sf::Time dt, std::vector<Marker> &markers, std::vector<Obstacle> &o
         else {
             time_since_found_food += dt.asSeconds();
             //Let's look if we arrived
-            if (distance(home, position) <= eating_radius) {
+            if (distance(home, position) <= EATING_RADIUS) {
 
                 texture.loadFromFile("../ressources/ant.png");
                 graphics.setTexture(texture);
@@ -165,7 +165,7 @@ Ant_::update(sf::Time dt, std::vector<Marker> &markers, std::vector<Obstacle> &o
             }
 
                 //If we are not arrived, we might at least see it
-            else if (distance(home, position) <= detection_radius) {
+            else if (distance(home, position) <= DETECTION_RADIUS) {
                 sf::Vector2f delta_vect = home - position;
                 float new_angle = atan2(delta_vect.y , delta_vect.x);
                 /*if (new_angle <= angle + PI / 2 && new_angle >= angle - PI / 2)this->angle = new_angle;
@@ -200,7 +200,7 @@ Ant_::update(sf::Time dt, std::vector<Marker> &markers, std::vector<Obstacle> &o
 
     this->angle = normalise_angle(angle);
     this->direction = sf::Vector2<float>(cos(angle), sin(angle));
-    sf::Vector2<float> new_position = this->position + this->direction * speed * dt.asSeconds();
+    sf::Vector2<float> new_position = this->position + this->direction * ANT_SPEED * dt.asSeconds();
     move_to(new_position, dt, obstacles, markers);
     if (last_dropped > .05) {
         if (ToFood) {
@@ -258,15 +258,13 @@ float Ant_::sampleWorld(std::vector<Marker> markers) {
     for (int i = 0; i < markers.size(); i++) {
         if (markers[i].marker_type == type || markers[i].marker_type == 5) {
             float distance_ = distance(markers[i].position, position);
-            if (distance_ <= detection_radius && distance_ > eating_radius) {
+            if (distance_ <= DETECTION_RADIUS && distance_ > EATING_RADIUS) {
                 sf::Vector2f target_position = markers[i].position;
                 sf::Vector2f delta_vect = target_position - position;
                 float markers_angle = atan2(delta_vect.y , delta_vect.x);
-                //if (!(scalar_product(delta_vect,sf::Vector2f(100.*cos(angle), 100.* sin(angle)))>0.))markers_angle+=PI;
                 markers_angle = normalise_angle(markers_angle);
 
                 if (markers_angle <= angle + PI / 2 && markers_angle >= angle - PI / 2) {
-                    // if (markers[i].marker_type == 5) { markers_angle += PI; }
                     bary_angle += markers[i].get_intensity() * markers_angle;
                     total_intensity += markers[i].get_intensity();
                 }

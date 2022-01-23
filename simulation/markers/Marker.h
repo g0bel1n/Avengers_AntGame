@@ -15,7 +15,6 @@ public:
 
     float get_intensity();
 
-    float radius = 2.f;
     int marker_type;
 
     sf::Vector2<float> position;
@@ -26,15 +25,10 @@ public:
 
     void update(sf::Time &dt);
 
-    float death_threshold = 0.;
-
-    float marker_lifetime = 15.f;
-
 
 private:
 
-    sf::Time lifetime;
-
+    float intensity;
 
 };
 

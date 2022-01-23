@@ -1,24 +1,24 @@
 #pragma once
 #include <iostream>
 #include "World.h"
+#include "../simulation/parameters.h"
 
-#define MY_PATH std::string ("/Users/g0bel1n/CLionProjects/Avengers_AntGame")
+
+using namespace parameters;
 
 
-World::World(int length, int width, int nb_ants, int nb_food) {
+World::World(int nb_ants, int nb_food) {
 
-    world_length = length;
-    world_width = width;
 
     this->nb_ants=nb_ants;
     this->nb_food = nb_food;
-    sf::Vector2<float> aleat_position (50.,width/2.);
+    sf::Vector2<float> aleat_position (50.,LENGTH/2.);
 
 
     for(int i=0; i<nb_ants;i++){
 
-        texture.loadFromFile(MY_PATH+"/ressources/ant.png");
-        Ant_ ant (aleat_position, i, world_width, world_length, nb_food);
+        texture.loadFromFile("../ressources/ant.png");
+        Ant_ ant (aleat_position, i, nb_food);
         ant.graphics.setTexture(texture);
 
         ants.push_back(ant);
