@@ -8,7 +8,6 @@
 #include "../../common/utils.h"
 
 #define PI 3.14159265
-#define MY_PATH std::string ("/Users/g0bel1n/CLionProjects/Avengers_AntGame")
 
 float Ant_::RandomAngle() {
     return (std::rand() % angular_width - angular_width / 2) * (PI / 180);
@@ -127,7 +126,7 @@ Ant_::update(sf::Time dt, std::vector<Marker> &markers, std::vector<Obstacle> &o
                     last_changed = sf::Time::Zero;
                     this->angle += PI;
 
-                    texture_with_food.loadFromFile(MY_PATH + "/ressources/ant_with_food.png");
+                    texture_with_food.loadFromFile("../ressources/ant_with_food.png");
                     graphics.setTexture(texture_with_food);
                     switchSkin = false;
 
@@ -150,7 +149,7 @@ Ant_::update(sf::Time dt, std::vector<Marker> &markers, std::vector<Obstacle> &o
             //Let's look if we arrived
             if (distance(home, position) <= eating_radius) {
 
-                texture.loadFromFile(MY_PATH+ "/ressources/ant.png");
+                texture.loadFromFile("../ressources/ant.png");
                 graphics.setTexture(texture);
                 switchSkin = false;
 

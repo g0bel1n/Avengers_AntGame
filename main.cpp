@@ -7,13 +7,11 @@ using namespace std;
 
 #define PI 3.14159265
 
-#define MY_PATH string ("/Users/thomaskientz/Documents/Github/Avengers_AntGame")
-
 
 int main() {
 
-    int height = 1500;
-    int width = 2400;
+    int height = 800;
+    int width = 1200;
     bool pause = true;
     int total_food = 0;
 
@@ -28,13 +26,13 @@ int main() {
     World world(width, height, 20, total_food);
 
 
-    if (!font.loadFromFile( MY_PATH + "/ressources/pricedown.otf")) {
+    if (!font.loadFromFile( "../ressources/pricedown.otf")) {
         cout<<"Could not load the font...";
     }
 
     //Loading the grass background
     sf::Texture SoilTex;
-    SoilTex.loadFromFile(MY_PATH+ "/ressources/soil.jpeg");
+    SoilTex.loadFromFile("../ressources/soil.jpeg");
 
     sf::Sprite Background(SoilTex);
     Background.setPosition(0,0);
@@ -80,7 +78,7 @@ int main() {
 
     // Texture of the colony Hole
     sf::Texture colony_hole;
-    colony_hole.loadFromFile(MY_PATH+ "/ressources/Hole.PNG");
+    colony_hole.loadFromFile("../ressources/Hole.PNG");
 
     //Colony Graphic object
     sf::Sprite colony_base;
@@ -121,7 +119,7 @@ int main() {
                 if (event.mouseButton.button == sf::Mouse::Right) {
 
                     Obstacle obstacle(sf::Vector2f(event.mouseButton.x - 50., event.mouseButton.y - 50.), 100.);
-                    obstacle.texture.loadFromFile(MY_PATH+"/ressources/rock.jpeg");
+                    obstacle.texture.loadFromFile("../ressources/rock.jpeg");
                     obstacles.push_back(obstacle);
                 }
 

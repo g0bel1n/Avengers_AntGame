@@ -28,8 +28,8 @@ public:
 
     int check_env(std::vector<Marker> &markers, float radius);
 
-    float ant_length = 50.f;
-    float ant_width = 10.f;
+    float ant_length = 10.f;
+    float ant_width = 2.f;
 
     int world_height;
     int world_width;
