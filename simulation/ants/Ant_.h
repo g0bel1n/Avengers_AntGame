@@ -9,6 +9,7 @@
 
 
 #pragma once
+
 #include "../markers/Marker.h"
 #include "../obstacles/Obstacle.h"
 #include "../parameters.h"
@@ -17,7 +18,7 @@
 class Ant_ {
 
 public:
-    Ant_(sf::Vector2<float> position, int ant_id, int nb_food);
+    Ant_(sf::Vector2<float> position, int ant_id);
 
     void
     update(sf::Time dt, std::vector<Marker> &markers, std::vector<Obstacle> &obstacles, std::vector<Marker> &foods);

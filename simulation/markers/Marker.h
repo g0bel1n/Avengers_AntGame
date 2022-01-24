@@ -11,6 +11,7 @@
 class Marker {
 
 public:
+
     Marker(sf::Vector2<float> position, int marker_type, float time_offset);
 
     float get_intensity();

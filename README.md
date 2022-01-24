@@ -3,7 +3,7 @@
 ## Briefly
 
 This project is an implementation of what can be called an "Ant Search". Generic ants are independently generated. They
-follow some basic rules, are attracted to food and leave pheromones or markers behind them depending of in which state
+follow some basic rules, are attracted to food and leave pheromones or markers behind them depending on in which state
 they are. It enables them to guide other in order to develop a common intelligence based on each individual experience.
 
 It can be implemented to solve TSP Problems
