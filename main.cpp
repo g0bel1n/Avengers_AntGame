@@ -16,12 +16,14 @@ int main() {
 
     sf::RenderWindow window(sf::VideoMode(WIDTH, LENGTH), "My window");
     sf::Clock clock;
+    sf::Clock drawing_clock;
+    sf::Clock updating_clock;
     sf::Font font;
     window.setTitle("Avengers AntGame - @G0bel1n");
 
 
     //Generating the world
-    World world(20, total_food);
+    World world(NB_ANTS, total_food);
 
 
     if (!font.loadFromFile("../ressources/pricedown.otf")) {
@@ -116,6 +118,8 @@ int main() {
 
                         pause = false;
 
+                    } else if (event.key.code == sf::Keyboard::C) {
+                        obstacles.clear();
                     }
                     break;
 
@@ -136,14 +140,14 @@ int main() {
 
 
                         // The following for-loop is there to add a "block" of food, instead of a line
-                        sf::Vector2f to_pos = sf::Vector2f(event.mouseButton.x-20, event.mouseButton.y-20);
+                        sf::Vector2f to_pos = sf::Vector2f(event.mouseButton.x - 20, event.mouseButton.y - 20);
                         float x_offset = 10.;
 
                         for (int i = 0; i < 4; i++) {
-                            for (int j = 0; j < 4; j++){
+                            for (int j = 0; j < 4; j++) {
 
-                            world.AddMarker(to_pos+ sf::Vector2f (i*x_offset, j*x_offset), 1);
-                        }
+                                world.AddMarker(to_pos + sf::Vector2f(i * x_offset, j * x_offset), 1);
+                            }
                         }
                         total_food += 10;
                     }
@@ -160,58 +164,63 @@ int main() {
                     if (draw_obstacle) {
 
 
-                        Obstacle obstacle(sf::Vector2f(event.mouseMove.x-50, event.mouseMove.y-50), 100.);
+                        Obstacle obstacle(sf::Vector2f(event.mouseMove.x - 50, event.mouseMove.y - 50), 100.);
                         obstacle.texture.loadFromFile("../ressources/rock.jpeg");
                         obstacles.push_back(obstacle);
 
                     }
             }
 
-            }
-
-            sf::Time dt = clock.restart();
-            if (!pause) {
-
-                text.setString("Food available: " + to_string(world.get_food_available()));
-
-                float time = world.ants[0].get_lifetime();
-
-                //To display a time in minutes
-                int minutes = 0;
-                while (time > 60.) {
-                    time -= 60.;
-                    minutes += 1;
-                }
-
-                //These objects need to be updated only when the simulation is running
-                text1.setString(
-                        "Time elapsed :  " + to_string(minutes) + "  min  " + to_string(time).substr(0, 3));
-                text2.setString(to_string(total_food - world.get_food_available()));
-                world.update_ants(dt, obstacles);
-            }
-
-
-            window.clear();
-
-            // Drawing every object
-            window.draw(Background);
-            window.draw(colony_base);
-            for (auto &marker: world.markers) { window.draw(marker.graphic); }
-            for (auto &ant: world.ants) { window.draw(ant.graphics); }
-            for (auto &food: world.foods) { window.draw(food.graphic); }
-            for (auto &obstacle: obstacles) { window.draw(obstacle.graphics, &obstacle.texture); }
-
-            window.draw(text);
-            window.draw(text1);
-            window.draw(text2);
-
-            if (pause) window.draw(text3);
-
-            window.display();
-
         }
-        return 0;
+
+        sf::Time dt = clock.restart();
+        if (!pause) {
+
+            text.setString("Food available: " + to_string(world.get_food_available()));
+
+            float time = world.ants[0].get_lifetime();
+
+            //To display a time in minutes
+            int minutes = 0;
+            while (time > 60.) {
+                time -= 60.;
+                minutes += 1;
+            }
+
+            //These objects need to be updated only when the simulation is running
+            text1.setString(
+                    "Time elapsed :  " + to_string(minutes) + "  min  " + to_string(time).substr(0, 3));
+            text2.setString(to_string(total_food - world.get_food_available()));
+
+            updating_clock.restart();
+            world.update_ants(dt, obstacles);
+            cout << "updating time" << updating_clock.restart().asSeconds() << "\n";
+        }
+
+
+        window.clear();
+
+        drawing_clock.restart();
+        // Drawing every object
+        window.draw(Background);
+        window.draw(colony_base);
+        for (auto &marker: world.markers) { window.draw(marker.graphic); }
+        for (auto &ant: world.ants) { window.draw(ant.graphics); }
+        for (auto &food: world.foods) { window.draw(food.graphic); }
+        for (auto &obstacle: obstacles) { window.draw(obstacle.graphics, &obstacle.texture); }
+
+        window.draw(text);
+        window.draw(text1);
+        window.draw(text2);
+
+        cout << "drawing time" << drawing_clock.restart().asSeconds() << "\n";
+        if (pause) window.draw(text3);
+
+        window.display();
+
     }
+    return 0;
+}
 
 
 

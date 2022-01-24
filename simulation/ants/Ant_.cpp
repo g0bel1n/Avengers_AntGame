@@ -5,7 +5,6 @@
 
 #include "Ant_.h"
 #include <cmath>
-#include <iostream>
 #include "../../common/utils.h"
 
 
@@ -95,8 +94,6 @@ Ant_::update(sf::Time dt, std::vector<Marker> &markers, std::vector<Obstacle> &o
                     float new_angle = atan2(delta_vect.y, delta_vect.x);
                     this->angle = new_angle;
                     last_changed = sf::Time::Zero;
-                    std::cout << "4 \n";
-
 
                 }
                     //If the ant can't see the food, it looks for markers left by others
@@ -105,10 +102,8 @@ Ant_::update(sf::Time dt, std::vector<Marker> &markers, std::vector<Obstacle> &o
                     // if new_angle is a nan it is because there is no markers in the detection radius
                     if (!isnan(new_angle)) {
                         this->angle = new_angle;
-                        std::cout << "5 \n";
                     } else {
                         this->angle += RandomAngle();
-                        std::cout << "6 \n";
                     }
                     last_changed = sf::Time::Zero;
                 }
@@ -118,7 +113,6 @@ Ant_::update(sf::Time dt, std::vector<Marker> &markers, std::vector<Obstacle> &o
             else {
                 // Just checking if arrived. If not, keep going...
                 if (target == check_env(foods, EATING_RADIUS)) {
-                    std::cout << "8 \n";
 
                     foods[target].marker_type = -1;
                     foods[target].changeColor = true;
@@ -165,7 +159,6 @@ Ant_::update(sf::Time dt, std::vector<Marker> &markers, std::vector<Obstacle> &o
                 last_changed = sf::Time::Zero;
                 time_since_quitted_home = 0.;
 
-                std::cout << "1 \n";
 
             }
 
@@ -175,8 +168,6 @@ Ant_::update(sf::Time dt, std::vector<Marker> &markers, std::vector<Obstacle> &o
                 float new_angle = atan2(delta_vect.y, delta_vect.x);
                 last_changed = sf::Time::Zero;
                 this->angle = new_angle;
-
-                std::cout << "2 \n";
             }
 
                 //If we cannot see it, lets look for markers
@@ -185,10 +176,8 @@ Ant_::update(sf::Time dt, std::vector<Marker> &markers, std::vector<Obstacle> &o
                 // if new_angle is a nan it is because there is no markers in the detection radius
                 if (!isnan(new_angle)) {
                     this->angle = new_angle;
-                    std::cout << "Following markers \n";
                 } else {
                     this->angle += RandomAngle();
-                    std::cout << "3 \n";
                 }
                 last_changed = sf::Time::Zero;
 
