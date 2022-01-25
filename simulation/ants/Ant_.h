@@ -51,26 +51,26 @@ public:
     sf::Texture texture;
     sf::Texture texture_with_food;
 
-    int target = -1;
+    int target = -1; // Id of the food the ant is targeting
 private:
 
 
-    int ant_id;
-    float lifetime{};
+    int ant_id; // "Identity" of the ant
+    float lifetime; // Time the ant has been alive
     float time_since_quitted_home = 0.;
     float time_since_found_food = 0.;
 
-    float last_dropped = 0.;
+    float last_dropped = 0.; // To regulate the flow of markers
     sf::Vector2f direction;
     sf::Vector2f position;
     float angle = 0.f;
     int times_wall_hit = 0;
-    int angular_width = 45;
-    float direction_change_delta = .1f;
-    sf::Time last_changed = sf::Time::Zero;
+    int angular_width = 45; // Angular range in wich the ant can go when random moving
+    float direction_change_delta = .1f; // Time to wait before changing direction to avoid epileptic behaviour
+    sf::Time last_changed = sf::Time::Zero; // Time since last change of direction
 
 
-    bool is_valid(sf::Vector2f position, std::vector<Obstacle> &obstacles);
+    bool is_valid(sf::Vector2f position, std::vector<Obstacle> &obstacles); // To check if the new position is valid
 };
 
 

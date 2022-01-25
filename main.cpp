@@ -14,7 +14,11 @@ int main() {
     int total_food = 0;
 
 
-    sf::RenderWindow window(sf::VideoMode(WIDTH, LENGTH), "My window");
+    sf::RenderWindow window(sf::VideoMode::getDesktopMode(), "Avengers AntGame");
+    sf::Vector2u size = window.getSize();
+    WIDTH = size.x;
+    LENGTH = size.y;
+
     sf::Clock clock;
     sf::Clock drawing_clock;
     sf::Clock updating_clock;
@@ -169,6 +173,44 @@ int main() {
                         obstacles.push_back(obstacle);
 
                     }
+                case sf::Event::Resized:
+                    break;
+                case sf::Event::LostFocus:
+                    break;
+                case sf::Event::GainedFocus:
+                    break;
+                case sf::Event::TextEntered:
+                    break;
+                case sf::Event::KeyReleased:
+                    break;
+                case sf::Event::MouseWheelMoved:
+                    break;
+                case sf::Event::MouseWheelScrolled:
+                    break;
+                case sf::Event::MouseEntered:
+                    break;
+                case sf::Event::MouseLeft:
+                    break;
+                case sf::Event::JoystickButtonPressed:
+                    break;
+                case sf::Event::JoystickButtonReleased:
+                    break;
+                case sf::Event::JoystickMoved:
+                    break;
+                case sf::Event::JoystickConnected:
+                    break;
+                case sf::Event::JoystickDisconnected:
+                    break;
+                case sf::Event::TouchBegan:
+                    break;
+                case sf::Event::TouchMoved:
+                    break;
+                case sf::Event::TouchEnded:
+                    break;
+                case sf::Event::SensorChanged:
+                    break;
+                case sf::Event::Count:
+                    break;
             }
 
         }
@@ -193,7 +235,7 @@ int main() {
             text2.setString(to_string(total_food - world.get_food_available()));
 
             updating_clock.restart();
-            world.update_ants(dt, obstacles);
+            world.update(dt, obstacles);
             cout << "updating time" << updating_clock.restart().asSeconds() << "\n";
         }
 

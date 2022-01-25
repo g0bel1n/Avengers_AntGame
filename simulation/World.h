@@ -6,6 +6,7 @@
 #define ANTS_FIGHT_CLUB_WORLD_H
 
 #pragma once
+
 #include <vector>
 #include "ants/Ant_.h"
 
@@ -29,7 +30,7 @@ public:
 
     sf::Texture texture;
 
-    void update_ants(sf::Time dt, std::vector<Obstacle> &obstacles);
+    void update(sf::Time dt, std::vector<Obstacle> &obstacles);
 
     void AddMarker(sf::Vector2f position, int type);
 

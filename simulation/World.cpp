@@ -32,7 +32,7 @@ int World::get_nb_food() {
     return foods.size();
 }
 
-void World::update_ants(sf::Time dt, std::vector<Obstacle> &obstacles) {
+void World::update(sf::Time dt, std::vector<Obstacle> &obstacles) {
 
     for (int k = 0; k < nb_ants; k++) {
         ants[k].update(dt, markers, obstacles, foods);
