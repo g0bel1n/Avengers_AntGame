@@ -39,7 +39,6 @@ Marker::Marker(sf::Vector2<float> position, int marker_type, float time_offset =
 void Marker::update(sf::Time &dt) {
 
     /* Exponential decrease of the marker's intensity with time */
-
     intensity *= pow((1 - DECAY_RATE), dt.asSeconds());
     if (marker_type == 3 || marker_type == 4) {
         intensity *= pow((1 - DECAY_RATE), dt.asSeconds());

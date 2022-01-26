@@ -70,7 +70,7 @@ int main() {
     text2.setFillColor(sf::Color::White);
 
 
-    //Basic commands
+    // Basic commands
     sf::Text text3;
     text3.setFont(font);
     text3.setString("SPACE to start/Pause \nLeft Click to add food \nRight click to add obstacles");
@@ -84,7 +84,7 @@ int main() {
     sf::Texture colony_hole;
     colony_hole.loadFromFile("../ressources/Hole.PNG");
 
-    //Colony Graphic object
+    // Colony Graphic object
     sf::Sprite colony_base;
     colony_base.setPosition(world.ants[0].home);
     colony_base.setOrigin(536. / 2., 204.);
@@ -132,7 +132,9 @@ int main() {
                     if (event.mouseButton.button == sf::Mouse::Right) {
                         draw_obstacle = true;
 
-                        Obstacle obstacle(sf::Vector2f(event.mouseButton.x - 50., event.mouseButton.y - 50.), 100.);
+                        Obstacle obstacle(sf::Vector2f(event.mouseButton.x,
+                                                       event.mouseButton.y),
+                                          LENGTH * MAP_OCCUPATION);
                         obstacle.texture.loadFromFile("../ressources/rock.jpeg");
                         obstacles.push_back(obstacle);
 
@@ -168,53 +170,18 @@ int main() {
                     if (draw_obstacle) {
 
 
-                        Obstacle obstacle(sf::Vector2f(event.mouseMove.x - 50, event.mouseMove.y - 50), 100.);
+                        Obstacle obstacle(sf::Vector2f(event.mouseMove.x,
+                                                       event.mouseMove.y),
+                                          LENGTH * MAP_OCCUPATION);
                         obstacle.texture.loadFromFile("../ressources/rock.jpeg");
                         obstacles.push_back(obstacle);
 
                     }
-                case sf::Event::Resized:
-                    break;
-                case sf::Event::LostFocus:
-                    break;
-                case sf::Event::GainedFocus:
-                    break;
-                case sf::Event::TextEntered:
-                    break;
-                case sf::Event::KeyReleased:
-                    break;
-                case sf::Event::MouseWheelMoved:
-                    break;
-                case sf::Event::MouseWheelScrolled:
-                    break;
-                case sf::Event::MouseEntered:
-                    break;
-                case sf::Event::MouseLeft:
-                    break;
-                case sf::Event::JoystickButtonPressed:
-                    break;
-                case sf::Event::JoystickButtonReleased:
-                    break;
-                case sf::Event::JoystickMoved:
-                    break;
-                case sf::Event::JoystickConnected:
-                    break;
-                case sf::Event::JoystickDisconnected:
-                    break;
-                case sf::Event::TouchBegan:
-                    break;
-                case sf::Event::TouchMoved:
-                    break;
-                case sf::Event::TouchEnded:
-                    break;
-                case sf::Event::SensorChanged:
-                    break;
-                case sf::Event::Count:
                     break;
             }
 
         }
-
+        // Calculating the time elapsed during last loop
         sf::Time dt = clock.restart();
         if (!pause) {
 
@@ -222,7 +189,7 @@ int main() {
 
             float time = world.ants[0].get_lifetime();
 
-            //To display a time in minutes
+            // To display a time in minutes
             int minutes = 0;
             while (time > 60.) {
                 time -= 60.;
@@ -236,7 +203,8 @@ int main() {
 
             updating_clock.restart();
             world.update(dt, obstacles);
-            cout << "updating time" << updating_clock.restart().asSeconds() << "\n";
+            float updating_delay = updating_clock.restart().asSeconds();
+            if (updating_delay > 0.3)cout << "updating time" << updating_delay << "\n";
         }
 
 
@@ -255,7 +223,8 @@ int main() {
         window.draw(text1);
         window.draw(text2);
 
-        cout << "drawing time" << drawing_clock.restart().asSeconds() << "\n";
+        float drawing_delay = drawing_clock.restart().asSeconds();
+        if (drawing_delay > 0.2)cout << "drawing time" << drawing_delay << "\n";
         if (pause) window.draw(text3);
 
         window.display();

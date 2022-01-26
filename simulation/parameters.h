@@ -9,7 +9,7 @@
 
 namespace parameters {
     //WORLD PARAMETERS
-    inline constexpr int NB_ANTS{10};
+    inline constexpr int NB_ANTS{20};
     inline int LENGTH{800};
     inline int WIDTH{1400};
 
@@ -26,6 +26,10 @@ namespace parameters {
     inline constexpr float INTENSITY_INCREMENT = 5;
     inline constexpr float RADIUS = 2.f;
     inline constexpr float DETECTION_THRESHOLD = 1.;
+
+    // OBSTACLE PARAMETER
+
+    inline constexpr float MAP_OCCUPATION{0.02};
 }
 
 #endif //AVENGERS_ANTGAME_SIMULATION_PARAMETERS_H
