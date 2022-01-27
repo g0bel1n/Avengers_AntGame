@@ -25,6 +25,8 @@ public:
     std::vector<Marker> markers;
     std::vector<Marker> foods;
 
+    void add_ant();
+
 
     int get_food_available();
 

@@ -67,3 +67,13 @@ void World::AddMarker(sf::Vector2f position, int type) {
 
 }
 
+void World::add_ant() {
+
+    texture.loadFromFile("../ressources/ant.png");
+    Ant_ ant(sf::Vector2<float>(50., LENGTH / 2.), 0);
+    ant.graphics.setTexture(texture);
+
+    ants.push_back(ant);
+
+}
+

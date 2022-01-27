@@ -9,12 +9,12 @@
 
 namespace parameters {
     //WORLD PARAMETERS
-    inline constexpr int NB_ANTS{20};
+    inline int NB_ANTS{20};
     inline int LENGTH{800};
     inline int WIDTH{1400};
 
     //ANT PARAMETERS
-    inline constexpr float ANT_SPEED{300.};
+    inline float ANT_SPEED{300.};
     inline constexpr float DETECTION_RADIUS{150.};
     inline constexpr float EATING_RADIUS{10.};
     inline constexpr float ANT_LENGTH = 10.f;

@@ -3,6 +3,9 @@
 #include "simulation/World.h"
 #include "simulation/parameters.h"
 
+//TO DO
+
+/*Make new ants move */
 
 using namespace parameters;
 
@@ -42,11 +45,40 @@ int main() {
     Background.setPosition(0, 0);
     Background.setScale(WIDTH / 3448., LENGTH / 3448.);
 
+    sf::VertexArray quad(sf::Quads, 4);
+
+    quad[0].position = sf::Vector2f(WIDTH - 800, 10);
+    quad[1].position = sf::Vector2f(WIDTH - 10, 10);
+    quad[2].position = sf::Vector2f(WIDTH - 10, 410);
+    quad[3].position = sf::Vector2f(WIDTH - 800, 410);
+
+    quad[0].color = sf::Color(255, 255, 255, 100);
+    quad[1].color = sf::Color(255, 255, 255, 100);
+    quad[2].color = sf::Color(255, 255, 255, 100);
+    quad[3].color = sf::Color(255, 255, 255, 100);
+
+    sf::Text ant_speed;
+    ant_speed.setFont(font);
+    ant_speed.setString("ANTS SPEED : " + to_string((int) ANT_SPEED));
+    ant_speed.setPosition(WIDTH - 700, 30);
+    ant_speed.setCharacterSize(50);
+    ant_speed.setFillColor(sf::Color::Black);
+
+    sf::Text colony_size;
+    colony_size.setFont(font);
+    colony_size.setString("Number of Ants : " + to_string((int) NB_ANTS));
+    colony_size.setPosition(WIDTH - 700, 100);
+    colony_size.setCharacterSize(50);
+    colony_size.setFillColor(sf::Color::Black);
+
+
+
 
     //Text SFML-Objects that will display :
 
     // the amount of food available
-    sf::Text text;
+    sf::Text
+            text;
     text.setFont(font);
     text.setString("amount of food available");
     text.setPosition(50, (float) LENGTH - 100.);
@@ -130,6 +162,20 @@ int main() {
                         world.foods.clear();
                     } else if (event.key.code == sf::Keyboard::Q) {
                         window.close();
+                    } else if (event.key.code == sf::Keyboard::Up) {
+                        ANT_SPEED += 100.;
+                        ant_speed.setString("ANTS SPEED : " + to_string((int) ANT_SPEED));
+                    } else if (event.key.code == sf::Keyboard::Down) {
+                        if (ANT_SPEED >= 100.)ANT_SPEED -= 100.;
+                        ant_speed.setString("ANTS SPEED : " + to_string((int) ANT_SPEED));
+                    } else if (event.key.code == sf::Keyboard::Right) {
+                        world.add_ant();
+                        NB_ANTS += 1;
+                        colony_size.setString("Number of Ants : " + to_string((int) NB_ANTS));
+                    } else if (event.key.code == sf::Keyboard::Left) {
+                        world.ants.pop_back();
+                        NB_ANTS -= 1;
+                        colony_size.setString("Number of Ants : " + to_string((int) NB_ANTS));
                     }
                     break;
 
@@ -228,6 +274,9 @@ int main() {
         window.draw(text);
         window.draw(text1);
         window.draw(text2);
+        window.draw(quad);
+        window.draw(ant_speed);
+        window.draw(colony_size);
 
         float drawing_delay = drawing_clock.restart().asSeconds();
         if (drawing_delay > 0.2)cout << "drawing time" << drawing_delay << "\n";
