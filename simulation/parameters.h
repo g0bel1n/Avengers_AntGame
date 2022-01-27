@@ -21,15 +21,14 @@ namespace parameters {
     inline constexpr float ANT_WIDTH = 2.f;
 
 
-    // MARKER PARAMETER
+    //MARKER PARAMETERS
     inline constexpr float DECAY_RATE{.1}; //Percentage of intensity decrease per second
     inline constexpr float INTENSITY_INCREMENT = 5;
     inline constexpr float RADIUS = 2.f;
     inline constexpr float DETECTION_THRESHOLD = .5;
 
-    // OBSTACLE PARAMETER
-
-    inline constexpr float MAP_OCCUPATION{0.02};
+    // OBSTACLE PARAMETERS
+    inline constexpr float MAP_OCCUPATION{0.05};
 }
 
 #endif //AVENGERS_ANTGAME_SIMULATION_PARAMETERS_H
