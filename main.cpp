@@ -4,9 +4,7 @@
 #include "simulation/parameters.h"
 
 //TO DO
-
-/*Make new ants move */
-
+// Add saved map feature
 using namespace parameters;
 
 using namespace std;
@@ -72,6 +70,13 @@ int main() {
     colony_size.setCharacterSize(50);
     colony_size.setFillColor(sf::Color::Black);
 
+    sf::Text nb_markers;
+    nb_markers.setFont(font);
+    nb_markers.setString("Number of Markers : " + to_string((int) world.markers.size()));
+    nb_markers.setPosition(WIDTH - 700, 170);
+    nb_markers.setCharacterSize(50);
+    nb_markers.setFillColor(sf::Color::Black);
+
 
 
 
@@ -82,17 +87,17 @@ int main() {
             text;
     text.setFont(font);
     text.setString("amount of food available");
-    text.setPosition(50, (float) LENGTH - 100.);
+    text.setPosition(WIDTH - 700, 310);
     text.setCharacterSize(50);
-    text.setFillColor(sf::Color::White);
+    text.setFillColor(sf::Color::Black);
 
     // The time elapsed
     sf::Text text1;
     text1.setFont(font);
     text1.setString("time elapsed");
-    text1.setPosition(WIDTH * 3. / 6, LENGTH - 100.);
-    text1.setCharacterSize(40);
-    text1.setFillColor(sf::Color::White);
+    text1.setPosition(WIDTH - 700, 240);;
+    text1.setCharacterSize(50);
+    text1.setFillColor(sf::Color::Black);
 
     // The amount of food in the colony
     sf::Text text2;
@@ -108,9 +113,9 @@ int main() {
     text3.setFont(font);
     text3.setString(
             "SPACE to start/Pause \nLeft Click to add food \nRight click to add obstacles \nC to  clear the obstacles \nM to  clear the markers \nLeft/Right arrow to Erase/Create new ants \nDown/Up to reduce/increase the speed of the ants ");
-    text3.setCharacterSize(40);
+    text3.setCharacterSize(60);
     text3.setFillColor(sf::Color::White);
-    text3.setPosition(10, 10);
+    text3.setPosition(WIDTH / 3., LENGTH / 3.);
 
 
 
@@ -190,6 +195,7 @@ int main() {
                         case sf::Keyboard::D:
                             COLONY_POS = (sf::Vector2f) sf::Mouse::getPosition(window);
                             colony_base.setPosition(COLONY_POS);
+                            text2.setPosition(COLONY_POS + sf::Vector2f(50., 0.));
                             window.draw(colony_base);
                             if (!began) {
                                 world.ants.clear();
@@ -260,6 +266,11 @@ int main() {
         sf::Time dt = clock.restart();
         if (!pause) {
 
+            // Might need to decrease the number of markers when passing a critical value (aroud 3500)
+            /*if (world.markers.size() > 3000) {
+                for (int i = 0; i <= 100; i++)world.markers.erase(world.markers.begin());
+            }*/
+
             began = true;
 
             text.setString("Food available: " + to_string(world.get_food_available()));
@@ -284,6 +295,8 @@ int main() {
             if (updating_delay > 0.3)cout << "updating time" << updating_delay << "\n";
         }
 
+        nb_markers.setString("Number of Markers : " + to_string((int) world.markers.size()));
+
 
         window.clear();
 
@@ -296,14 +309,16 @@ int main() {
         for (auto &food: world.foods) { window.draw(food.graphic); }
         for (auto &obstacle: obstacles) { window.draw(obstacle.graphics, &obstacle.texture); }
 
+        window.draw(quad);
+
         window.draw(text);
         window.draw(text1);
         window.draw(text2);
-        window.draw(quad);
         window.draw(ant_speed);
         window.draw(colony_size);
         window.draw(colony_base);
-        
+        window.draw(nb_markers);
+
         float drawing_delay = drawing_clock.restart().asSeconds();
         if (drawing_delay > 0.2)cout << "drawing time" << drawing_delay << "\n";
         if (pause) window.draw(text3);
