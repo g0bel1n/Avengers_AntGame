@@ -22,10 +22,10 @@ namespace parameters {
 
 
     // MARKER PARAMETER
-    inline constexpr float DECAY_RATE{0.1}; //Percentage of intensity decrease per second
+    inline constexpr float DECAY_RATE{.1}; //Percentage of intensity decrease per second
     inline constexpr float INTENSITY_INCREMENT = 5;
     inline constexpr float RADIUS = 2.f;
-    inline constexpr float DETECTION_THRESHOLD = 1.;
+    inline constexpr float DETECTION_THRESHOLD = .5;
 
     // OBSTACLE PARAMETER
 

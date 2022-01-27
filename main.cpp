@@ -124,6 +124,12 @@ int main() {
 
                     } else if (event.key.code == sf::Keyboard::C) {
                         obstacles.clear();
+                    } else if (event.key.code == sf::Keyboard::M) {
+                        world.markers.clear();
+                    } else if (event.key.code == sf::Keyboard::F) {
+                        world.foods.clear();
+                    } else if (event.key.code == sf::Keyboard::Q) {
+                        window.close();
                     }
                     break;
 
