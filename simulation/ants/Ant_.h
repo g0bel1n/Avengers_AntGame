@@ -39,7 +39,6 @@ public:
 
     bool switchSkin = false;
     bool ToFood = true;
-    sf::Vector2f home;
     sf::Sprite graphics;
 
     void AddMarker(std::vector<Marker> &markers, int type, float time_offset);

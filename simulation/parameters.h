@@ -15,6 +15,7 @@ namespace parameters {
 
     //ANT PARAMETERS
     inline float ANT_SPEED{300.};
+    inline sf::Vector2f COLONY_POS(LENGTH / 2, 50.);
     inline constexpr float DETECTION_RADIUS{150.};
     inline constexpr float EATING_RADIUS{10.};
     inline constexpr float ANT_LENGTH = 10.f;

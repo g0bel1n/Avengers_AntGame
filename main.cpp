@@ -15,6 +15,7 @@ int main() {
 
     bool pause = true;
     int total_food = 0;
+    bool began = false;
 
 
     sf::RenderWindow window(sf::VideoMode::getDesktopMode(), "Avengers AntGame");
@@ -98,7 +99,7 @@ int main() {
     text2.setFont(font);
     text2.setString("amount of food in the colony");
     text2.setCharacterSize(40);
-    text2.setPosition(world.ants[0].home + sf::Vector2f(50., 0.));
+    text2.setPosition(COLONY_POS + sf::Vector2f(50., 0.));
     text2.setFillColor(sf::Color::White);
 
 
@@ -119,7 +120,7 @@ int main() {
 
     // Colony Graphic object
     sf::Sprite colony_base;
-    colony_base.setPosition(world.ants[0].home);
+    colony_base.setPosition(COLONY_POS);
     colony_base.setOrigin(536. / 2., 204.);
     colony_base.setTexture(colony_hole);
     colony_base.setScale(0.2, 0.2);
@@ -186,6 +187,20 @@ int main() {
                                 colony_size.setString("Number of Ants : " + to_string((int) NB_ANTS));
                             }
                             break;
+                        case sf::Keyboard::D:
+                            COLONY_POS = (sf::Vector2f) sf::Mouse::getPosition(window);
+                            colony_base.setPosition(COLONY_POS);
+                            window.draw(colony_base);
+                            if (!began) {
+                                world.ants.clear();
+                                int recreate_N_ants = 0;
+                                while (recreate_N_ants <= NB_ANTS) {
+                                    world.add_ant();
+                                    recreate_N_ants += 1;
+                                }
+
+                            }
+                            break;
                     }
 
                 case (sf::Event::MouseButtonPressed) :
@@ -245,6 +260,8 @@ int main() {
         sf::Time dt = clock.restart();
         if (!pause) {
 
+            began = true;
+
             text.setString("Food available: " + to_string(world.get_food_available()));
 
             float time = world.ants[0].get_lifetime();
@@ -285,6 +302,9 @@ int main() {
         window.draw(quad);
         window.draw(ant_speed);
         window.draw(colony_size);
+        window.draw(colony_base);
+
+        //cout << to_string(COLONY_POS.x) << "\n";
 
         float drawing_delay = drawing_clock.restart().asSeconds();
         if (drawing_delay > 0.2)cout << "drawing time" << drawing_delay << "\n";

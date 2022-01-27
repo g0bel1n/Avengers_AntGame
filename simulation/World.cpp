@@ -11,13 +11,12 @@ World::World(int nb_ants, int nb_food) {
 
     this->nb_ants = nb_ants;
     this->nb_food = nb_food;
-    sf::Vector2<float> aleat_position(50., LENGTH / 2.);
 
 
     for (int i = 0; i < nb_ants; i++) {
 
         texture.loadFromFile("../ressources/ant.png");
-        Ant_ ant(aleat_position, i);
+        Ant_ ant(COLONY_POS, i);
         ant.graphics.setTexture(texture);
 
         ants.push_back(ant);
@@ -46,7 +45,6 @@ void World::update(sf::Time dt, std::vector<Obstacle> &obstacles) {
     for (int k = 0; k < foods.size(); k++) {
         foods[k].update(dt);
     }
-
 }
 
 int World::get_food_available() {
@@ -70,7 +68,7 @@ void World::AddMarker(sf::Vector2f position, int type) {
 void World::add_ant() {
 
     texture.loadFromFile("../ressources/ant.png");
-    Ant_ ant(sf::Vector2<float>(50., LENGTH / 2.), 0);
+    Ant_ ant(COLONY_POS, 0);
     ant.graphics.setTexture(texture);
     ants.push_back(ant);
 

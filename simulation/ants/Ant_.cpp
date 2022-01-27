@@ -23,8 +23,6 @@ Ant_::Ant_(sf::Vector2<float> position, int ant_id) {
     this->direction = sf::Vector2<float>(cos(angle), sin(angle));
 
     this->ant_id = ant_id;
-    this->home = position;
-
     graphics = sf::Sprite();
     graphics.setColor(sf::Color::Red);
     graphics.setOrigin(300., 300.f);
@@ -144,7 +142,7 @@ Ant_::update(sf::Time dt, std::vector<Marker> &markers, std::vector<Obstacle> &o
         else {
             time_since_found_food += dt.asSeconds();
             //Let's look if we arrived
-            if (distance(home, position) <= EATING_RADIUS) {
+            if (distance(COLONY_POS, position) <= EATING_RADIUS) {
 
                 // Changing skin
                 texture.loadFromFile("../ressources/ant.png");
@@ -163,8 +161,8 @@ Ant_::update(sf::Time dt, std::vector<Marker> &markers, std::vector<Obstacle> &o
             }
 
                 //If we are not arrived, we might at least see it
-            else if (distance(home, position) <= DETECTION_RADIUS) {
-                sf::Vector2f delta_vect = home - position;
+            else if (distance(COLONY_POS, position) <= DETECTION_RADIUS) {
+                sf::Vector2f delta_vect = COLONY_POS - position;
                 float new_angle = atan2(delta_vect.y, delta_vect.x);
                 last_changed = sf::Time::Zero;
                 this->angle = new_angle;
