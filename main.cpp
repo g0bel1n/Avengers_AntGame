@@ -303,9 +303,7 @@ int main() {
         window.draw(ant_speed);
         window.draw(colony_size);
         window.draw(colony_base);
-
-        //cout << to_string(COLONY_POS.x) << "\n";
-
+        
         float drawing_delay = drawing_clock.restart().asSeconds();
         if (drawing_delay > 0.2)cout << "drawing time" << drawing_delay << "\n";
         if (pause) window.draw(text3);
