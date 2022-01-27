@@ -105,7 +105,8 @@ int main() {
     // Basic commands
     sf::Text text3;
     text3.setFont(font);
-    text3.setString("SPACE to start/Pause \nLeft Click to add food \nRight click to add obstacles");
+    text3.setString(
+            "SPACE to start/Pause \nLeft Click to add food \nRight click to add obstacles \nC to  clear the obstacles \nM to  clear the markers \nLeft/Right arrow to Erase/Create new ants \nDown/Up to reduce/increase the speed of the ants ");
     text3.setCharacterSize(40);
     text3.setFillColor(sf::Color::White);
     text3.setPosition(10, 10);
@@ -143,41 +144,49 @@ int main() {
                     window.close();
                     break;
 
-                case sf::Event::KeyPressed:
-                    if (event.key.code == sf::Keyboard::Space && !pause) {
+                case (sf::Event::KeyPressed):
 
-                        cout << "PAUSING";
-
-                        pause = true;
-
-                    } else if (event.key.code == sf::Keyboard::Space && pause) {
-
-                        pause = false;
-
-                    } else if (event.key.code == sf::Keyboard::C) {
-                        obstacles.clear();
-                    } else if (event.key.code == sf::Keyboard::M) {
-                        world.markers.clear();
-                    } else if (event.key.code == sf::Keyboard::F) {
-                        world.foods.clear();
-                    } else if (event.key.code == sf::Keyboard::Q) {
-                        window.close();
-                    } else if (event.key.code == sf::Keyboard::Up) {
-                        ANT_SPEED += 100.;
-                        ant_speed.setString("ANTS SPEED : " + to_string((int) ANT_SPEED));
-                    } else if (event.key.code == sf::Keyboard::Down) {
-                        if (ANT_SPEED >= 100.)ANT_SPEED -= 100.;
-                        ant_speed.setString("ANTS SPEED : " + to_string((int) ANT_SPEED));
-                    } else if (event.key.code == sf::Keyboard::Right) {
-                        world.add_ant();
-                        NB_ANTS += 1;
-                        colony_size.setString("Number of Ants : " + to_string((int) NB_ANTS));
-                    } else if (event.key.code == sf::Keyboard::Left) {
-                        world.ants.pop_back();
-                        NB_ANTS -= 1;
-                        colony_size.setString("Number of Ants : " + to_string((int) NB_ANTS));
+                    switch (event.key.code) {
+                        case (sf::Keyboard::Space):
+                            if (pause) pause = !pause;
+                            else {
+                                cout << "PAUSING";
+                                pause = true;
+                            }
+                            break;
+                        case sf::Keyboard::C:
+                            obstacles.clear();
+                            break;
+                        case sf::Keyboard::M:
+                            world.markers.clear();
+                            break;
+                        case sf::Keyboard::F:
+                            world.foods.clear();
+                            break;
+                        case sf::Keyboard::Q:
+                            window.close();
+                            break;
+                        case sf::Keyboard::Up:
+                            ANT_SPEED += 100.;
+                            ant_speed.setString("ANTS SPEED : " + to_string((int) ANT_SPEED));
+                            break;
+                        case sf::Keyboard::Down:
+                            if (ANT_SPEED >= 100.)ANT_SPEED -= 100.;
+                            ant_speed.setString("ANTS SPEED : " + to_string((int) ANT_SPEED));
+                            break;
+                        case sf::Keyboard::Right:
+                            world.add_ant();
+                            NB_ANTS += 1;
+                            colony_size.setString("Number of Ants : " + to_string((int) NB_ANTS));
+                            break;
+                        case sf::Keyboard::Left:
+                            if (NB_ANTS >= 1) {
+                                world.ants.pop_back();
+                                NB_ANTS -= 1;
+                                colony_size.setString("Number of Ants : " + to_string((int) NB_ANTS));
+                            }
+                            break;
                     }
-                    break;
 
                 case (sf::Event::MouseButtonPressed) :
 
@@ -210,7 +219,6 @@ int main() {
                         total_food += 10;
                     }
                     break;
-
 
                 case (sf::Event::MouseButtonReleased):
                     if (event.mouseButton.button == sf::Mouse::Right) {

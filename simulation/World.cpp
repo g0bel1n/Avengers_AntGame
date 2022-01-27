@@ -34,7 +34,7 @@ int World::get_nb_food() {
 
 void World::update(sf::Time dt, std::vector<Obstacle> &obstacles) {
 
-    for (int k = 0; k < nb_ants; k++) {
+    for (int k = 0; k < NB_ANTS; k++) {
         ants[k].update(dt, markers, obstacles, foods);
     }
 
@@ -72,7 +72,6 @@ void World::add_ant() {
     texture.loadFromFile("../ressources/ant.png");
     Ant_ ant(sf::Vector2<float>(50., LENGTH / 2.), 0);
     ant.graphics.setTexture(texture);
-
     ants.push_back(ant);
 
 }
