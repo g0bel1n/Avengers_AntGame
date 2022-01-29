@@ -9,6 +9,11 @@
 
 #include <vector>
 #include "ants/Ant_.h"
+#include "chunks/chunk.h"
+
+Chunk& get_chunk_ij(std::vector<Chunk>& chunks, int i, int j);
+Chunk& get_chunk_xy(std::vector<Chunk>& chunks, float x, float y);
+Chunk& get_chunk_pos(std::vector<Chunk>& chunks, sf::Vector2<float> pos);
 
 class World {
 
@@ -20,9 +25,8 @@ public:
 
     int get_nb_food();
 
-
     std::vector<Ant_> ants;
-    std::vector<Marker> markers;
+    std::vector<Chunk> chunks;
     std::vector<Marker> foods;
 
     void add_ant();
@@ -41,6 +45,7 @@ private:
 
     int nb_ants;
     int nb_food;
+    int nb_markers;
 
 
 };

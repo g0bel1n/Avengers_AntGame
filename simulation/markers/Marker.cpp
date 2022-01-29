@@ -7,6 +7,7 @@
 #include "Marker.h"
 #include <math.h>
 #include "../parameters.h"
+#include "../chunks/chunk.h"
 
 
 using namespace parameters;
@@ -25,15 +26,18 @@ float Marker::get_intensity() {
     return intensity;
 }
 
-Marker::Marker(sf::Vector2<float> position, int marker_type, float time_offset = 0.) {
+Marker::Marker(sf::Vector2<float> position, int marker_type, Chunk* myChunk, float time_offset = 0.) {
 
     this->position = position;
     this->marker_type = marker_type;
     this->intensity = INTENSITY_INCREMENT * pow(1 - DECAY_RATE, time_offset);
+    this->myChunk = myChunk;
 
     graphic = sf::CircleShape(intensity);
     graphic.setPosition(position);
     graphic.setFillColor(marker_color(marker_type));
+
+
 }
 
 void Marker::update(sf::Time &dt) {

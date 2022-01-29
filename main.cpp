@@ -31,6 +31,9 @@ int main() {
     //Generating the world
     World world(NB_ANTS, total_food);
 
+    std::cout<<"IJ of first : "<<world.chunks[0].getIJ()[0]<<world.chunks[0].getIJ()[1]<<std::endl;
+
+    std::cout<<"IJ of IJ 0 : "<<get_chunk_ij(world.chunks, 0, 0).getIJ()[0]<<get_chunk_ij(world.chunks, 0, 0).getIJ()[0]<<std::endl;
 
     if (!font.loadFromFile("../ressources/pricedown.otf")) {
         cout << "Could not load the font...";
@@ -72,7 +75,9 @@ int main() {
 
     sf::Text nb_markers;
     nb_markers.setFont(font);
-    nb_markers.setString("Number of Markers : " + to_string((int) world.markers.size()));
+    int total_markers = 0;
+    for (int c=0; c < world.chunks.size(); c++) {total_markers += world.chunks[c].getMarkers().size();}
+    nb_markers.setString("Number of Markers : " + to_string((int) total_markers));
     nb_markers.setPosition(WIDTH - 700, 170);
     nb_markers.setCharacterSize(50);
     nb_markers.setFillColor(sf::Color::Black);
@@ -164,7 +169,8 @@ int main() {
                             obstacles.clear();
                             break;
                         case sf::Keyboard::M:
-                            world.markers.clear();
+
+                            for (int c=0; c < world.chunks.size(); c++) {world.chunks[c].getMarkers().clear();}
                             break;
                         case sf::Keyboard::F:
                             world.foods.clear();
@@ -295,7 +301,9 @@ int main() {
             if (updating_delay > 0.3)cout << "updating time" << updating_delay << "\n";
         }
 
-        nb_markers.setString("Number of Markers : " + to_string((int) world.markers.size()));
+        int total_markers = 0;
+        for (int c=0; c < world.chunks.size(); c++) {total_markers += world.chunks[c].getMarkers().size();}
+        nb_markers.setString("Number of Markers : " + to_string((int) total_markers));
 
 
         window.clear();
@@ -304,7 +312,10 @@ int main() {
         // Drawing every object
         window.draw(Background);
         window.draw(colony_base);
-        for (auto &marker: world.markers) { window.draw(marker.graphic); }
+        for (int c=0; c < world.chunks.size(); c++) {
+            for (auto &marker: world.chunks[c].getMarkers()) { window.draw(marker.graphic); }
+        }
+
         for (auto &ant: world.ants) { window.draw(ant.graphics); }
         for (auto &food: world.foods) { window.draw(food.graphic); }
         for (auto &obstacle: obstacles) { window.draw(obstacle.graphics, &obstacle.texture); }

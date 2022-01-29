@@ -6,6 +6,8 @@
 #include "Ant_.h"
 #include <cmath>
 #include "../../common/utils.h"
+#include "../World.h"
+#include <iostream>
 
 
 using namespace parameters;
@@ -39,8 +41,9 @@ float Ant_::get_lifetime() {
 bool Ant_::is_valid(sf::Vector2f position, std::vector<Obstacle> &obstacles) {
     float offset = 5.f;
     if (!((position.x > 0 + offset) && (position.x + offset < WIDTH) && (position.y > 0 + offset) &&
-          (position.y + offset < LENGTH)))
+          (position.y + offset < LENGTH))) {
         return false;
+    }
     for (auto &obstacle: obstacles) {
         if (position.x >= obstacle.graphics[0].position.x && position.x <= obstacle.graphics[1].position.x &&
             position.y >= obstacle.graphics[0].position.y && position.y <= obstacle.graphics[2].position.y) {
@@ -51,8 +54,7 @@ bool Ant_::is_valid(sf::Vector2f position, std::vector<Obstacle> &obstacles) {
     return true;
 }
 
-void Ant_::move_to(sf::Vector2<float> new_position, sf::Time dt, std::vector<Obstacle> &obstacles,
-                   std::vector<Marker> &markers) {
+void Ant_::move_to(sf::Vector2<float> new_position, sf::Time dt, std::vector<Obstacle> &obstacles) {
     /* Check if the position we are trying to implement is valid, e.g. no obstacle */
 
     if (is_valid(new_position, obstacles)) {
@@ -61,18 +63,14 @@ void Ant_::move_to(sf::Vector2<float> new_position, sf::Time dt, std::vector<Obs
         this->angle += PI / 2;
         this->direction = sf::Vector2<float>(cos(angle), sin(angle));
         this->position += direction * ANT_SPEED * dt.asSeconds();
-        // Adding repellent ? (to pursue)
-        //AddMarker(markers, 5,10.);
-        //last_changed=sf::seconds(direction_change_delta+0.5);
         times_wall_hit++;
     }
 
 }
 
 void
-Ant_::update(sf::Time dt, std::vector<Marker> &markers, std::vector<Obstacle> &obstacles, std::vector<Marker> &foods) {
+Ant_::update(sf::Time dt, std::vector<Chunk> &chunks, std::vector<Obstacle> &obstacles, std::vector<Marker> &foods) {
 /* Kind of a decision tree to decide what is the next position */
-
     // To avoid changing direction too often...
     if (last_changed > sf::seconds(direction_change_delta + (std::rand() % 5) / 100.)) {
         //If looking for food...
@@ -96,7 +94,7 @@ Ant_::update(sf::Time dt, std::vector<Marker> &markers, std::vector<Obstacle> &o
                 }
                     //If the ant can't see the food, it looks for markers left by others
                 else {
-                    float new_angle = sampleWorld(markers);
+                    float new_angle = sampleWorld(chunks);
                     // if new_angle is a nan it is because there is no markers in the detection radius
                     if (!isnan(new_angle)) {
                         this->angle = new_angle;
@@ -170,7 +168,7 @@ Ant_::update(sf::Time dt, std::vector<Marker> &markers, std::vector<Obstacle> &o
 
                 //If we cannot see it, lets look for markers
             else {
-                float new_angle = sampleWorld(markers);
+                float new_angle = sampleWorld(chunks);
                 // if new_angle is a nan it is because there is no markers in the detection radius
                 if (!isnan(new_angle)) {
                     this->angle = new_angle;
@@ -190,11 +188,11 @@ Ant_::update(sf::Time dt, std::vector<Marker> &markers, std::vector<Obstacle> &o
     this->angle = normalise_angle(angle);
     this->direction = sf::Vector2<float>(cos(angle), sin(angle));
     sf::Vector2<float> new_position = this->position + this->direction * ANT_SPEED * dt.asSeconds();
-    move_to(new_position, dt, obstacles, markers);
+    move_to(new_position, dt, obstacles);
     if (last_dropped > .05) {
         if (ToFood) {
-            AddMarker(markers, 3, time_since_quitted_home);
-        } else { AddMarker(markers, 4, time_since_found_food); }
+            AddMarker(chunks, 3, time_since_quitted_home);
+        } else { AddMarker(chunks, 4, time_since_found_food); }
         last_dropped = 0.;
     }
 
@@ -231,15 +229,15 @@ int Ant_::check_env(std::vector<Marker> &foods, float radius) {
     return min_index;
 }
 
-void Ant_::AddMarker(std::vector<Marker> &markers, int type, float time_offset) {
+void Ant_::AddMarker(std::vector<Chunk> &chunks, int type, float time_offset) {
 
-    Marker marker(position, type, time_offset);
-    markers.push_back(marker);
+    Chunk& fatherChunk = get_chunk_pos(chunks, position);
+    fatherChunk.getMarkers().push_back(Marker(position, type, &fatherChunk, time_offset));
 
 }
 
 
-float Ant_::sampleWorld(std::vector<Marker> markers) {
+float Ant_::sampleWorld(std::vector<Chunk> chunks) {
     /* Calculate the barycenter of markers in the detection radius depending on the ant objective*/
 
     int type;
@@ -248,22 +246,27 @@ float Ant_::sampleWorld(std::vector<Marker> markers) {
 
     float bary_angle = 0.;
     float total_intensity = 0.;
-    for (int i = 0; i < markers.size(); i++) {
-        if (markers[i].marker_type == type || markers[i].marker_type == 5) {
-            float distance_ = distance(markers[i].position, position);
-            if (distance_ <= DETECTION_RADIUS && distance_ > EATING_RADIUS) {
-                sf::Vector2f target_position = markers[i].position;
-                sf::Vector2f delta_vect = target_position - position;
-                float markers_angle = atan2(delta_vect.y, delta_vect.x);
-                markers_angle = normalise_angle(markers_angle);
+    std::vector<std::vector<int>> close_chunks = neighbour_chunks({(int)(position.x/CHUNKSIZE), (int)(position.y/CHUNKSIZE)});
+    for (int c = 0; c < close_chunks.size(); c++) {
+        std::vector<Marker> markers = get_chunk_ij(chunks, close_chunks[c][0], close_chunks[c][1]).getMarkers();
+        for (int i = 0; i < markers.size(); i++) {
+            if (markers[i].marker_type == type || markers[i].marker_type == 5) {
+                float distance_ = distance(markers[i].position, position);
+                if (distance_ <= DETECTION_RADIUS && distance_ > EATING_RADIUS) {
+                    sf::Vector2f target_position = markers[i].position;
+                    sf::Vector2f delta_vect = target_position - position;
+                    float markers_angle = atan2(delta_vect.y, delta_vect.x);
+                    markers_angle = normalise_angle(markers_angle);
 
-                if (markers_angle <= angle + PI / 2 && markers_angle >= angle - PI / 2) {
-                    bary_angle += markers[i].get_intensity() * markers_angle;
-                    total_intensity += markers[i].get_intensity();
+                    if (markers_angle <= angle + PI / 2 && markers_angle >= angle - PI / 2) {
+                        bary_angle += markers[i].get_intensity() * markers_angle;
+                        total_intensity += markers[i].get_intensity();
+                    }
                 }
             }
         }
     }
+
 
     return bary_angle / (total_intensity);
 }

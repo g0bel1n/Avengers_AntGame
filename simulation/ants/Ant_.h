@@ -21,7 +21,7 @@ public:
     Ant_(sf::Vector2<float> position, int ant_id);
 
     void
-    update(sf::Time dt, std::vector<Marker> &markers, std::vector<Obstacle> &obstacles, std::vector<Marker> &foods);
+    update(sf::Time dt, std::vector<Chunk> &chunks, std::vector<Obstacle> &obstacles, std::vector<Marker> &foods);
 
     float get_angle();
 
@@ -29,23 +29,23 @@ public:
 
     float get_lifetime();
 
-    int check_env(std::vector<Marker> &markers, float radius);
+    int check_env(std::vector<Marker> &foods, float radius);
 
 
     sf::Vector2<float> size = sf::Vector2f(parameters::ANT_LENGTH, parameters::ANT_WIDTH);
 
     void
-    move_to(sf::Vector2<float> position, sf::Time dt, std::vector<Obstacle> &obstacles, std::vector<Marker> &markers);
+    move_to(sf::Vector2<float> position, sf::Time dt, std::vector<Obstacle> &obstacles);
 
     bool switchSkin = false;
     bool ToFood = true;
     sf::Sprite graphics;
 
-    void AddMarker(std::vector<Marker> &markers, int type, float time_offset);
+    void AddMarker(std::vector<Chunk> &chunks, int type, float time_offset);
 
     float RandomAngle();
 
-    float sampleWorld(std::vector<Marker> markers);
+    float sampleWorld(std::vector<Chunk> chunks);
 
     sf::Texture texture;
     sf::Texture texture_with_food;

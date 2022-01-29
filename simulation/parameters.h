@@ -12,6 +12,7 @@ namespace parameters {
     inline int NB_ANTS{20};
     inline int LENGTH{800};
     inline int WIDTH{1400};
+    inline int CHUNKSIZE{150};
 
     //ANT PARAMETERS
     inline float ANT_SPEED{300.};

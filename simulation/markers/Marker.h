@@ -8,11 +8,13 @@
 #pragma once
 #include <SFML/Graphics.hpp>
 
+class Chunk;
+
 class Marker {
 
 public:
 
-    Marker(sf::Vector2<float> position, int marker_type, float time_offset);
+    Marker(sf::Vector2<float> position, int marker_type, Chunk* myChunk, float time_offset);
 
     float get_intensity();
 
@@ -23,12 +25,14 @@ public:
     sf::CircleShape graphic;
     bool changeColor = false;
 
+    Chunk* getChunk();
 
     void update(sf::Time &dt);
 
 
 private:
 
+    Chunk* myChunk;
     float intensity;
 
 };
