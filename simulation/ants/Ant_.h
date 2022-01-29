@@ -10,10 +10,10 @@
 
 #pragma once
 
-#include "../markers/Marker.h"
+#include "../Elements/Marker.h"
 #include "../obstacles/Obstacle.h"
 #include "../parameters.h"
-#include "../markers/Food.h"
+#include "../Elements/Food.h"
 
 
 class Ant_ {

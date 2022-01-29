@@ -5,7 +5,7 @@
 #ifndef ANTS_FIGHT_CLUB_WORLD_H
 #define ANTS_FIGHT_CLUB_WORLD_H
 
-#include "markers/Marker.h"
+#include "Elements/Marker.h"
 
 
 #pragma once
@@ -13,7 +13,7 @@
 #include <vector>
 #include "ants/Ant_.h"
 #include "chunks/chunk.h"
-#include "markers/Food.h"
+#include "Elements/Food.h"
 
 
 Chunk &get_chunk_ij(std::vector<Chunk> &chunks, int i, int j);

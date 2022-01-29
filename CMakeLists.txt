@@ -3,7 +3,7 @@ project(Avengers_AntGame)
 
 set(CMAKE_CXX_STANDARD 14)
 
-add_executable(Avengers_AntGame main.cpp simulation/ants/Ant_.cpp simulation/ants/Ant_.h simulation/World.cpp simulation/World.h simulation/markers/Marker.cpp simulation/markers/Marker.h common/utils.h simulation/obstacles/Obstacle.cpp simulation/obstacles/Obstacle.h simulation/parameters.h simulation/chunks/chunk.cpp simulation/chunks/chunk.h simulation/markers/Food.cpp simulation/markers/Food.h simulation/BaseElement.h)
+add_executable(Avengers_AntGame main.cpp simulation/ants/Ant_.cpp simulation/ants/Ant_.h simulation/World.cpp simulation/World.h simulation/Elements/Marker.cpp simulation/Elements/Marker.h common/utils.h simulation/obstacles/Obstacle.cpp simulation/obstacles/Obstacle.h simulation/parameters.h simulation/chunks/chunk.cpp simulation/chunks/chunk.h simulation/Elements/Food.cpp simulation/Elements/Food.h simulation/Elements/BaseElement.h)
 find_package(PkgConfig REQUIRED)
 
 pkg_check_modules(SFML REQUIRED sfml-graphics sfml-window)
