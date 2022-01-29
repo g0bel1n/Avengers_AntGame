@@ -6,35 +6,33 @@
 #define ANTS_FIGHT_CLUB_MARKER_H
 
 #pragma once
+
 #include <SFML/Graphics.hpp>
+#include "BaseElement.h"
 
 class Chunk;
 
-class Marker {
+class Marker : public BaseElement {
 
 public:
 
-    Marker(sf::Vector2<float> position, int marker_type, Chunk* myChunk, float time_offset);
+    Marker(sf::Vector2<float> position, int state, Chunk *myChunk, float time_offset);
 
     float get_intensity();
-
-    int marker_type;
 
     sf::Vector2<float> position;
 
     sf::CircleShape graphic;
-    bool changeColor = false;
-
-    Chunk* getChunk();
-
-    void update(sf::Time &dt);
+    
+    void update(sf::Time &dt) override;
 
 
 private:
 
-    Chunk* myChunk;
+    Chunk *myChunk;
     float intensity;
 
+    const sf::Color &color();
 };
 
 

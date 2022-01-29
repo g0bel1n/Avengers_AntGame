@@ -13,6 +13,7 @@
 #include <vector>
 #include "ants/Ant_.h"
 #include "chunks/chunk.h"
+#include "markers/Food.h"
 
 
 Chunk &get_chunk_ij(std::vector<Chunk> &chunks, int i, int j);
@@ -33,7 +34,7 @@ public:
 
     std::vector<Ant_> ants;
     std::vector<Chunk> chunks;
-    std::vector<Marker> foods;
+    std::vector<Food> foods;
 
     void add_ant();
 
@@ -44,7 +45,7 @@ public:
 
     void update(sf::Time dt, std::vector<Obstacle> &obstacles);
 
-    void AddMarker(sf::Vector2f position, int type);
+    void AddFood(sf::Vector2f position);
 
 private:
 

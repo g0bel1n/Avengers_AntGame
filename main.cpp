@@ -249,7 +249,7 @@ int main() {
                         for (int i = 0; i < 4; i++) {
                             for (int j = 0; j < 4; j++) {
 
-                                world.AddMarker(to_pos + sf::Vector2f(i * x_offset, j * x_offset), 1);
+                                world.AddFood(to_pos + sf::Vector2f(i * x_offset, j * x_offset));
                             }
                         }
                         total_food += 10;
@@ -302,7 +302,7 @@ int main() {
             //These objects need to be updated only when the simulation is running
             text1.setString(
                     "Time elapsed :  " + to_string(minutes) + "  min  " + to_string(time).substr(0, 3));
-            text2.setString(to_string(total_food - world.get_food_available()));
+            text2.setString(to_string(food_in_colony));
 
             updating_clock.restart();
             world.update(dt, obstacles);

@@ -7,7 +7,6 @@
 #include <cmath>
 #include "../../common/utils.h"
 #include "../World.h"
-#include <iostream>
 
 
 using namespace parameters;
@@ -69,7 +68,7 @@ void Ant_::move_to(sf::Vector2<float> new_position, sf::Time dt, std::vector<Obs
 }
 
 void
-Ant_::update(sf::Time dt, std::vector<Chunk> &chunks, std::vector<Obstacle> &obstacles, std::vector<Marker> &foods) {
+Ant_::update(sf::Time dt, std::vector<Chunk> &chunks, std::vector<Obstacle> &obstacles, std::vector<Food> &foods) {
 /* Kind of a decision tree to decide what is the next position */
     // To avoid changing direction too often...
     if (last_changed > sf::seconds(direction_change_delta + (std::rand() % 5) / 100.)) {
@@ -83,9 +82,8 @@ Ant_::update(sf::Time dt, std::vector<Chunk> &chunks, std::vector<Obstacle> &obs
 
                 target = check_env(foods, DETECTION_RADIUS);
                 //If it detects valid food, let's go to it
-                if (target >= 0 && foods[target].marker_type == 1) {
-                    foods[target].changeColor = true;
-                    foods[target].marker_type = 2;
+                if (target >= 0 && foods[target].state == 1) {
+                    foods[target].isTargeted();
                     sf::Vector2f delta_vect = foods[target].position - position;
                     float new_angle = atan2(delta_vect.y, delta_vect.x);
                     this->angle = new_angle;
@@ -110,8 +108,7 @@ Ant_::update(sf::Time dt, std::vector<Chunk> &chunks, std::vector<Obstacle> &obs
                 // Just checking if arrived. If not, keep going...
                 if (target == check_env(foods, EATING_RADIUS)) {
 
-                    foods[target].marker_type = -1;
-                    foods[target].changeColor = true;
+                    foods[target].isEaten();
                     target = -1;
                     ToFood = false;
                     time_since_found_food = 0.;
@@ -124,13 +121,13 @@ Ant_::update(sf::Time dt, std::vector<Chunk> &chunks, std::vector<Obstacle> &obs
                     switchSkin = false;
 
                 }
-                    //if we are not there yet, lets still check if it is avalaible
-                else if (foods[target].marker_type == -1) {
+                    //if we are not there yet, lets still check if it is available
+                else if (foods[target].state == 0) {
                     target = -1;
 
                 } else if (check_env(foods, DETECTION_RADIUS) != target) {
 
-                    foods[target].marker_type = 1;
+                    foods[target].HasBeenForgotten();
                     target = -1;
                 }
 
@@ -146,6 +143,8 @@ Ant_::update(sf::Time dt, std::vector<Chunk> &chunks, std::vector<Obstacle> &obs
                 texture.loadFromFile("../ressources/ant.png");
                 graphics.setTexture(texture);
                 switchSkin = false;
+
+                food_in_colony++;
 
                 //Changing Objective
                 ToFood = true;
@@ -191,8 +190,8 @@ Ant_::update(sf::Time dt, std::vector<Chunk> &chunks, std::vector<Obstacle> &obs
     move_to(new_position, dt, obstacles);
     if (last_dropped > .05) {
         if (ToFood) {
-            AddMarker(chunks, 3, time_since_quitted_home);
-        } else { AddMarker(chunks, 4, time_since_found_food); }
+            AddMarker(chunks, 1, time_since_quitted_home);
+        } else { AddMarker(chunks, 2, time_since_found_food); }
         last_dropped = 0.;
     }
 
@@ -209,7 +208,7 @@ float Ant_::get_angle() {
     return this->angle;
 }
 
-int Ant_::check_env(std::vector<Marker> &foods, float radius) {
+int Ant_::check_env(std::vector<Food> foods, float radius) {
     /* Look for the closest piece of food according to the radius*/
 
     int i = 0;
@@ -217,7 +216,7 @@ int Ant_::check_env(std::vector<Marker> &foods, float radius) {
     float min_distance = 1000.f;
     int min_index = -1;
     while (foods.size() > i) {
-        if (foods[i].marker_type >= 0) {
+        if (foods[i].state > 0) {
             distance_ = distance(foods[i].position, position);
             if (distance_ <= radius && distance_ <= min_distance) {
                 min_distance = distance_;
@@ -231,7 +230,7 @@ int Ant_::check_env(std::vector<Marker> &foods, float radius) {
 
 void Ant_::AddMarker(std::vector<Chunk> &chunks, int type, float time_offset) {
 
-    Chunk& fatherChunk = get_chunk_pos(chunks, position);
+    Chunk &fatherChunk = get_chunk_pos(chunks, position);
     fatherChunk.getMarkers().push_back(Marker(position, type, &fatherChunk, time_offset));
 
 }
@@ -241,16 +240,17 @@ float Ant_::sampleWorld(std::vector<Chunk> chunks) {
     /* Calculate the barycenter of markers in the detection radius depending on the ant objective*/
 
     int type;
-    if (ToFood) { type = 4; }
-    else { type = 3; }
+    if (ToFood) { type = 2; }
+    else { type = 1; }
 
     float bary_angle = 0.;
     float total_intensity = 0.;
-    std::vector<std::vector<int>> close_chunks = neighbour_chunks({(int)(position.x/CHUNKSIZE), (int)(position.y/CHUNKSIZE)});
+    std::vector<std::vector<int>> close_chunks = neighbour_chunks(
+            {(int) (position.x / CHUNKSIZE), (int) (position.y / CHUNKSIZE)});
     for (int c = 0; c < close_chunks.size(); c++) {
         std::vector<Marker> markers = get_chunk_ij(chunks, close_chunks[c][0], close_chunks[c][1]).getMarkers();
         for (int i = 0; i < markers.size(); i++) {
-            if (markers[i].marker_type == type || markers[i].marker_type == 5) {
+            if (markers[i].state == type) {
                 float distance_ = distance(markers[i].position, position);
                 if (distance_ <= DETECTION_RADIUS && distance_ > EATING_RADIUS) {
                     sf::Vector2f target_position = markers[i].position;

@@ -13,6 +13,7 @@ namespace parameters {
     inline int LENGTH{800};
     inline int WIDTH{1400};
     inline int CHUNKSIZE{150};
+    inline int food_in_colony = 0;
 
     //ANT PARAMETERS
     inline float ANT_SPEED{300.};
@@ -26,9 +27,10 @@ namespace parameters {
     //MARKER PARAMETERS
     inline constexpr float DECAY_RATE{.1}; //Percentage of intensity decrease per second
     inline constexpr float INTENSITY_INCREMENT = 5;
-    inline constexpr float RADIUS = 2.f;
-    inline float DETECTION_THRESHOLD = .5;
-    inline constexpr float DETECTION_THRESHOLD_FIXED = .5;
+    inline constexpr float RADIUS = 10.f;
+    inline float DETECTION_THRESHOLD = 1.5;
+
+    inline constexpr float DECOMPOSITION_THRESHOLD = 30.;
 
 
     // OBSTACLE PARAMETERS

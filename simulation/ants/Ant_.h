@@ -13,6 +13,7 @@
 #include "../markers/Marker.h"
 #include "../obstacles/Obstacle.h"
 #include "../parameters.h"
+#include "../markers/Food.h"
 
 
 class Ant_ {
@@ -21,7 +22,7 @@ public:
     Ant_(sf::Vector2<float> position, int ant_id);
 
     void
-    update(sf::Time dt, std::vector<Chunk> &chunks, std::vector<Obstacle> &obstacles, std::vector<Marker> &foods);
+    update(sf::Time dt, std::vector<Chunk> &chunks, std::vector<Obstacle> &obstacles, std::vector<Food> &foods);
 
     float get_angle();
 
@@ -29,7 +30,7 @@ public:
 
     float get_lifetime();
 
-    int check_env(std::vector<Marker> &foods, float radius);
+    int check_env(std::vector<Food> foods, float radius);
 
 
     sf::Vector2<float> size = sf::Vector2f(parameters::ANT_LENGTH, parameters::ANT_WIDTH);
