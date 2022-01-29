@@ -1,5 +1,6 @@
 #include <SFML/Window.hpp>
 #include <iostream>
+#include <fstream>
 #include "simulation/World.h"
 #include "simulation/parameters.h"
 
@@ -9,7 +10,11 @@ using namespace parameters;
 
 using namespace std;
 
+
 int main() {
+
+    ofstream data_file("../data.csv");
+    data_file << "Time;dt loop;dt update;nb_markers;" + to_string(NB_ANTS) << endl;
 
     bool pause = true;
     int total_food = 0;
@@ -31,9 +36,10 @@ int main() {
     //Generating the world
     World world(NB_ANTS, total_food);
 
-    std::cout<<"IJ of first : "<<world.chunks[0].getIJ()[0]<<world.chunks[0].getIJ()[1]<<std::endl;
+    std::cout << "IJ of first : " << world.chunks[0].getIJ()[0] << world.chunks[0].getIJ()[1] << std::endl;
 
-    std::cout<<"IJ of IJ 0 : "<<get_chunk_ij(world.chunks, 0, 0).getIJ()[0]<<get_chunk_ij(world.chunks, 0, 0).getIJ()[0]<<std::endl;
+    std::cout << "IJ of IJ 0 : " << get_chunk_ij(world.chunks, 0, 0).getIJ()[0]
+              << get_chunk_ij(world.chunks, 0, 0).getIJ()[0] << std::endl;
 
     if (!font.loadFromFile("../ressources/pricedown.otf")) {
         cout << "Could not load the font...";
@@ -76,14 +82,11 @@ int main() {
     sf::Text nb_markers;
     nb_markers.setFont(font);
     int total_markers = 0;
-    for (int c=0; c < world.chunks.size(); c++) {total_markers += world.chunks[c].getMarkers().size();}
+    for (int c = 0; c < world.chunks.size(); c++) { total_markers += world.chunks[c].getMarkers().size(); }
     nb_markers.setString("Number of Markers : " + to_string((int) total_markers));
     nb_markers.setPosition(WIDTH - 700, 170);
     nb_markers.setCharacterSize(50);
     nb_markers.setFillColor(sf::Color::Black);
-
-
-
 
     //Text SFML-Objects that will display :
 
@@ -139,6 +142,7 @@ int main() {
     // The vector Obstacle (Reminder : send it to World.h)
     std::vector<Obstacle> obstacles;
 
+
     bool draw_obstacle = false;
     //Main Loop
     while (window.isOpen()) {
@@ -152,6 +156,7 @@ int main() {
             // "close requested" event: we close the window
             switch (event.type) {
                 case (sf::Event::Closed):
+                    data_file.close();
                     window.close();
                     break;
 
@@ -169,14 +174,18 @@ int main() {
                             obstacles.clear();
                             break;
                         case sf::Keyboard::M:
-
-                            for (int c=0; c < world.chunks.size(); c++) {world.chunks[c].getMarkers().clear();}
+                            for (int c = 0; c < world.chunks.size(); c++) { world.chunks[c].getMarkers().clear(); }
                             break;
                         case sf::Keyboard::F:
                             world.foods.clear();
                             break;
                         case sf::Keyboard::Q:
+                            data_file.close();
                             window.close();
+                            system("python3 -m pip install 'matplotlib'");
+                            system("python3 -m pip install 'pandas'");
+                            system("python3 '../plot_data.py'");
+                            system("open ../data.png");
                             break;
                         case sf::Keyboard::Up:
                             ANT_SPEED += 100.;
@@ -299,11 +308,15 @@ int main() {
             world.update(dt, obstacles);
             float updating_delay = updating_clock.restart().asSeconds();
             if (updating_delay > 0.3)cout << "updating time" << updating_delay << "\n";
-        }
 
-        int total_markers = 0;
-        for (int c=0; c < world.chunks.size(); c++) {total_markers += world.chunks[c].getMarkers().size();}
-        nb_markers.setString("Number of Markers : " + to_string((int) total_markers));
+            int total_markers = 0;
+            for (int c = 0; c < world.chunks.size(); c++) { total_markers += world.chunks[c].getMarkers().size(); }
+            nb_markers.setString("Number of Markers : " + to_string((int) total_markers));
+
+            data_file
+                    << to_string(minutes) + ":" + to_string(time) + ";" + to_string(dt.asSeconds()) + ";" +
+                       to_string(updating_delay) + ";" + to_string(total_markers) << endl;
+        }
 
 
         window.clear();
@@ -312,10 +325,9 @@ int main() {
         // Drawing every object
         window.draw(Background);
         window.draw(colony_base);
-        for (int c=0; c < world.chunks.size(); c++) {
-            for (auto &marker: world.chunks[c].getMarkers()) { window.draw(marker.graphic); }
+        for (auto &chunk: world.chunks) {
+            for (auto &marker: chunk.getMarkers()) { window.draw(marker.graphic); }
         }
-
         for (auto &ant: world.ants) { window.draw(ant.graphics); }
         for (auto &food: world.foods) { window.draw(food.graphic); }
         for (auto &obstacle: obstacles) { window.draw(obstacle.graphics, &obstacle.texture); }
