@@ -18,15 +18,13 @@
 
 Chunk &get_chunk_ij(std::vector<Chunk> &chunks, int i, int j);
 
-Chunk &get_chunk_xy(std::vector<Chunk> &chunks, float x, float y);
-
 Chunk &get_chunk_pos(std::vector<Chunk> &chunks, sf::Vector2<float> pos);
 
 class Colony {
 
 public:
 
-    Colony(int nb_ants, sf::Color color, sf::Texture hole_text, sf::Font font,
+    Colony(int nb_ants, sf::Color color,
            sf::Vector2f colony_pos = parameters::DEFAULT_COLONY_POSITION,
            float ant_speed = parameters::DEFAULT_ANT_SPEED);
 
@@ -45,17 +43,7 @@ public:
 
     void delete_ant();
 
-    void apply_texture();
-
-
-    int get_food_available();
-
-
     void update(sf::Time dt, std::vector<Obstacle> &obstacles, std::vector<Food> &foods);
-
-    // Texture of the colony Hole
-    sf::Texture colony_hole;
-
 
     // Colony Graphic object
     sf::Sprite colony_base;
@@ -63,12 +51,7 @@ public:
 
 private:
 
-
-    int nb_ants;
-    int nb_markers{};
     sf::Color color;
-    sf::Font font;
-
 
 };
 

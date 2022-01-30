@@ -34,22 +34,21 @@ int main() {
     sf::Clock drawing_clock;
     sf::Clock updating_clock;
     sf::Font font;
+    if (!font.loadFromFile("../ressources/pricedown.otf")) {
+        cout << "Could not load the font...";
+    }
     window.setTitle("Avengers AntGame - @G0bel1n");
+
+    ant_texture.loadFromFile("../ressources/ant.png");
+    hole_texture.loadFromFile("../ressources/Hole.PNG");
+
 
 
     //Generating the world
     World world = World(2);
 
-    for (auto &colony: world.colonies)colony.apply_texture();
 
-    /*std::cout << "IJ of first : " << world.chunks[0].getIJ()[0] << world.chunks[0].getIJ()[1] << std::endl;
 
-    std::cout << "IJ of IJ 0 : " << get_chunk_ij(world.chunks, 0, 0).getIJ()[0]
-              << get_chunk_ij(world.chunks, 0, 0).getIJ()[0] << std::endl;*/
-
-    if (!font.loadFromFile("../ressources/pricedown.otf")) {
-        cout << "Could not load the font...";
-    }
 
     //Loading the grass background
     sf::Texture SoilTex;
@@ -238,7 +237,6 @@ int main() {
                             break;
                         case sf::Keyboard::Right:
                             world.colonies[active_colony].add_ant();
-                            world.colonies[active_colony].apply_texture();
                             colony_size.setString(
                                     "Number of Ants : " + to_string((int) world.colonies[active_colony].get_nb_ants()));
                             break;
@@ -251,7 +249,7 @@ int main() {
                             break;
 
                         case sf::Keyboard::G:
-                            MARKER_GRAPHICS = (MARKER_GRAPHICS == false);
+                            markerGraphics = !markerGraphics;
                             break;
 
                         case sf::Keyboard::D:
@@ -268,7 +266,6 @@ int main() {
                                     world.colonies[active_colony].add_ant();
                                     recreate_N_ants += 1;
                                 }
-                                world.colonies[active_colony].apply_texture();
                             }
                             break;
                     }
@@ -383,19 +380,18 @@ int main() {
         total_markers = 0;
 
 
-
         for (auto &colony: world.colonies) {
 
             window.draw(colony.colony_base);
             for (auto &chunk: colony.chunks) {
                 for (auto &marker: chunk.getMarkers()) {
-                    if (MARKER_GRAPHICS) { window.draw(marker.graphic); }
+                    if (markerGraphics) { window.draw(marker.graphic); }
                     total_markers += 1;
 
                 }
             }
 
-            for (auto &ant: colony.ants) { ;
+            for (auto &ant: colony.ants) {
                 window.draw(ant.graphics);
             }
 

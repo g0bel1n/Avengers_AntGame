@@ -5,7 +5,6 @@
 #include "World.h"
 
 
-
 void World::update(sf::Time &dt) {
 
     for (auto &colony: colonies) {
@@ -20,12 +19,8 @@ void World::update(sf::Time &dt) {
 
 World::World(int nb_colonies, int nb_ants_per_colony) {
 
-    hole_texture.loadFromFile("../ressources/Hole.PNG");
-    if (!font.loadFromFile("../ressources/pricedown.otf")) {
-    }
-
     for (int i = 0; i < nb_colonies; i++) {
-        colonies.emplace_back(nb_ants_per_colony, parameters::DEFAULT_COLORS[i], hole_texture, font);
+        colonies.emplace_back(nb_ants_per_colony, parameters::DEFAULT_COLORS[i]);
     }
 
 

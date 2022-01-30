@@ -10,31 +10,25 @@ Chunk &get_chunk_ij(std::vector<Chunk> &chunks, int i, int j) {
     return chunks[j + LENGTH / CHUNKSIZE * i];
 }
 
-Chunk &get_chunk_xy(std::vector<Chunk> &chunks, float x, float y) {
-    return get_chunk_ij(chunks, (int) (x / CHUNKSIZE), (int) (y / CHUNKSIZE));
-}
-
 Chunk &get_chunk_pos(std::vector<Chunk> &chunks, sf::Vector2<float> pos) {
     float x = std::max(std::min(pos.x, (float) WIDTH), (float) 0);
     float y = std::max(std::min(pos.y, (float) LENGTH), (float) 0);
     return get_chunk_ij(chunks, (int) (x / CHUNKSIZE), (int) (y / CHUNKSIZE));
 }
 
-void fast_erase(std::vector<Marker>& vect, int pos) { /*Using the back-swap trick*/
+void fast_erase(std::vector<Marker> &vect, int pos) { /*Using the back-swap trick*/
     auto it = vect.begin() + pos;
     *it = std::move(vect.back());
     vect.pop_back();
 }
 
 
-Colony::Colony(int nb_ants, sf::Color color, sf::Texture hole_text, sf::Font font, sf::Vector2f colony_pos,
+Colony::Colony(int nb_ants, sf::Color color, sf::Vector2f colony_pos,
                float ant_speed) {
 
 
     food_in_colony = 0;
-    this->nb_ants = nb_ants;
     this->colony_pos = colony_pos;
-    this->nb_markers = 0;
     this->ant_speed = ant_speed;
     this->color = color;
 
@@ -51,12 +45,11 @@ Colony::Colony(int nb_ants, sf::Color color, sf::Texture hole_text, sf::Font fon
 
     for (int i = 0; i < nb_ants; i++) {
 
-        Ant_ ant(colony_pos, i, color, ant_speed);
+        Ant_ ant(colony_pos, color, ant_speed);
         ants.push_back(ant);
     }
 
-    colony_hole = hole_text;
-
+    colony_base.setTexture(hole_texture);
     colony_base.setPosition(colony_pos);
     colony_base.setOrigin(536. / 2., 204.);
     colony_base.setColor(color);
@@ -73,8 +66,8 @@ void Colony::update(sf::Time dt, std::vector<Obstacle> &obstacles, std::vector<F
         ant.update(dt, chunks, obstacles, foods, food_in_colony, ant_speed, colony_pos);
     }
 
-    for (int c = 0; c < chunks.size(); c++) {
-        std::vector<Marker> &markers = chunks[c].getMarkers();
+    for (auto &chunk: chunks) {
+        std::vector<Marker> &markers = chunk.getMarkers();
         for (int k = 0; k < markers.size(); k++) {
             markers[k].update(dt);
             if (markers[k].state == 0) fast_erase(markers, k);
@@ -92,7 +85,7 @@ void Colony::update(sf::Time dt, std::vector<Obstacle> &obstacles, std::vector<F
 
 void Colony::add_ant() {
 
-    Ant_ ant(colony_pos, 0, color, ant_speed);
+    Ant_ ant(colony_pos, color, ant_speed);
     ants.push_back(ant);
 
 
@@ -100,11 +93,5 @@ void Colony::add_ant() {
 
 void Colony::delete_ant() {
     ants.pop_back();
-}
-
-void Colony::apply_texture() {
-
-    for (auto &ant: ants)ant.apply_texture();
-    colony_base.setTexture(colony_hole);
 }
 

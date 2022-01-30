@@ -19,34 +19,20 @@
 class Ant_ {
 
 public:
-    Ant_(sf::Vector2<float> position, int ant_id, sf::Color &color, float ant_speed);
+    Ant_(sf::Vector2<float> position, sf::Color &color, float ant_speed);
 
     void
     update(sf::Time dt, std::vector<Chunk> &chunks, std::vector<Obstacle> &obstacles, std::vector<Food> &foods,
            int &food_in_colony, float ant_speed, sf::Vector2f colony_pos);
 
-    float get_angle();
-
-    sf::Vector2f get_position();
-
-    sf::Vector2f colony_pos;
-
     float get_lifetime();
 
-    void apply_texture();
 
-    sf::Color color;
-
-
-    int check_env(std::vector<Food>& foods, float radius);
-
-
-    sf::Vector2<float> size = sf::Vector2f(parameters::ANT_LENGTH, parameters::ANT_WIDTH);
+    int check_env(std::vector<Food> &foods, float radius);
 
     void
     move_to(sf::Vector2<float> position, sf::Time dt, std::vector<Obstacle> &obstacles);
 
-    bool switchSkin = false;
     bool ToFood = true;
     sf::Sprite graphics;
 
@@ -56,14 +42,11 @@ public:
 
     float sampleWorld(std::vector<Chunk> &chunks);
 
-    sf::Texture texture;
-    sf::Texture texture_with_food;
-
     int target = -1; // Id of the food the ant is targeting
 private:
 
 
-    int ant_id; // "Identity" of the ant
+    // "Identity" of the ant
     float lifetime; // Time the ant has been alive
     float time_since_quitted_home = 0.;
     float time_since_found_food = 0.;
@@ -79,7 +62,8 @@ private:
     sf::Time last_changed = sf::Time::Zero; // Time since last change of direction
 
 
-    bool is_valid(sf::Vector2f position, std::vector<Obstacle> &obstacles); // To check if the new position is valid
+    static bool
+    is_valid(sf::Vector2f position, std::vector<Obstacle> &obstacles); // To check if the new position is valid
 };
 
 

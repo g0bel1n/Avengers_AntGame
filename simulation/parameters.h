@@ -8,7 +8,6 @@
 #define AVENGERS_ANTGAME_SIMULATION_PARAMETERS_H
 
 
-
 namespace parameters {
     //WORLD PARAMETERS
     inline int NB_ANTS{20};
@@ -20,15 +19,16 @@ namespace parameters {
     inline constexpr int FOOD_FOR_GENERATION{10};
     inline std::vector<sf::Color> DEFAULT_COLORS{sf::Color::White, sf::Color::Black, sf::Color::Green};
     inline std::vector<std::string> DEFAULT_COLORS_STR{"White", "Black", "Green"};
-    inline bool MARKER_GRAPHICS{false};
+    inline bool markerGraphics{false};
+    inline sf::Texture ant_texture;
+    inline sf::Texture hole_texture;
+
 
     //ANT PARAMETERS
     inline float DEFAULT_ANT_SPEED{300.};
     inline sf::Vector2f DEFAULT_COLONY_POSITION(LENGTH / 2., 50.);
     inline constexpr float DETECTION_RADIUS{150.};
     inline constexpr float EATING_RADIUS{10.};
-    inline constexpr float ANT_LENGTH = 20.f;
-    inline constexpr float ANT_WIDTH = 4.f;
 
 
 //MARKER PARAMETERS

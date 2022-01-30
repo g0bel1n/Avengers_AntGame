@@ -24,7 +24,7 @@ Marker::Marker(sf::Vector2<float> position, int state, Chunk *myChunk, float tim
 
     this->state = state;
 
-    if (MARKER_GRAPHICS) {
+    if (markerGraphics) {
         graphic = sf::CircleShape(intensity);
         graphic.setPosition(position);
         graphic.setFillColor(color());
@@ -38,7 +38,7 @@ void Marker::update(sf::Time &dt) {
     /* Exponential decrease of the marker's intensity with time */
     intensity *= pow((1 - DECAY_RATE), dt.asSeconds());
 
-    if (MARKER_GRAPHICS) { graphic.setRadius(intensity); }
+    if (markerGraphics) { graphic.setRadius(intensity); }
 
     if (intensity < DETECTION_THRESHOLD) {
         state = 0;
@@ -47,7 +47,7 @@ void Marker::update(sf::Time &dt) {
 
     if (changeColor) {
 
-        if (MARKER_GRAPHICS) { graphic.setFillColor(color()); }
+        if (markerGraphics) { graphic.setFillColor(color()); }
         changeColor = false;
     }
 
