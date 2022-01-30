@@ -386,6 +386,7 @@ int main() {
             for (auto &chunk: colony.chunks) {
                 for (auto &marker: chunk.getMarkers()) {
                     window.draw(marker.graphic);
+                    total_markers += 1;
 
                 }
             }
