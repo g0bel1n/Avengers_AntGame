@@ -8,6 +8,8 @@
 #include <iostream>
 #include "../../common/utils.h"
 #include "../Colony.h"
+//#include "omp.h" Tried multithreading
+
 
 
 using namespace parameters;
@@ -104,7 +106,7 @@ Ant_::update(sf::Time dt, std::vector<Chunk> &chunks, std::vector<Obstacle> &obs
                         this->angle = new_angle;
                     } else {
                         this->angle += RandomAngle();
-                        std::cout << RandomAngle() << std::endl;
+
                     }
                     last_changed = sf::Time::Zero;
                 }
@@ -238,6 +240,7 @@ void Ant_::AddMarker(std::vector<Chunk> &chunks, int type, float time_offset) {
 
 }
 
+int thread_i;
 
 float Ant_::sampleWorld(std::vector<Chunk> &chunks) {
     /* Calculate the barycenter of markers in the detection radius depending on the ant objective*/
@@ -250,9 +253,14 @@ float Ant_::sampleWorld(std::vector<Chunk> &chunks) {
     float total_intensity = 0.;
     std::vector<std::vector<int>> close_chunks = neighbour_chunks(
             {(int) (position.x / CHUNKSIZE), (int) (position.y / CHUNKSIZE)});
+
+//#pragma omp parallel for default(none) shared(chunks, close_chunks, bary_angle, total_intensity, type, position) private(thread_i) num_threads(10) // Tried multithreading
     for (auto &close_chunk: close_chunks) {
         std::vector<Marker> &markers = get_chunk_ij(chunks, close_chunk[0], close_chunk[1]).getMarkers();
-        for (auto &marker: markers) {
+
+
+        for (Marker &marker : markers) {
+
             if (marker.state == type) {
                 float distance_ = distance(marker.position, position);
                 if (distance_ <= DETECTION_RADIUS && distance_ > EATING_RADIUS) {

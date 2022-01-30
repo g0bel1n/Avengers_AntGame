@@ -15,7 +15,7 @@ namespace parameters {
     inline int WIDTH{1400};
     inline int CHUNKSIZE{150};
     inline int DEFAULT_NB_COLONIES{2};
-    inline int DEFAULT_NB_ANTS_PER_COLONY{100};
+    inline int DEFAULT_NB_ANTS_PER_COLONY{500};
     inline constexpr int FOOD_FOR_GENERATION{10};
     inline std::vector<sf::Color> DEFAULT_COLORS{sf::Color::White, sf::Color::Black, sf::Color::Green};
     inline std::vector<std::string> DEFAULT_COLORS_STR{"White", "Black", "Green"};
