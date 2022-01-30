@@ -216,7 +216,7 @@ float Ant_::get_angle() {
     return this->angle;
 }
 
-int Ant_::check_env(std::vector<Food> foods, float radius) {
+int Ant_::check_env(std::vector<Food>& foods, float radius) {
     /* Look for the closest piece of food according to the radius*/
 
     int i = 0;

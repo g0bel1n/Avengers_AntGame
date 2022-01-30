@@ -2,7 +2,7 @@
 
 #include <iostream>
 #include "World.h"
-#include "../common/utils.h"
+
 
 
 using namespace parameters;
@@ -19,6 +19,12 @@ Chunk &get_chunk_pos(std::vector<Chunk> &chunks, sf::Vector2<float> pos) {
     float x = std::max(std::min(pos.x, (float) WIDTH), (float) 0);
     float y = std::max(std::min(pos.y, (float) LENGTH), (float) 0);
     return get_chunk_ij(chunks, (int) (x / CHUNKSIZE), (int) (y / CHUNKSIZE));
+}
+
+void fast_erase(std::vector<Marker>& vect, int pos) { /*Using the back-swap trick*/
+    auto it = vect.begin() + pos;
+    *it = std::move(vect.back());
+    vect.pop_back();
 }
 
 World::World(int nb_ants, int nb_food) {

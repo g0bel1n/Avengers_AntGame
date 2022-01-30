@@ -30,7 +30,7 @@ public:
 
     float get_lifetime();
 
-    int check_env(std::vector<Food> foods, float radius);
+    int check_env(std::vector<Food>& foods, float radius);
 
 
     sf::Vector2<float> size = sf::Vector2f(parameters::ANT_LENGTH, parameters::ANT_WIDTH);

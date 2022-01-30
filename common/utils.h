@@ -14,11 +14,7 @@ float distancenul(sf::Vector2f vect1, sf::Vector2f vect2 ){
 }
 
 
-void fast_erase(std::vector<Marker>& vect, int pos) { /*Using the back-swap trick*/
-    auto it = vect.begin() + pos;
-    *it = std::move(vect.back());
-    vect.pop_back();
-}
+
 
 float distance2(sf::Vector2f vect1, sf::Vector2f vect2 ){
     //(vect2.x-vect1.x)*(vect2.x-vect1.x) + (vect2.y-vect1.y)*(vect2.y-vect1.y)
