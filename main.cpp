@@ -377,13 +377,16 @@ int main() {
         // Drawing every object
         window.draw(Background);
         total_markers = 0;
+
+
+
         for (auto &colony: world.colonies) {
 
             window.draw(colony.colony_base);
             for (auto &chunk: colony.chunks) {
                 for (auto &marker: chunk.getMarkers()) {
                     window.draw(marker.graphic);
-                    total_markers += chunk.size();
+
                 }
             }
 

@@ -231,7 +231,7 @@ float Ant_::get_angle() {
     return this->angle;
 }
 
-int Ant_::check_env(std::vector<Food> foods, float radius) {
+int Ant_::check_env(std::vector<Food>& foods, float radius) {
     /* Look for the closest piece of food according to the radius*/
 
     int i = 0;
@@ -259,7 +259,7 @@ void Ant_::AddMarker(std::vector<Chunk> &chunks, int type, float time_offset) {
 }
 
 
-float Ant_::sampleWorld(std::vector<Chunk> chunks) {
+float Ant_::sampleWorld(std::vector<Chunk>& chunks) {
     /* Calculate the barycenter of markers in the detection radius depending on the ant objective*/
 
     int type;
@@ -271,7 +271,7 @@ float Ant_::sampleWorld(std::vector<Chunk> chunks) {
     std::vector<std::vector<int>> close_chunks = neighbour_chunks(
             {(int) (position.x / CHUNKSIZE), (int) (position.y / CHUNKSIZE)});
     for (int c = 0; c < close_chunks.size(); c++) {
-        std::vector<Marker> markers = get_chunk_ij(chunks, close_chunks[c][0], close_chunks[c][1]).getMarkers();
+        std::vector<Marker>& markers = get_chunk_ij(chunks, close_chunks[c][0], close_chunks[c][1]).getMarkers();
         for (int i = 0; i < markers.size(); i++) {
             if (markers[i].state == type) {
                 float distance_ = distance(markers[i].position, position);

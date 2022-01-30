@@ -20,6 +20,13 @@ Chunk &get_chunk_pos(std::vector<Chunk> &chunks, sf::Vector2<float> pos) {
     return get_chunk_ij(chunks, (int) (x / CHUNKSIZE), (int) (y / CHUNKSIZE));
 }
 
+void fast_erase(std::vector<Marker>& vect, int pos) { /*Using the back-swap trick*/
+    auto it = vect.begin() + pos;
+    *it = std::move(vect.back());
+    vect.pop_back();
+}
+
+
 Colony::Colony(int nb_ants, sf::Color color, sf::Texture hole_text, sf::Font font, sf::Vector2f colony_pos,
                float ant_speed) {
 
@@ -70,7 +77,7 @@ void Colony::update(sf::Time dt, std::vector<Obstacle> &obstacles, std::vector<F
         std::vector<Marker> &markers = chunks[c].getMarkers();
         for (int k = 0; k < markers.size(); k++) {
             markers[k].update(dt);
-            if (markers[k].state == 0)markers.erase(markers.begin() + k);
+            if (markers[k].state == 0) fast_erase(markers, k);
         }
     }
 
