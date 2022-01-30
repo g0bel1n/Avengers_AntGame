@@ -12,13 +12,13 @@ namespace parameters {
     inline int NB_ANTS{20};
     inline int LENGTH{800};
     inline int WIDTH{1400};
-    inline int CHUNKSIZE{150};
+    inline int CHUNKSIZE{200};
     inline int food_in_colony = 0;
 
     //ANT PARAMETERS
     inline float ANT_SPEED{300.};
     inline sf::Vector2f COLONY_POS(LENGTH / 2, 50.);
-    inline constexpr float DETECTION_RADIUS{150.};
+    inline constexpr float DETECTION_RADIUS{200};
     inline constexpr float EATING_RADIUS{10.};
     inline constexpr float ANT_LENGTH = 10.f;
     inline constexpr float ANT_WIDTH = 2.f;

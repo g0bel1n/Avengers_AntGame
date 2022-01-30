@@ -46,7 +46,7 @@ public:
 
     float RandomAngle();
 
-    float sampleWorld(std::vector<Chunk> chunks);
+    float sampleWorld(std::vector<Chunk>& chunks);
 
     sf::Texture texture;
     sf::Texture texture_with_food;

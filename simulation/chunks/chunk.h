@@ -13,6 +13,7 @@ class Chunk {
 public:
     Chunk();
     Chunk(std::vector<int> grid_pos);
+    Chunk(const Chunk& c);
 
     std::vector<Marker>& getMarkers();
     std::vector<int> getIJ();

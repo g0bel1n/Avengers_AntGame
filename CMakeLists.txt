@@ -3,6 +3,9 @@ project(Avengers_AntGame)
 
 set(CMAKE_CXX_STANDARD 14)
 
+set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -O0")
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -O0")
+
 add_executable(Avengers_AntGame main.cpp simulation/ants/Ant_.cpp simulation/ants/Ant_.h simulation/World.cpp simulation/World.h simulation/Elements/Marker.cpp simulation/Elements/Marker.h common/utils.h simulation/obstacles/Obstacle.cpp simulation/obstacles/Obstacle.h simulation/parameters.h simulation/chunks/chunk.cpp simulation/chunks/chunk.h simulation/Elements/Food.cpp simulation/Elements/Food.h simulation/Elements/BaseElement.h)
 find_package(PkgConfig REQUIRED)
 

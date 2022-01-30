@@ -7,20 +7,27 @@
 #include <cmath>
 #include "../../common/utils.h"
 #include "../World.h"
+#include <iostream>
 
 
 using namespace parameters;
 
 #define PI 3.14159265
+int g_seed = 11;
+
+inline int fastrand() {
+    g_seed = (214013*g_seed+2531011);
+    return (g_seed>>16)&0x7FFF;
+}
 
 float Ant_::RandomAngle() {
-    return (std::rand() % angular_width - angular_width / 2) * (PI / 180);
+    return (fastrand() % angular_width - angular_width / 2) * (PI / 180);
 }
 
 Ant_::Ant_(sf::Vector2<float> position, int ant_id) {
     this->position = position;
     this->lifetime = 0;
-    this->angle = (std::rand() % 360 - 180) * (PI / 180);
+    this->angle = (fastrand() % 360 - 180) * (PI / 180);
     this->direction = sf::Vector2<float>(cos(angle), sin(angle));
 
     this->ant_id = ant_id;
@@ -59,7 +66,7 @@ void Ant_::move_to(sf::Vector2<float> new_position, sf::Time dt, std::vector<Obs
     if (is_valid(new_position, obstacles)) {
         this->position = new_position;
     } else {
-        this->angle += PI / 2;
+        this->angle += PI + ((fastrand()%10)-5)*PI/4/5;
         this->direction = sf::Vector2<float>(cos(angle), sin(angle));
         this->position += direction * ANT_SPEED * dt.asSeconds();
         times_wall_hit++;
@@ -71,7 +78,8 @@ void
 Ant_::update(sf::Time dt, std::vector<Chunk> &chunks, std::vector<Obstacle> &obstacles, std::vector<Food> &foods) {
 /* Kind of a decision tree to decide what is the next position */
     // To avoid changing direction too often...
-    if (last_changed > sf::seconds(direction_change_delta + (std::rand() % 5) / 100.)) {
+
+    if (last_changed > sf::seconds(direction_change_delta + (fastrand() % 5) / 100.)) {
         //If looking for food...
         if (ToFood) {
             time_since_quitted_home += dt.asSeconds();
@@ -236,7 +244,7 @@ void Ant_::AddMarker(std::vector<Chunk> &chunks, int type, float time_offset) {
 }
 
 
-float Ant_::sampleWorld(std::vector<Chunk> chunks) {
+float Ant_::sampleWorld(std::vector<Chunk>& chunks) {
     /* Calculate the barycenter of markers in the detection radius depending on the ant objective*/
 
     int type;
@@ -253,6 +261,7 @@ float Ant_::sampleWorld(std::vector<Chunk> chunks) {
             if (markers[i].state == type) {
                 float distance_ = distance(markers[i].position, position);
                 if (distance_ <= DETECTION_RADIUS && distance_ > EATING_RADIUS) {
+
                     sf::Vector2f target_position = markers[i].position;
                     sf::Vector2f delta_vect = target_position - position;
                     float markers_angle = atan2(delta_vect.y, delta_vect.x);
