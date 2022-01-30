@@ -156,7 +156,7 @@ int main() {
     sf::Text text3;
     text3.setFont(font);
     text3.setString(
-            "SPACE to start/Pause \nLeft Click to add food \nRight click to add obstacles \nC to  clear the obstacles \nM to  clear the markers \nLeft/Right arrow to Erase/Create new ants \nDown/Up to reduce/increase the speed of the ants ");
+            "SPACE to start/Pause \nLeft Click to add food \nRight click to add obstacles \nC to  clear the obstacles \nM to  clear the markers \nLeft/Right arrow to Erase/Create new ants \nDown/Up to reduce/increase the speed of the ants \nG to toggle marker graphics ");
     text3.setCharacterSize(60);
     text3.setFillColor(sf::Color::White);
     text3.setPosition(WIDTH / 3., LENGTH / 3.);
