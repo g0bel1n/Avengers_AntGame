@@ -1,61 +1,36 @@
 //
-// Created by g0bel1n on 07/12/2021.
+// Created by g0bel1n on 29/01/2022.
 //
 
-#ifndef ANTS_FIGHT_CLUB_WORLD_H
-#define ANTS_FIGHT_CLUB_WORLD_H
-
-#include "Elements/Marker.h"
+#ifndef AVENGERS_ANTGAME_WORLD_H
+#define AVENGERS_ANTGAME_WORLD_H
 
 
-#pragma once
-
-#include <vector>
-#include "ants/Ant_.h"
-#include "chunks/chunk.h"
-#include "Elements/Food.h"
-
-
-Chunk &get_chunk_ij(std::vector<Chunk> &chunks, int i, int j);
-
-Chunk &get_chunk_xy(std::vector<Chunk> &chunks, float x, float y);
-
-Chunk &get_chunk_pos(std::vector<Chunk> &chunks, sf::Vector2<float> pos);
+#include "Colony.h"
 
 class World {
 
 public:
+    World(int nb_colonies = parameters::DEFAULT_NB_COLONIES,
+          int nb_ants_per_colony = parameters::DEFAULT_NB_ANTS_PER_COLONY);
 
-    World(int nb_ants, int nb_food);
-
-    int get_nb_ants();
-
-    int get_nb_food();
-
-    std::vector<Ant_> ants;
-    std::vector<Chunk> chunks;
+    std::vector<Colony> colonies;
     std::vector<Food> foods;
+    std::vector<Obstacle> obstacles;
 
-    void add_ant();
+    sf::Texture textures[3];
 
+    void update(sf::Time &dt);
+
+    sf::Texture hole_texture;
+    sf::Font font;
+
+    void apply_texture();
 
     int get_food_available();
 
-    sf::Texture texture;
-
-    void update(sf::Time dt, std::vector<Obstacle> &obstacles);
-
     void AddFood(sf::Vector2f position);
-
-private:
-
-
-    int nb_ants;
-    int nb_food;
-    int nb_markers;
-
-
 };
 
 
-#endif //ANTS_FIGHT_CLUB_WORLD_H
+#endif //AVENGERS_ANTGAME_WORLD_H
