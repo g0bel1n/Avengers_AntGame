@@ -35,7 +35,24 @@ void Marker::update(sf::Time &dt) {
 
     /* Exponential decrease of the marker's intensity with time */
     intensity *= pow((1 - DECAY_RATE), dt.asSeconds());
-    //graphic.setRadius(intensity);
+    if (intensity < INTENSITY_INCREMENT * 0.2) {
+        graphic.setRadius(intensity);
+    }
+    else {
+        if (intensity < INTENSITY_INCREMENT * 0.4) {
+            graphic.setRadius(intensity);
+        }
+        else {
+            if (intensity < INTENSITY_INCREMENT * 0.6) {
+                graphic.setRadius(intensity);
+            }
+            else {
+                if (intensity < INTENSITY_INCREMENT * 0.8) {
+                    graphic.setRadius(intensity);
+                }
+            }
+        }
+    }
     if (intensity < DETECTION_THRESHOLD) {
         state = 0;
         intensity = 0.;

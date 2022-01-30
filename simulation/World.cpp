@@ -2,6 +2,7 @@
 
 #include <iostream>
 #include "World.h"
+#include "../common/utils.h"
 
 
 using namespace parameters;
@@ -64,7 +65,7 @@ void World::update(sf::Time dt, std::vector<Obstacle> &obstacles) {
         std::vector<Marker> &markers = chunks[c].getMarkers();
         for (int k = 0; k < markers.size(); k++) {
             markers[k].update(dt);
-            if (markers[k].state == 0)markers.erase(markers.begin() + k);
+            if (markers[k].state == 0) { fast_erase(markers, k); }
         }
     }
 

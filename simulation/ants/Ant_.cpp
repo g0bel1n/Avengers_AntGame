@@ -145,7 +145,7 @@ Ant_::update(sf::Time dt, std::vector<Chunk> &chunks, std::vector<Obstacle> &obs
         else {
             time_since_found_food += dt.asSeconds();
             //Let's look if we arrived
-            if (distance(COLONY_POS, position) <= EATING_RADIUS) {
+            if (distance2(COLONY_POS, position) <= EATING_RADIUS) {
 
                 // Changing skin
                 texture.loadFromFile("../ressources/ant.png");
@@ -166,7 +166,7 @@ Ant_::update(sf::Time dt, std::vector<Chunk> &chunks, std::vector<Obstacle> &obs
             }
 
                 //If we are not arrived, we might at least see it
-            else if (distance(COLONY_POS, position) <= DETECTION_RADIUS) {
+            else if (distance2(COLONY_POS, position) <= DETECTION_RADIUS) {
                 sf::Vector2f delta_vect = COLONY_POS - position;
                 float new_angle = atan2(delta_vect.y, delta_vect.x);
                 last_changed = sf::Time::Zero;
@@ -225,7 +225,7 @@ int Ant_::check_env(std::vector<Food> foods, float radius) {
     int min_index = -1;
     while (foods.size() > i) {
         if (foods[i].state > 0) {
-            distance_ = distance(foods[i].position, position);
+            distance_ = distance2(foods[i].position, position);
             if (distance_ <= radius && distance_ <= min_distance) {
                 min_distance = distance_;
                 min_index = i;
@@ -256,10 +256,10 @@ float Ant_::sampleWorld(std::vector<Chunk>& chunks) {
     std::vector<std::vector<int>> close_chunks = neighbour_chunks(
             {(int) (position.x / CHUNKSIZE), (int) (position.y / CHUNKSIZE)});
     for (int c = 0; c < close_chunks.size(); c++) {
-        std::vector<Marker> markers = get_chunk_ij(chunks, close_chunks[c][0], close_chunks[c][1]).getMarkers();
+        std::vector<Marker>& markers = get_chunk_ij(chunks, close_chunks[c][0], close_chunks[c][1]).getMarkers();
         for (int i = 0; i < markers.size(); i++) {
             if (markers[i].state == type) {
-                float distance_ = distance(markers[i].position, position);
+                float distance_ = distance2(markers[i].position, position);
                 if (distance_ <= DETECTION_RADIUS && distance_ > EATING_RADIUS) {
 
                     sf::Vector2f target_position = markers[i].position;
