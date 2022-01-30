@@ -8,6 +8,7 @@
 #include <math.h>
 #include "../parameters.h"
 #include "../chunks/chunk.h"
+#include <iostream>
 
 
 using namespace parameters;
@@ -36,8 +37,8 @@ Marker::Marker(sf::Vector2<float> position, int state, Chunk *myChunk, float tim
 void Marker::update(sf::Time &dt) {
 
     /* Exponential decrease of the marker's intensity with time */
-    intensity *= pow((1 - DECAY_RATE), dt.asSeconds());
-
+    //intensity *= pow((1 - DECAY_RATE), dt.asSeconds()); Can be approximated
+    intensity *= (1 - DECAY_RATE * dt.asSeconds());
     if (markerGraphics) { graphic.setRadius(intensity); }
 
     if (intensity < DETECTION_THRESHOLD) {
