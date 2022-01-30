@@ -13,18 +13,23 @@ namespace parameters {
     inline int LENGTH{800};
     inline int WIDTH{1400};
     inline int CHUNKSIZE{150};
-    inline int food_in_colony = 0;
+    inline int DEFAULT_NB_COLONIES{2};
+    inline int DEFAULT_NB_ANTS_PER_COLONY{10};
+    inline constexpr int FOOD_FOR_GENERATION{10};
+    inline std::vector<sf::Color> DEFAULT_COLORS{sf::Color::White, sf::Color::Black, sf::Color::Green};
+    inline std::vector<std::string> DEFAULT_COLORS_STR{"White", "Black", "Green"};
+
 
     //ANT PARAMETERS
-    inline float ANT_SPEED{300.};
-    inline sf::Vector2f COLONY_POS(LENGTH / 2, 50.);
+    inline float DEFAULT_ANT_SPEED{300.};
+    inline sf::Vector2f DEFAULT_COLONY_POSITION(LENGTH / 2., 50.);
     inline constexpr float DETECTION_RADIUS{150.};
     inline constexpr float EATING_RADIUS{10.};
-    inline constexpr float ANT_LENGTH = 10.f;
-    inline constexpr float ANT_WIDTH = 2.f;
+    inline constexpr float ANT_LENGTH = 20.f;
+    inline constexpr float ANT_WIDTH = 4.f;
 
 
-    //MARKER PARAMETERS
+//MARKER PARAMETERS
     inline constexpr float DECAY_RATE{.1}; //Percentage of intensity decrease per second
     inline constexpr float INTENSITY_INCREMENT = 5;
     inline constexpr float RADIUS = 10.f;
@@ -33,7 +38,7 @@ namespace parameters {
     inline constexpr float DECOMPOSITION_THRESHOLD = 30.;
 
 
-    // OBSTACLE PARAMETERS
+// OBSTACLE PARAMETERS
     inline constexpr float MAP_OCCUPATION{0.05};
 }
 

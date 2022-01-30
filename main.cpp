@@ -1,11 +1,15 @@
 #include <SFML/Window.hpp>
 #include <iostream>
 #include <fstream>
+#include "simulation/Colony.h"
 #include "simulation/World.h"
 #include "simulation/parameters.h"
 
 //TO DO
 // Add saved map feature
+// CLEAN THE CODE (delete useless funcs etc)
+
+
 using namespace parameters;
 
 using namespace std;
@@ -34,12 +38,14 @@ int main() {
 
 
     //Generating the world
-    World world(NB_ANTS, total_food);
+    World world = World(2);
 
-    std::cout << "IJ of first : " << world.chunks[0].getIJ()[0] << world.chunks[0].getIJ()[1] << std::endl;
+    for (auto &colony: world.colonies)colony.apply_texture();
+
+    /*std::cout << "IJ of first : " << world.chunks[0].getIJ()[0] << world.chunks[0].getIJ()[1] << std::endl;
 
     std::cout << "IJ of IJ 0 : " << get_chunk_ij(world.chunks, 0, 0).getIJ()[0]
-              << get_chunk_ij(world.chunks, 0, 0).getIJ()[0] << std::endl;
+              << get_chunk_ij(world.chunks, 0, 0).getIJ()[0] << std::endl;*/
 
     if (!font.loadFromFile("../ressources/pricedown.otf")) {
         cout << "Could not load the font...";
@@ -53,38 +59,65 @@ int main() {
     Background.setPosition(0, 0);
     Background.setScale(WIDTH / 3448., LENGTH / 3448.);
 
-    sf::VertexArray quad(sf::Quads, 4);
+    sf::VertexArray colony_info_quad(sf::Quads, 4);
 
-    quad[0].position = sf::Vector2f(WIDTH - 800, 10);
-    quad[1].position = sf::Vector2f(WIDTH - 10, 10);
-    quad[2].position = sf::Vector2f(WIDTH - 10, 410);
-    quad[3].position = sf::Vector2f(WIDTH - 800, 410);
+    colony_info_quad[0].position = sf::Vector2f(WIDTH - 720, 100);
+    colony_info_quad[1].position = sf::Vector2f(WIDTH - 100, 100);
+    colony_info_quad[2].position = sf::Vector2f(WIDTH - 100, 410);
+    colony_info_quad[3].position = sf::Vector2f(WIDTH - 720, 410);
 
-    quad[0].color = sf::Color(255, 255, 255, 100);
-    quad[1].color = sf::Color(255, 255, 255, 100);
-    quad[2].color = sf::Color(255, 255, 255, 100);
-    quad[3].color = sf::Color(255, 255, 255, 100);
+    colony_info_quad[0].color = sf::Color(255, 255, 255, 100);
+    colony_info_quad[1].color = sf::Color(255, 255, 255, 100);
+    colony_info_quad[2].color = sf::Color(255, 255, 255, 100);
+    colony_info_quad[3].color = sf::Color(255, 255, 255, 100);
+
+    sf::VertexArray simulation_info_quad(sf::Quads, 4);
+
+    simulation_info_quad[0].position = sf::Vector2f(WIDTH / 2 - WIDTH / 3, LENGTH - 150);
+    simulation_info_quad[1].position = sf::Vector2f(WIDTH / 2 + WIDTH / 3, LENGTH - 150);
+    simulation_info_quad[2].position = sf::Vector2f(WIDTH / 2 + WIDTH / 3, LENGTH - 50);
+    simulation_info_quad[3].position = sf::Vector2f(WIDTH / 2 - WIDTH / 3, LENGTH - 50);
+
+    simulation_info_quad[0].color = sf::Color(255, 255, 255, 100);
+    simulation_info_quad[1].color = sf::Color(255, 255, 255, 100);
+    simulation_info_quad[2].color = sf::Color(255, 255, 255, 100);
+    simulation_info_quad[3].color = sf::Color(255, 255, 255, 100);
+
+
+    sf::Text colony_active;
+    colony_active.setFont(font);
+    colony_active.setString(DEFAULT_COLORS_STR[0] + " colony");
+    colony_active.setPosition(WIDTH - 700, 100);
+    colony_active.setCharacterSize(50);
+    colony_active.setFillColor(sf::Color::Black);
 
     sf::Text ant_speed;
     ant_speed.setFont(font);
-    ant_speed.setString("ANTS SPEED : " + to_string((int) ANT_SPEED));
-    ant_speed.setPosition(WIDTH - 700, 30);
+    ant_speed.setString("ANTS SPEED : " + to_string((int) DEFAULT_ANT_SPEED));
+    ant_speed.setPosition(WIDTH - 700, 160);
     ant_speed.setCharacterSize(50);
     ant_speed.setFillColor(sf::Color::Black);
 
     sf::Text colony_size;
     colony_size.setFont(font);
-    colony_size.setString("Number of Ants : " + to_string((int) NB_ANTS));
-    colony_size.setPosition(WIDTH - 700, 100);
+    colony_size.setString("Number of Ants : " + to_string((int) DEFAULT_NB_ANTS_PER_COLONY));
+    colony_size.setPosition(WIDTH - 700, 220);
     colony_size.setCharacterSize(50);
     colony_size.setFillColor(sf::Color::Black);
+
+    sf::Text
+            ant_generated;
+    ant_generated.setFont(font);
+    ant_generated.setString("Ants generated");
+    ant_generated.setPosition(WIDTH - 700, 280);
+    ant_generated.setCharacterSize(50);
+    ant_generated.setFillColor(sf::Color::Black);
 
     sf::Text nb_markers;
     nb_markers.setFont(font);
     int total_markers = 0;
-    for (int c = 0; c < world.chunks.size(); c++) { total_markers += world.chunks[c].getMarkers().size(); }
-    nb_markers.setString("Number of Markers : " + to_string((int) total_markers));
-    nb_markers.setPosition(WIDTH - 700, 170);
+    nb_markers.setString("Number of markers : 0");
+    nb_markers.setPosition(WIDTH / 2 - WIDTH / 3 + 10, LENGTH - 125);
     nb_markers.setCharacterSize(50);
     nb_markers.setFillColor(sf::Color::Black);
 
@@ -94,26 +127,29 @@ int main() {
     sf::Text
             text;
     text.setFont(font);
-    text.setString("amount of food available");
-    text.setPosition(WIDTH - 700, 310);
+    text.setString("Food available : 0");
+    text.setPosition((WIDTH / 2 - WIDTH / 3) * 5. / 2, LENGTH - 125);
     text.setCharacterSize(50);
     text.setFillColor(sf::Color::Black);
+
+
 
     // The time elapsed
     sf::Text text1;
     text1.setFont(font);
     text1.setString("time elapsed");
-    text1.setPosition(WIDTH - 700, 240);;
+    text1.setPosition((WIDTH / 2 - WIDTH / 3) * 11. / 3, LENGTH - 125);;
     text1.setCharacterSize(50);
     text1.setFillColor(sf::Color::Black);
 
     // The amount of food in the colony
-    sf::Text text2;
-    text2.setFont(font);
-    text2.setString("amount of food in the colony");
-    text2.setCharacterSize(40);
-    text2.setPosition(COLONY_POS + sf::Vector2f(50., 0.));
-    text2.setFillColor(sf::Color::White);
+    sf::Text food_in_col;
+    food_in_col.setFont(font);
+    food_in_col.setString("0");
+    food_in_col.setPosition(WIDTH - 700, 340);;
+    food_in_col.setCharacterSize(50);
+    food_in_col.setFillColor(sf::Color::Black);
+
 
 
     // Basic commands
@@ -125,25 +161,11 @@ int main() {
     text3.setFillColor(sf::Color::White);
     text3.setPosition(WIDTH / 3., LENGTH / 3.);
 
-
-
-    // Texture of the colony Hole
-    sf::Texture colony_hole;
-    colony_hole.loadFromFile("../ressources/Hole.PNG");
-
-    // Colony Graphic object
-    sf::Sprite colony_base;
-    colony_base.setPosition(COLONY_POS);
-    colony_base.setOrigin(536. / 2., 204.);
-    colony_base.setTexture(colony_hole);
-    colony_base.setScale(0.2, 0.2);
-    cout << colony_base.getLocalBounds().width;
-
-    // The vector Obstacle (Reminder : send it to World.h)
-    std::vector<Obstacle> obstacles;
+    int active_colony = 0;
 
 
     bool draw_obstacle = false;
+
     //Main Loop
     while (window.isOpen()) {
 
@@ -163,6 +185,20 @@ int main() {
                 case (sf::Event::KeyPressed):
 
                     switch (event.key.code) {
+                        case (sf::Keyboard::Enter):
+                            if (active_colony + 1 == world.colonies.size())active_colony = 0;
+                            else active_colony++;
+                            ant_speed.setString(
+                                    "ANTS SPEED : " + to_string((int) world.colonies[active_colony].ant_speed));
+                            colony_size.setString(
+                                    "Number of Ants : " + to_string((int) world.colonies[active_colony].get_nb_ants()));
+                            food_in_col.setString("Food in colony : " +
+                                                  to_string((int) world.colonies[active_colony].food_in_colony));
+                            ant_generated.setString("Ants generated : " +
+                                                    to_string((int) world.colonies[active_colony].ant_generated));
+
+                            colony_active.setString(DEFAULT_COLORS_STR[active_colony] + " colony");
+                            break;
                         case (sf::Keyboard::Space):
                             if (pause) pause = !pause;
                             else {
@@ -171,10 +207,12 @@ int main() {
                             }
                             break;
                         case sf::Keyboard::C:
-                            obstacles.clear();
+                            world.obstacles.clear();
                             break;
                         case sf::Keyboard::M:
-                            for (int c = 0; c < world.chunks.size(); c++) { world.chunks[c].getMarkers().clear(); }
+                            for (auto &colony: world.colonies) {
+                                for (auto &chunk: colony.chunks) chunk.clear();
+                            }
                             break;
                         case sf::Keyboard::F:
                             world.foods.clear();
@@ -188,38 +226,45 @@ int main() {
                             system("open ../data.png");
                             break;
                         case sf::Keyboard::Up:
-                            ANT_SPEED += 100.;
-                            ant_speed.setString("ANTS SPEED : " + to_string((int) ANT_SPEED));
+                            world.colonies[active_colony].ant_speed += 100.;
+                            ant_speed.setString(
+                                    "ANTS SPEED : " + to_string((int) world.colonies[active_colony].ant_speed));
                             break;
                         case sf::Keyboard::Down:
-                            if (ANT_SPEED >= 100.)ANT_SPEED -= 100.;
-                            ant_speed.setString("ANTS SPEED : " + to_string((int) ANT_SPEED));
+                            if (world.colonies[active_colony].ant_speed >= 100.)
+                                world.colonies[active_colony].ant_speed -= 100.;
+                            ant_speed.setString(
+                                    "ANTS SPEED : " + to_string((int) world.colonies[active_colony].ant_speed));
                             break;
                         case sf::Keyboard::Right:
-                            world.add_ant();
-                            NB_ANTS += 1;
-                            colony_size.setString("Number of Ants : " + to_string((int) NB_ANTS));
+                            world.colonies[active_colony].add_ant();
+                            world.colonies[active_colony].apply_texture();
+                            colony_size.setString(
+                                    "Number of Ants : " + to_string((int) world.colonies[active_colony].get_nb_ants()));
                             break;
                         case sf::Keyboard::Left:
-                            if (NB_ANTS >= 1) {
-                                world.ants.pop_back();
-                                NB_ANTS -= 1;
-                                colony_size.setString("Number of Ants : " + to_string((int) NB_ANTS));
+                            if (world.colonies[active_colony].get_nb_ants() >= 1) {
+                                world.colonies[active_colony].delete_ant();
+                                colony_size.setString("Number of Ants : " +
+                                                      to_string((int) world.colonies[active_colony].get_nb_ants()));
                             }
                             break;
+
                         case sf::Keyboard::D:
-                            COLONY_POS = (sf::Vector2f) sf::Mouse::getPosition(window);
-                            colony_base.setPosition(COLONY_POS);
-                            text2.setPosition(COLONY_POS + sf::Vector2f(50., 0.));
-                            window.draw(colony_base);
+
+                            sf::Vector2f colony_pos = (sf::Vector2f) sf::Mouse::getPosition(window);
+
+                            world.colonies[active_colony].colony_base.setPosition(colony_pos);
+                            world.colonies[active_colony].colony_pos = colony_pos;
+                            window.draw(world.colonies[active_colony].colony_base);
                             if (!began) {
-                                world.ants.clear();
+                                world.colonies[active_colony].ants.clear();
                                 int recreate_N_ants = 0;
-                                while (recreate_N_ants <= NB_ANTS) {
-                                    world.add_ant();
+                                while (recreate_N_ants < DEFAULT_NB_ANTS_PER_COLONY) {
+                                    world.colonies[active_colony].add_ant();
                                     recreate_N_ants += 1;
                                 }
-
+                                world.colonies[active_colony].apply_texture();
                             }
                             break;
                     }
@@ -233,7 +278,7 @@ int main() {
                                                        event.mouseButton.y),
                                           LENGTH * MAP_OCCUPATION);
                         obstacle.texture.loadFromFile("../ressources/rock.jpeg");
-                        obstacles.push_back(obstacle);
+                        world.obstacles.push_back(obstacle);
 
                     }
 
@@ -270,7 +315,7 @@ int main() {
                                                        event.mouseMove.y),
                                           LENGTH * MAP_OCCUPATION);
                         obstacle.texture.loadFromFile("../ressources/rock.jpeg");
-                        obstacles.push_back(obstacle);
+                        world.obstacles.push_back(obstacle);
 
                     }
                     break;
@@ -290,7 +335,7 @@ int main() {
 
             text.setString("Food available: " + to_string(world.get_food_available()));
 
-            float time = world.ants[0].get_lifetime();
+            float time = world.colonies[0].ants[0].get_lifetime();
 
             // To display a time in minutes
             int minutes = 0;
@@ -302,15 +347,13 @@ int main() {
             //These objects need to be updated only when the simulation is running
             text1.setString(
                     "Time elapsed :  " + to_string(minutes) + "  min  " + to_string(time).substr(0, 3));
-            text2.setString(to_string(food_in_colony));
+
 
             updating_clock.restart();
-            world.update(dt, obstacles);
+            world.update(dt);
             float updating_delay = updating_clock.restart().asSeconds();
             if (updating_delay > 0.3)cout << "updating time" << updating_delay << "\n";
 
-            int total_markers = 0;
-            for (int c = 0; c < world.chunks.size(); c++) { total_markers += world.chunks[c].getMarkers().size(); }
             nb_markers.setString("Number of Markers : " + to_string((int) total_markers));
 
             data_file
@@ -319,28 +362,51 @@ int main() {
         }
 
 
+        ant_speed.setString(
+                "ANTS SPEED : " + to_string((int) world.colonies[active_colony].ant_speed));
+        colony_size.setString(
+                "Number of Ants : " + to_string((int) world.colonies[active_colony].get_nb_ants()));
+        food_in_col.setString("Food in colony : " +
+                              to_string((int) world.colonies[active_colony].food_in_colony));
+        ant_generated.setString("Ants generated : " +
+                                to_string((int) world.colonies[active_colony].ant_generated));
+
         window.clear();
 
         drawing_clock.restart();
         // Drawing every object
         window.draw(Background);
-        window.draw(colony_base);
-        for (auto &chunk: world.chunks) {
-            for (auto &marker: chunk.getMarkers()) { window.draw(marker.graphic); }
-        }
-        for (auto &ant: world.ants) { window.draw(ant.graphics); }
-        for (auto &food: world.foods) { window.draw(food.graphic); }
-        for (auto &obstacle: obstacles) { window.draw(obstacle.graphics, &obstacle.texture); }
+        total_markers = 0;
+        for (auto &colony: world.colonies) {
 
-        window.draw(quad);
+            window.draw(colony.colony_base);
+            for (auto &chunk: colony.chunks) {
+                for (auto &marker: chunk.getMarkers()) {
+                    window.draw(marker.graphic);
+                    total_markers += chunk.size();
+                }
+            }
+
+            for (auto &ant: colony.ants) { ;
+                window.draw(ant.graphics);
+            }
+
+        }
+
+        for (auto &food: world.foods) { window.draw(food.graphic); }
+        for (auto &obstacle: world.obstacles) { window.draw(obstacle.graphics, &obstacle.texture); }
+
+        window.draw(colony_info_quad);
+        window.draw(simulation_info_quad);
 
         window.draw(text);
         window.draw(text1);
-        window.draw(text2);
         window.draw(ant_speed);
         window.draw(colony_size);
-        window.draw(colony_base);
         window.draw(nb_markers);
+        window.draw(food_in_col);
+        window.draw(ant_generated);
+        window.draw(colony_active);
 
         float drawing_delay = drawing_clock.restart().asSeconds();
         if (drawing_delay > 0.2)cout << "drawing time" << drawing_delay << "\n";

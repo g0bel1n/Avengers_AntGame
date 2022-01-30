@@ -19,16 +19,24 @@
 class Ant_ {
 
 public:
-    Ant_(sf::Vector2<float> position, int ant_id);
+    Ant_(sf::Vector2<float> position, int ant_id, sf::Color &color, float ant_speed);
 
     void
-    update(sf::Time dt, std::vector<Chunk> &chunks, std::vector<Obstacle> &obstacles, std::vector<Food> &foods);
+    update(sf::Time dt, std::vector<Chunk> &chunks, std::vector<Obstacle> &obstacles, std::vector<Food> &foods,
+           int &food_in_colony, float ant_speed, sf::Vector2f colony_pos);
 
     float get_angle();
 
     sf::Vector2f get_position();
 
+    sf::Vector2f colony_pos;
+
     float get_lifetime();
+
+    void apply_texture();
+
+    sf::Color color;
+
 
     int check_env(std::vector<Food> foods, float radius);
 
@@ -59,6 +67,7 @@ private:
     float lifetime; // Time the ant has been alive
     float time_since_quitted_home = 0.;
     float time_since_found_food = 0.;
+    float ant_speed;
 
     float last_dropped = 0.; // To regulate the flow of markers
     sf::Vector2f direction;

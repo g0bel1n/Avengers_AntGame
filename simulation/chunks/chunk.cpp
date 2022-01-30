@@ -24,3 +24,17 @@ std::vector<int> Chunk::getIJ() {
     return grid_pos;
 }
 
+void Chunk::clear() {
+    markers.clear();
+
+}
+
+int Chunk::size() {
+    return markers.size();
+
+}
+
+void Chunk::add(Marker marker) {
+    markers.push_back(marker);
+}
+

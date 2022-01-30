@@ -5,8 +5,9 @@
 
 #include "Ant_.h"
 #include <cmath>
+#include <iostream>
 #include "../../common/utils.h"
-#include "../World.h"
+#include "../Colony.h"
 
 
 using namespace parameters;
@@ -17,19 +18,32 @@ float Ant_::RandomAngle() {
     return (std::rand() % angular_width - angular_width / 2) * (PI / 180);
 }
 
-Ant_::Ant_(sf::Vector2<float> position, int ant_id) {
+Ant_::Ant_(sf::Vector2<float> position, int ant_id, sf::Color &color, float ant_speed) {
     this->position = position;
     this->lifetime = 0;
     this->angle = (std::rand() % 360 - 180) * (PI / 180);
     this->direction = sf::Vector2<float>(cos(angle), sin(angle));
+    this->colony_pos = position;
+    this->ant_speed = ant_speed;
 
     this->ant_id = ant_id;
     graphics = sf::Sprite();
-    graphics.setColor(sf::Color::Red);
-    graphics.setOrigin(300., 300.f);
+    if (!texture.loadFromFile("../ressources/ant.png"))std::cout << "WTF \n";
+    if (!texture_with_food.loadFromFile("../ressources/ant.png"))std::cout << "WTF \n";
 
-    graphics.setScale(0.05f, 0.05f);
+    this->color = color;
+    graphics.setTexture(texture);
+    graphics.setColor(color);
+    graphics.setOrigin(248., 159.f);
+
+    graphics.setScale(0.1f, 0.1f);
     graphics.setPosition(position);
+
+
+
+    //texture = textures[0];
+    //texture_with_food = textures[1];
+    //graphics.setTexture(textures[0]);
 
 }
 
@@ -56,19 +70,26 @@ bool Ant_::is_valid(sf::Vector2f position, std::vector<Obstacle> &obstacles) {
 void Ant_::move_to(sf::Vector2<float> new_position, sf::Time dt, std::vector<Obstacle> &obstacles) {
     /* Check if the position we are trying to implement is valid, e.g. no obstacle */
 
+
     if (is_valid(new_position, obstacles)) {
         this->position = new_position;
     } else {
         this->angle += PI / 2;
         this->direction = sf::Vector2<float>(cos(angle), sin(angle));
-        this->position += direction * ANT_SPEED * dt.asSeconds();
+        this->position += direction * ant_speed * dt.asSeconds();
         times_wall_hit++;
     }
 
 }
 
 void
-Ant_::update(sf::Time dt, std::vector<Chunk> &chunks, std::vector<Obstacle> &obstacles, std::vector<Food> &foods) {
+Ant_::update(sf::Time dt, std::vector<Chunk> &chunks, std::vector<Obstacle> &obstacles, std::vector<Food> &foods,
+             int &food_in_colony, float ant_speed, sf::Vector2f colony_pos) {
+
+    this->colony_pos = colony_pos;
+
+    this->ant_speed = ant_speed;
+
 /* Kind of a decision tree to decide what is the next position */
     // To avoid changing direction too often...
     if (last_changed > sf::seconds(direction_change_delta + (std::rand() % 5) / 100.)) {
@@ -112,13 +133,14 @@ Ant_::update(sf::Time dt, std::vector<Chunk> &chunks, std::vector<Obstacle> &obs
                     target = -1;
                     ToFood = false;
                     time_since_found_food = 0.;
-                    switchSkin = true;
+                    //switchSkin = true;
                     last_changed = sf::Time::Zero;
                     this->angle += PI;
 
-                    texture_with_food.loadFromFile("../ressources/ant_with_food.png");
-                    graphics.setTexture(texture_with_food);
-                    switchSkin = false;
+                    //texture_with_food.loadFromFile("../ressources/ant_with_food.png");
+                    //graphics.setTexture(texture_with_food);
+                    apply_texture();
+                    //switchSkin = false;
 
                 }
                     //if we are not there yet, lets still check if it is available
@@ -137,12 +159,13 @@ Ant_::update(sf::Time dt, std::vector<Chunk> &chunks, std::vector<Obstacle> &obs
         else {
             time_since_found_food += dt.asSeconds();
             //Let's look if we arrived
-            if (distance(COLONY_POS, position) <= EATING_RADIUS) {
+            if (distance(colony_pos, position) <= EATING_RADIUS) {
 
                 // Changing skin
-                texture.loadFromFile("../ressources/ant.png");
-                graphics.setTexture(texture);
-                switchSkin = false;
+                //texture.loadFromFile("../ressources/ant.png");
+                //graphics.setTexture(texture);
+                apply_texture();
+                //switchSkin = false;
 
                 food_in_colony++;
 
@@ -158,8 +181,8 @@ Ant_::update(sf::Time dt, std::vector<Chunk> &chunks, std::vector<Obstacle> &obs
             }
 
                 //If we are not arrived, we might at least see it
-            else if (distance(COLONY_POS, position) <= DETECTION_RADIUS) {
-                sf::Vector2f delta_vect = COLONY_POS - position;
+            else if (distance(colony_pos, position) <= DETECTION_RADIUS) {
+                sf::Vector2f delta_vect = colony_pos - position;
                 float new_angle = atan2(delta_vect.y, delta_vect.x);
                 last_changed = sf::Time::Zero;
                 this->angle = new_angle;
@@ -186,7 +209,7 @@ Ant_::update(sf::Time dt, std::vector<Chunk> &chunks, std::vector<Obstacle> &obs
     // Actually changing position according to the context-based new angle
     this->angle = normalise_angle(angle);
     this->direction = sf::Vector2<float>(cos(angle), sin(angle));
-    sf::Vector2<float> new_position = this->position + this->direction * ANT_SPEED * dt.asSeconds();
+    sf::Vector2<float> new_position = this->position + this->direction * ant_speed * dt.asSeconds();
     move_to(new_position, dt, obstacles);
     if (last_dropped > .05) {
         if (ToFood) {
@@ -231,7 +254,7 @@ int Ant_::check_env(std::vector<Food> foods, float radius) {
 void Ant_::AddMarker(std::vector<Chunk> &chunks, int type, float time_offset) {
 
     Chunk &fatherChunk = get_chunk_pos(chunks, position);
-    fatherChunk.getMarkers().push_back(Marker(position, type, &fatherChunk, time_offset));
+    fatherChunk.add(Marker(position, type, &fatherChunk, time_offset));
 
 }
 
@@ -271,8 +294,10 @@ float Ant_::sampleWorld(std::vector<Chunk> chunks) {
     return bary_angle / (total_intensity);
 }
 
-sf::Vector2f Ant_::get_position() {
-    return position;
+void Ant_::apply_texture() {
+    if (ToFood)graphics.setTexture(texture);
+    else graphics.setTexture(texture_with_food);
+
 }
 
 
