@@ -16,7 +16,7 @@ float distancenul(sf::Vector2f vect1, sf::Vector2f vect2 ){
 
 
 
-float distance2(sf::Vector2f vect1, sf::Vector2f vect2 ){
+float distance(sf::Vector2f vect1, sf::Vector2f vect2 ){
     //(vect2.x-vect1.x)*(vect2.x-vect1.x) + (vect2.y-vect1.y)*(vect2.y-vect1.y)
 
     return sqrt((vect2.x-vect1.x)*(vect2.x-vect1.x) + (vect2.y-vect1.y)*(vect2.y-vect1.y));

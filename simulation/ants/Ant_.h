@@ -38,7 +38,7 @@ public:
     sf::Color color;
 
 
-    int check_env(std::vector<Food> foods, float radius);
+    int check_env(std::vector<Food>& foods, float radius);
 
 
     sf::Vector2<float> size = sf::Vector2f(parameters::ANT_LENGTH, parameters::ANT_WIDTH);
@@ -54,7 +54,7 @@ public:
 
     float RandomAngle();
 
-    float sampleWorld(std::vector<Chunk> chunks);
+    float sampleWorld(std::vector<Chunk> &chunks);
 
     sf::Texture texture;
     sf::Texture texture_with_food;
