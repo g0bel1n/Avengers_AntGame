@@ -9,6 +9,7 @@
 
 #include <SFML/Graphics.hpp>
 #include "BaseElement.h"
+#include "../parameters.h"
 
 class Chunk;
 
@@ -20,9 +21,10 @@ public:
 
     float get_intensity();
 
-    sf::Vector2<float> position;
+    sf::CircleShape graphic;
 
-    //sf::CircleShape graphic;
+
+    sf::Vector2<float> position;
     
     void update(sf::Time &dt) override;
 

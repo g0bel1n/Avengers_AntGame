@@ -250,6 +250,10 @@ int main() {
                             }
                             break;
 
+                        case sf::Keyboard::G:
+                            MARKER_GRAPHICS = (MARKER_GRAPHICS == false);
+                            break;
+
                         case sf::Keyboard::D:
 
                             sf::Vector2f colony_pos = (sf::Vector2f) sf::Mouse::getPosition(window);
@@ -385,7 +389,7 @@ int main() {
             window.draw(colony.colony_base);
             for (auto &chunk: colony.chunks) {
                 for (auto &marker: chunk.getMarkers()) {
-                    window.draw(marker.graphic);
+                    if (MARKER_GRAPHICS) { window.draw(marker.graphic); }
                     total_markers += 1;
 
                 }

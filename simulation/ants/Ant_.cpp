@@ -119,6 +119,7 @@ Ant_::update(sf::Time dt, std::vector<Chunk> &chunks, std::vector<Obstacle> &obs
                         this->angle = new_angle;
                     } else {
                         this->angle += RandomAngle();
+                        std::cout<<RandomAngle()<<std::endl;
                     }
                     last_changed = sf::Time::Zero;
                 }

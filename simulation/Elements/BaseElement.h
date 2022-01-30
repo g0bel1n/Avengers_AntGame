@@ -17,7 +17,7 @@ class BaseElement {
 public:
 
     sf::Vector2f position;
-    sf::CircleShape graphic;
+
     bool changeColor = false;
 
     virtual void update(sf::Time &dt) = 0;

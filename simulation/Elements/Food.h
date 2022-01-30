@@ -16,7 +16,7 @@ public:
     explicit Food(sf::Vector2<float> position);
 
     void update(sf::Time &dt) override;
-
+    sf::CircleShape graphic;
     void isTargeted();
 
     void HasBeenForgotten();

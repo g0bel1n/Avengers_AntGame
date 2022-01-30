@@ -7,6 +7,8 @@
 #ifndef AVENGERS_ANTGAME_SIMULATION_PARAMETERS_H
 #define AVENGERS_ANTGAME_SIMULATION_PARAMETERS_H
 
+
+
 namespace parameters {
     //WORLD PARAMETERS
     inline int NB_ANTS{20};
@@ -14,11 +16,11 @@ namespace parameters {
     inline int WIDTH{1400};
     inline int CHUNKSIZE{150};
     inline int DEFAULT_NB_COLONIES{2};
-    inline int DEFAULT_NB_ANTS_PER_COLONY{10};
+    inline int DEFAULT_NB_ANTS_PER_COLONY{100};
     inline constexpr int FOOD_FOR_GENERATION{10};
     inline std::vector<sf::Color> DEFAULT_COLORS{sf::Color::White, sf::Color::Black, sf::Color::Green};
     inline std::vector<std::string> DEFAULT_COLORS_STR{"White", "Black", "Green"};
-
+    inline bool MARKER_GRAPHICS{false};
 
     //ANT PARAMETERS
     inline float DEFAULT_ANT_SPEED{300.};
@@ -35,7 +37,7 @@ namespace parameters {
     inline constexpr float RADIUS = 10.f;
     inline float DETECTION_THRESHOLD = 1.5;
 
-    inline constexpr float DECOMPOSITION_THRESHOLD = 30.;
+    inline constexpr float DECOMPOSITION_THRESHOLD = 120.;
 
 
 // OBSTACLE PARAMETERS

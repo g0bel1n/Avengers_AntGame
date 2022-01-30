@@ -12,11 +12,9 @@ Chunk::Chunk() {
 
 Chunk::Chunk(std::vector<int> grid_pos) {
     this->grid_pos = grid_pos;
-    std::cout << "Je suis un chunk en " << grid_pos[0] << grid_pos[1] << std::endl;
 }
 
 Chunk::Chunk(const Chunk& c){
-    std::cout<<" copycons "<<std::endl;
     this->grid_pos = c.grid_pos;
     this->markers = c.markers;
 }
