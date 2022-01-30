@@ -22,7 +22,7 @@ public:
 
     sf::Vector2<float> position;
 
-    sf::CircleShape graphic;
+    //sf::CircleShape graphic;
     
     void update(sf::Time &dt) override;
 
