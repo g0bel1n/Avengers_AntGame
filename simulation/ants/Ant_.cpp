@@ -10,13 +10,15 @@
 #include "../Colony.h"
 
 
+
+
 using namespace parameters;
 
 #define PI 3.14159265
 
 float Ant_::RandomAngle() {
 
-    return ((float) rand() / RAND_MAX - 1.0 / 2.0) * angular_width * (PI / 180);
+    return ((float) rand()/RAND_MAX - 1.0/2.0) * angular_width  * (PI / 180);
 }
 
 Ant_::Ant_(sf::Vector2<float> position, sf::Color &color, float ant_speed) {
@@ -76,9 +78,6 @@ Ant_::update(sf::Time dt, std::vector<Chunk> &chunks, std::vector<Obstacle> &obs
 
     this->ant_speed = ant_speed;
 
-    if (distance(colony_pos, position) <= DETECTION_RADIUS) { time_since_quitted_home = 0; }
-    //if (check_env(foods, DETECTION_RADIUS) != -1) { time_since_found_food = 0; }
-
 
 /* Kind of a decision tree to decide what is the next position */
     // To avoid changing direction too often...
@@ -106,10 +105,7 @@ Ant_::update(sf::Time dt, std::vector<Chunk> &chunks, std::vector<Obstacle> &obs
                     float new_angle = sampleWorld(chunks);
                     // if new_angle is a nan it is because there is no markers in the detection radius
                     if (!isnan(new_angle)) {
-                        this->angle = FREEDOM_COEFFICIENT * (RandomAngle() + angle) + (1.0 - FREEDOM_COEFFICIENT) *
-                                                                                      (TURN_COEFFICIENT * new_angle +
-                                                                                       (1.0 - TURN_COEFFICIENT) *
-                                                                                       angle);
+                        this->angle = FREEDOM_COEFFICIENT * (RandomAngle() + angle) + (1.0 - FREEDOM_COEFFICIENT) * (TURN_COEFFICIENT * new_angle + (1.0 - TURN_COEFFICIENT) * angle);
                     } else {
                         this->angle += RandomAngle();
 
@@ -152,7 +148,7 @@ Ant_::update(sf::Time dt, std::vector<Chunk> &chunks, std::vector<Obstacle> &obs
         else {
             time_since_found_food += dt.asSeconds();
             //Let's look if we arrived
-            if (distance(colony_pos, position) <= 2 * dt.asSeconds() * ant_speed) {
+            if (distance(colony_pos, position) <= 2*dt.asSeconds()*ant_speed) {
 
                 // Changing skin
                 //texture.loadFromFile("../ressources/ant.png");
@@ -177,7 +173,7 @@ Ant_::update(sf::Time dt, std::vector<Chunk> &chunks, std::vector<Obstacle> &obs
                 sf::Vector2f delta_vect = colony_pos - position;
                 float new_angle = atan2(delta_vect.y, delta_vect.x);
                 last_changed = sf::Time::Zero;
-                this->angle = new_angle;
+                this->angle =  new_angle;
             }
 
                 //If we cannot see it, lets look for markers
@@ -185,9 +181,7 @@ Ant_::update(sf::Time dt, std::vector<Chunk> &chunks, std::vector<Obstacle> &obs
                 float new_angle = sampleWorld(chunks);
                 // if new_angle is a nan it is because there is no markers in the detection radius
                 if (!isnan(new_angle)) {
-                    this->angle = FREEDOM_COEFFICIENT * (RandomAngle() + angle) + (1.0 - FREEDOM_COEFFICIENT) *
-                                                                                  (TURN_COEFFICIENT * new_angle +
-                                                                                   (1.0 - TURN_COEFFICIENT) * angle);
+                    this->angle = FREEDOM_COEFFICIENT * (RandomAngle() + angle) + (1.0 - FREEDOM_COEFFICIENT) * (TURN_COEFFICIENT * new_angle + (1.0 - TURN_COEFFICIENT) * angle);
                 } else {
                     this->angle += RandomAngle();
                 }
@@ -201,7 +195,7 @@ Ant_::update(sf::Time dt, std::vector<Chunk> &chunks, std::vector<Obstacle> &obs
 
 
     // Actually changing position according to the context-based new angle
-    this->angle = constrainAngle(angle);
+    this->angle = normalise_angle(angle);
 
     this->direction = sf::Vector2<float>(cos(angle), sin(angle));
     sf::Vector2<float> new_position = this->position + this->direction * ant_speed * dt.asSeconds();
@@ -267,7 +261,7 @@ float Ant_::sampleWorld(std::vector<Chunk> &chunks) {
         std::vector<Marker> &markers = get_chunk_ij(chunks, close_chunk[0], close_chunk[1]).getMarkers();
 
 
-        for (Marker &marker: markers) {
+        for (Marker &marker : markers) {
 
             if (marker.state == type) {
                 float distance_ = distance(marker.position, position);
@@ -275,9 +269,9 @@ float Ant_::sampleWorld(std::vector<Chunk> &chunks) {
                     sf::Vector2f target_position = marker.position;
                     sf::Vector2f delta_vect = target_position - position;
                     float markers_angle = atan2(delta_vect.y, delta_vect.x);
-                    markers_angle = constrainAngle(markers_angle);
+                    markers_angle = normalise_angle(markers_angle);
 
-                    if (abs(markers_angle - constrainAngle(angle)) <= PI * 2. / 3) {
+                    if (markers_angle <= angle + PI / 2 && markers_angle >= angle - PI / 2) {
                         bary_angle += marker.get_intensity() * markers_angle;
                         total_intensity += marker.get_intensity();
                     }

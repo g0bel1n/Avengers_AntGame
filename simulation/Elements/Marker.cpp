@@ -20,10 +20,8 @@ float Marker::get_intensity() {
 Marker::Marker(sf::Vector2<float> position, int state, Chunk *myChunk, float time_offset = 0.) {
 
     this->position = position;
-    this->decayRate = MAX_DECAY - (MAX_DECAY - MIN_DECAY) / (time_offset/DECAY_DECAY + 1);
-    this->intensity = BASE_INTENSITY * pow(1 - decayRate, time_offset);
+    this->intensity = INTENSITY_INCREMENT * pow(1 - DECAY_RATE, 30 * time_offset);
     this->myChunk = myChunk;
-
 
     this->state = state;
 
@@ -40,7 +38,7 @@ void Marker::update(sf::Time &dt) {
 
     /* Exponential decrease of the marker's intensity with time */
     //intensity *= pow((1 - DECAY_RATE), dt.asSeconds()); Can be approximated
-    intensity *= (1 - decayRate * dt.asSeconds());
+    intensity *= (1 - DECAY_RATE * dt.asSeconds());
     if (markerGraphics) { graphic.setRadius(intensity); }
 
     if (intensity < DETECTION_THRESHOLD) {

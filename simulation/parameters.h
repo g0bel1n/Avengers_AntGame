@@ -27,18 +27,15 @@ namespace parameters {
     //ANT PARAMETERS
     inline float DEFAULT_ANT_SPEED{300.};
     inline sf::Vector2f DEFAULT_COLONY_POSITION(LENGTH / 2., 50.);
-    inline constexpr float DETECTION_RADIUS{250.};
+    inline constexpr float DETECTION_RADIUS{480.};
     inline constexpr float EATING_RADIUS{30.};
-    inline float FREEDOM_COEFFICIENT{0.2};
-    inline float TURN_COEFFICIENT{1.};
+    inline float FREEDOM_COEFFICIENT{0.4};
+    inline float TURN_COEFFICIENT{0.9};
 
 
 //MARKER PARAMETERS
-    inline constexpr float MIN_DECAY{.07}; //Percentage of intensity decrease per second
-    inline constexpr float MAX_DECAY{.17};
-    inline constexpr float DECAY_DECAY{.2};
-
-    inline constexpr float BASE_INTENSITY = 5;
+    inline constexpr float DECAY_RATE{.1}; //Percentage of intensity decrease per second
+    inline constexpr float INTENSITY_INCREMENT = 6;
     inline constexpr float RADIUS = 10.f;
     inline float DETECTION_THRESHOLD = 1.5;
 
@@ -50,4 +47,4 @@ namespace parameters {
 }
 
 #endif //AVENGERS_ANTGAME_SIMULATION_PARAMETERS_H
-#pragma clang diagnostic pop
+#pragma clang diagnostic pop    @
