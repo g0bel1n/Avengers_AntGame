@@ -76,7 +76,7 @@ Ant_::update(sf::Time dt, std::vector<Chunk> &chunks, std::vector<Obstacle> &obs
 
     this->ant_speed = ant_speed;
 
-    //if (distance(colony_pos, position) <= DETECTION_RADIUS) { time_since_quitted_home = 0; }
+    if (distance(colony_pos, position) <= DETECTION_RADIUS) { time_since_quitted_home = 0; }
     //if (check_env(foods, DETECTION_RADIUS) != -1) { time_since_found_food = 0; }
 
 
