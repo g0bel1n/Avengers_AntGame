@@ -131,9 +131,7 @@ Ant_::update(sf::Time dt, std::vector<Chunk> &chunks, std::vector<Obstacle> &obs
                     //switchSkin = true;
                     last_changed = sf::Time::Zero;
                     this->angle += PI + RandomAngle();;
-
-                    //texture_with_food.loadFromFile("../ressources/ant_with_food.png");
-                    //graphics.setTexture(texture_with_food);
+                    graphics.setTexture(ant_texture_food);
                     //switchSkin = false;
 
                 }
@@ -157,8 +155,8 @@ Ant_::update(sf::Time dt, std::vector<Chunk> &chunks, std::vector<Obstacle> &obs
             if (distance(colony_pos, position) <= 2 * dt.asSeconds() * ant_speed) {
 
                 // Changing skin
-                //texture.loadFromFile("../ressources/ant.png");
-                //graphics.setTexture(texture);
+
+                graphics.setTexture(ant_texture);
                 //switchSkin = false;
 
                 food_in_colony++;
