@@ -15,10 +15,11 @@ namespace parameters {
     inline int WIDTH{1400};
     inline int CHUNKSIZE{250};
     inline int DEFAULT_NB_COLONIES{2};
-    inline int DEFAULT_NB_ANTS_PER_COLONY{90};
+    inline int DEFAULT_NB_ANTS_PER_COLONY{40};
     inline constexpr int FOOD_FOR_GENERATION{10};
-    inline std::vector<sf::Color> DEFAULT_COLORS{sf::Color::White, sf::Color::Black, sf::Color::Green};
-    inline std::vector<std::string> DEFAULT_COLORS_STR{"White", "Black", "Green"};
+    inline std::vector<sf::Color> DEFAULT_COLORS{sf::Color::White, sf::Color::Black, sf::Color::Green, sf::Color::Blue,
+                                                 sf::Color::Red, sf::Color::Yellow};
+    inline std::vector<std::string> DEFAULT_COLORS_STR{"White", "Black", "Green", "Blue", "Red", "Yellow"};
     inline bool markerGraphics{false};
     inline sf::Texture ant_texture;
     inline sf::Texture ant_texture_food;
