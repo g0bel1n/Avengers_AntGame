@@ -22,10 +22,8 @@ void fast_erase(std::vector<Marker> &vect, int pos) { /*Using the back-swap tric
     vect.pop_back();
 }
 
-
 Colony::Colony(int nb_ants, sf::Color color, sf::Vector2f colony_pos,
                float ant_speed) {
-
 
     food_in_colony = 0;
     this->colony_pos = colony_pos;
@@ -33,22 +31,23 @@ Colony::Colony(int nb_ants, sf::Color color, sf::Vector2f colony_pos,
     this->color = color;
 
 
+    // Building Chunks
     std::vector<Chunk> chunks;
     for (int i = 0; i < WIDTH / CHUNKSIZE + 1; i++) {
         for (int j = 0; j < LENGTH / CHUNKSIZE + 1; j++) {
             chunks.push_back(Chunk({i, j}));
-
         }
     }
-
     this->chunks = chunks;
 
+    // Generating ants
     for (int i = 0; i < nb_ants; i++) {
-
-        Ant_ ant(colony_pos, color, ant_speed);
+        Ant ant(colony_pos, color, ant_speed);
         ants.push_back(ant);
     }
 
+
+    //Setting up the colony graphics
     colony_base.setTexture(hole_texture);
     colony_base.setPosition(colony_pos);
     colony_base.setOrigin(536. / 2., 204.);
@@ -62,10 +61,12 @@ int Colony::get_nb_ants() {
 
 void Colony::update(sf::Time dt, std::vector<Obstacle> &obstacles, std::vector<Food> &foods) {
 
+    //Update ants
     for (auto &ant: ants) {
         ant.update(dt, chunks, obstacles, foods, food_in_colony, ant_speed, colony_pos);
     }
 
+    //Update Chunks
     for (auto &chunk: chunks) {
         std::vector<Marker> &markers = chunk.getMarkers();
         for (int k = 0; k < markers.size(); k++) {
@@ -74,6 +75,7 @@ void Colony::update(sf::Time dt, std::vector<Obstacle> &obstacles, std::vector<F
         }
     }
 
+    // Generate ants according to food in the colony
     if (food_in_colony >= FOOD_FOR_GENERATION) {
         add_ant();
         ant_generated += 1;
@@ -82,16 +84,12 @@ void Colony::update(sf::Time dt, std::vector<Obstacle> &obstacles, std::vector<F
 
 }
 
-
 void Colony::add_ant() {
-
-    Ant_ ant(colony_pos, color, ant_speed);
+    Ant ant(colony_pos, color, ant_speed);
     ants.push_back(ant);
-
-
 }
 
+//Delete the last ant
 void Colony::delete_ant() {
     ants.pop_back();
 }
-

@@ -8,8 +8,6 @@
 #pragma once
 
 #include <SFML/Graphics.hpp>
-#include <string>
-
 
 class BaseElement {
 
@@ -17,12 +15,12 @@ class BaseElement {
 public:
 
     sf::Vector2f position;
-
     bool changeColor = false;
+    int state;
 
+    // Abstract methods : inherited classes must have an update function
     virtual void update(sf::Time &dt) = 0;
 
-    int state;
 };
 
 

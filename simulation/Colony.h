@@ -11,7 +11,7 @@
 #pragma once
 
 #include <vector>
-#include "ants/Ant_.h"
+#include "ants/Ant.h"
 #include "chunks/chunk.h"
 #include "Elements/Food.h"
 
@@ -28,16 +28,8 @@ public:
            sf::Vector2f colony_pos = parameters::DEFAULT_COLONY_POSITION,
            float ant_speed = parameters::DEFAULT_ANT_SPEED);
 
+    //Methods
     int get_nb_ants();
-
-    int food_in_colony{};
-    int ant_generated = 0;
-    float ant_speed{};
-
-    std::vector<Ant_> ants;
-    std::vector<Chunk> chunks;
-
-    sf::Vector2f colony_pos;
 
     void add_ant();
 
@@ -45,14 +37,21 @@ public:
 
     void update(sf::Time dt, std::vector<Obstacle> &obstacles, std::vector<Food> &foods);
 
+
+    // Attributes
+    int food_in_colony{};
+    int ant_generated = 0;
+    float ant_speed{};
+    sf::Vector2f colony_pos;
+
+    std::vector<Ant> ants;
+    std::vector<Chunk> chunks;
+
     // Colony Graphic object
     sf::Sprite colony_base;
 
-
 private:
-
     sf::Color color;
-
 };
 
 

@@ -34,6 +34,7 @@ namespace parameters {
     inline float FREEDOM_COEFFICIENT{0.4};
     inline float TURN_COEFFICIENT{0.9};
     inline constexpr float DROPPING_RATE{0.01};
+    inline constexpr float DIRECTION_CHANGE_DELTA{0.05};
 
 
 //MARKER PARAMETERS

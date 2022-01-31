@@ -4,6 +4,12 @@
 
 #include "World.h"
 
+World::World(int nb_colonies, int nb_ants_per_colony) {
+
+    for (int i = 0; i < nb_colonies; i++) {
+        colonies.emplace_back(nb_ants_per_colony, parameters::DEFAULT_COLORS[i]);
+    }
+}
 
 void World::update(sf::Time &dt) {
 
@@ -17,13 +23,8 @@ void World::update(sf::Time &dt) {
     }
 }
 
-World::World(int nb_colonies, int nb_ants_per_colony) {
-
-    for (int i = 0; i < nb_colonies; i++) {
-        colonies.emplace_back(nb_ants_per_colony, parameters::DEFAULT_COLORS[i]);
-    }
-
-
+void World::AddFood(sf::Vector2f position) {
+    foods.emplace_back(position); /* Un food n'a pas de chunk */
 }
 
 int World::get_food_available() {
@@ -34,7 +35,4 @@ int World::get_food_available() {
     return food_available;
 }
 
-void World::AddFood(sf::Vector2f position) {
-    foods.emplace_back(position); /* Un food n'a pas de chunk */
 
-}

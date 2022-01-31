@@ -11,21 +11,23 @@
 class World {
 
 public:
+
+
     explicit World(int nb_colonies = parameters::DEFAULT_NB_COLONIES,
                    int nb_ants_per_colony = parameters::DEFAULT_NB_ANTS_PER_COLONY);
 
+    //Methods
+    void update(sf::Time &dt);
+
+    void AddFood(sf::Vector2f position);
+
+    int get_food_available();
+
+    //Attributes
     std::vector<Colony> colonies;
     std::vector<Food> foods;
     std::vector<Obstacle> obstacles;
 
-    void update(sf::Time &dt);
-
-    sf::Texture hole_texture;
-    sf::Font font;
-
-    int get_food_available();
-
-    void AddFood(sf::Vector2f position);
 };
 
 

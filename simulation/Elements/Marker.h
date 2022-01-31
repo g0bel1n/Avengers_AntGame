@@ -19,14 +19,14 @@ public:
 
     Marker(sf::Vector2<float> position, int state, Chunk *myChunk, float time_offset);
 
+    //Methods
     float get_intensity();
 
-    sf::CircleShape graphic;
-
-
-    sf::Vector2<float> position;
-
     void update(sf::Time &dt) override;
+
+    //Attributes
+    sf::CircleShape graphic;
+    sf::Vector2<float> position;
 
 
 private:

@@ -1,8 +1,8 @@
 #pragma once
+
 #include "Obstacle.h"
 
 Obstacle::Obstacle(sf::Vector2f position, float length) {
-
 
     graphics = sf::VertexArray(sf::Quads, 4);
 

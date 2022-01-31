@@ -17,6 +17,13 @@ Food::Food(sf::Vector2<float> position) {
     state = 1;
 }
 
+void Food::update(sf::Time &dt) {
+    decomposition += dt.asSeconds();
+    if (decomposition > DECOMPOSITION_THRESHOLD) { state = 0; }
+}
+
+
+/*
 void Food::isEaten() {
     state = 0;
 }
@@ -26,13 +33,8 @@ void Food::isTargeted() {
     graphic.setFillColor(sf::Color::Yellow);
 }
 
-void Food::update(sf::Time &dt) {
-    decomposition += dt.asSeconds();
-    if (decomposition > DECOMPOSITION_THRESHOLD) { state = 0; }
-}
-
 void Food::HasBeenForgotten() {
     state = 1;
     graphic.setFillColor(sf::Color::Red);
 
-}
+}*/

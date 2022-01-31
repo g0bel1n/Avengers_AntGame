@@ -3,7 +3,7 @@
 //
 #pragma once
 
-#include "Ant_.h"
+#include "Ant.h"
 #include <cmath>
 #include <iostream>
 #include "../../common/utils.h"
@@ -14,12 +14,12 @@ using namespace parameters;
 
 #define PI 3.14159265
 
-float Ant_::RandomAngle() {
+float Ant::RandomAngle() {
 
     return ((float) rand() / RAND_MAX - 1.0 / 2.0) * angular_width * (PI / 180);
 }
 
-Ant_::Ant_(sf::Vector2<float> position, sf::Color &color, float ant_speed) {
+Ant::Ant(sf::Vector2<float> position, sf::Color &color, float ant_speed) {
     this->position = position;
     this->lifetime = 0;
     this->angle = (std::rand() % 360 - 180) * (PI / 180);
@@ -36,11 +36,11 @@ Ant_::Ant_(sf::Vector2<float> position, sf::Color &color, float ant_speed) {
     graphics.setPosition(position);
 }
 
-float Ant_::get_lifetime() {
+float Ant::get_lifetime() {
     return this->lifetime;
 }
 
-bool Ant_::is_valid(sf::Vector2f position, std::vector<Obstacle> &obstacles) {
+bool Ant::is_valid(sf::Vector2f position, std::vector<Obstacle> &obstacles) {
     float offset = 5.f;
     if (!((position.x > 0 + offset) && (position.x + offset < WIDTH) && (position.y > 0 + offset) &&
           (position.y + offset < LENGTH))) {
@@ -56,7 +56,7 @@ bool Ant_::is_valid(sf::Vector2f position, std::vector<Obstacle> &obstacles) {
     return true;
 }
 
-void Ant_::move_to(sf::Vector2<float> new_position, sf::Time dt, std::vector<Obstacle> &obstacles) {
+void Ant::move_to(sf::Vector2<float> new_position, sf::Time dt, std::vector<Obstacle> &obstacles) {
     /* Check if the position we are trying to implement is valid, e.g. no obstacle */
 
     if (is_valid(new_position, obstacles)) {
@@ -65,14 +65,13 @@ void Ant_::move_to(sf::Vector2<float> new_position, sf::Time dt, std::vector<Obs
         this->angle += PI + RandomAngle();
         this->direction = sf::Vector2<float>(cos(angle), sin(angle));
         this->position += direction * ant_speed * dt.asSeconds();
-        times_wall_hit++;
     }
 
 }
 
 void
-Ant_::update(sf::Time dt, std::vector<Chunk> &chunks, std::vector<Obstacle> &obstacles, std::vector<Food> &foods,
-             int &food_in_colony, float ant_speed, sf::Vector2f colony_pos) {
+Ant::update(sf::Time dt, std::vector<Chunk> &chunks, std::vector<Obstacle> &obstacles, std::vector<Food> &foods,
+            int &food_in_colony, float ant_speed, sf::Vector2f colony_pos) {
 
     this->ant_speed = ant_speed;
 
@@ -89,18 +88,18 @@ Ant_::update(sf::Time dt, std::vector<Chunk> &chunks, std::vector<Obstacle> &obs
 
 /* Kind of a decision tree to decide what is the next position */
     // To avoid changing direction too often...
-    if (last_changed > sf::seconds(direction_change_delta + (std::rand() % 5) / 100.)) {
+    if (last_changed > sf::seconds(DIRECTION_CHANGE_DELTA + (std::rand() % 5) / 100.)) {
         //If looking for food...
         if (ToFood) {
             time_since_quitted_home += dt.asSeconds();
 
-            //if (time_since_quitted_home>10){ToFood=false;}
             //Looking for food and didn't see it yet
             if (target == -1) {
 
                 target = check_env(foods, DETECTION_RADIUS);
                 //If it detects valid food, let's go to it
                 if (target >= 0 && foods[target].state == 1) {
+                    // @@
                     //foods[target].isTargeted();
                     sf::Vector2f delta_vect = foods[target].position - position;
                     float new_angle = atan2(delta_vect.y, delta_vect.x);
@@ -117,42 +116,33 @@ Ant_::update(sf::Time dt, std::vector<Chunk> &chunks, std::vector<Obstacle> &obs
                                                                                       (TURN_COEFFICIENT * new_angle +
                                                                                        (1.0 - TURN_COEFFICIENT) *
                                                                                        angle);
-                    } else {
-                        this->angle += RandomAngle();
-
-                    }
+                    } else { this->angle += RandomAngle(); }
                     last_changed = sf::Time::Zero;
                 }
             }
-
                 // If we are looking for food but already going to the target...
             else {
                 // Just checking if arrived. If not, keep going...
                 if (check_env(foods, EATING_RADIUS) != -1) {
-
+                    // @@
                     //foods[target].isEaten();
                     foods.pop_back();
                     target = -1;
                     ToFood = false;
                     time_since_found_food = 0.;
-                    //switchSkin = true;
                     last_changed = sf::Time::Zero;
                     this->angle += PI + RandomAngle();;
                     graphics.setTexture(ant_texture_food);
-                    //switchSkin = false;
-
                 }
+                    // @@
                     //if we are not there yet, lets still check if it is available
                     /*else if (foods[target].state == 0) {
                         target = -1;*/
-
                     //}
                 else if (check_env(foods, DETECTION_RADIUS) == -1) {
-
-                    //foods[target].HasBeenForgotten();
+                    // @@ foods[target].HasBeenForgotten();
                     target = -1;
                 }
-
             }
         }
             //If we are going home...
@@ -162,9 +152,7 @@ Ant_::update(sf::Time dt, std::vector<Chunk> &chunks, std::vector<Obstacle> &obs
             if (distance(colony_pos, position) <= 2 * dt.asSeconds() * ant_speed) {
 
                 // Changing skin
-
                 graphics.setTexture(ant_texture);
-                //switchSkin = false;
 
                 food_in_colony++;
 
@@ -175,7 +163,6 @@ Ant_::update(sf::Time dt, std::vector<Chunk> &chunks, std::vector<Obstacle> &obs
                 this->angle += PI + RandomAngle();
                 last_changed = sf::Time::Zero;
                 time_since_quitted_home = 0.;
-
 
             }
 
@@ -199,11 +186,8 @@ Ant_::update(sf::Time dt, std::vector<Chunk> &chunks, std::vector<Obstacle> &obs
                     this->angle += RandomAngle();
                 }
                 last_changed = sf::Time::Zero;
-
             }
-
         }
-
     }
 
 
@@ -224,7 +208,7 @@ Ant_::update(sf::Time dt, std::vector<Chunk> &chunks, std::vector<Obstacle> &obs
 
 }
 
-int Ant_::check_env(std::vector<Food> &foods, float radius) {
+int Ant::check_env(std::vector<Food> &foods, float radius) {
     /* Look for the closest piece of food according to the radius*/
 
     int i = 0;
@@ -244,16 +228,14 @@ int Ant_::check_env(std::vector<Food> &foods, float radius) {
     return min_index;
 }
 
-void Ant_::AddMarker(std::vector<Chunk> &chunks, int type, float time_offset) {
+void Ant::AddMarker(std::vector<Chunk> &chunks, int type, float time_offset) {
 
     Chunk &fatherChunk = get_chunk_pos(chunks, position);
     fatherChunk.add(Marker(position, type, &fatherChunk, time_offset));
 
 }
 
-int thread_i;
-
-float Ant_::sampleWorld(std::vector<Chunk> &chunks) {
+float Ant::sampleWorld(std::vector<Chunk> &chunks) {
     /* Calculate the barycenter of markers in the detection radius depending on the ant objective*/
 
     int type;
@@ -267,8 +249,6 @@ float Ant_::sampleWorld(std::vector<Chunk> &chunks) {
 
     for (auto &close_chunk: close_chunks) {
         std::vector<Marker> &markers = get_chunk_ij(chunks, close_chunk[0], close_chunk[1]).getMarkers();
-
-
         for (Marker &marker: markers) {
 
             if (marker.state == type) {

@@ -20,21 +20,13 @@ Marker::Marker(sf::Vector2<float> position, int state, Chunk *myChunk, float tim
     this->position = position;
     this->intensity = INTENSITY_INCREMENT * pow(1 - DECAY_RATE, MARGINAL_PENALISATION * time_offset);
     this->myChunk = myChunk;
-
     this->state = state;
-    //float next_intensity = INTENSITY_INCREMENT * pow(1 - DECAY_RATE, 30 * time_offset);
-    //if (next_intensity > DETECTION_THRESHOLD) {this->intensity = next_intensity;}
-    //else { this->intensity = 0.; this->state = 0; }
-    this->myChunk = myChunk;
-
 
     if (markerGraphics) {
         graphic = sf::CircleShape(intensity);
         graphic.setPosition(position);
         graphic.setFillColor(color());
     }
-
-
 }
 
 void Marker::update(sf::Time &dt) {
@@ -50,12 +42,9 @@ void Marker::update(sf::Time &dt) {
     }
 
     if (changeColor) {
-
         if (markerGraphics) { graphic.setFillColor(color()); }
         changeColor = false;
     }
-
-
 }
 
 const sf::Color &Marker::color() {

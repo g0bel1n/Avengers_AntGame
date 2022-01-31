@@ -5,11 +5,10 @@
 #ifndef ANTS_FIGHT_CLUB_OBSTACLE_H
 #define ANTS_FIGHT_CLUB_OBSTACLE_H
 #pragma once
+
 #include <SFML/Graphics.hpp>
 
-class Obstacle {
-
-public:
+struct Obstacle {
 
     Obstacle(sf::Vector2f position, float lenght);
 

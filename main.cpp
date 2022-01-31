@@ -6,26 +6,35 @@
 #include "simulation/parameters.h"
 
 //TO DO
-// Add saved map feature
 // CLEAN THE CODE (delete useless funcs etc)
-
 
 using namespace parameters;
 
 using namespace std;
 
-
 int main() {
+
+    sf::Clock clock;
+    sf::Clock updating_clock;
+    sf::Font font;
+    sf::Texture SoilTex;
+
 
     ofstream data_file("../data.csv");
     data_file << "Time;dt loop;dt update;nb_markers;" + to_string(DEFAULT_NB_ANTS_PER_COLONY) << endl;
 
+    // Some useful variables
     bool pause = true;
-    int total_food = 0;
     bool began = false;
+    int active_colony = 0;
+    bool draw_obstacle = false;
+    float updating_delay;
+    float time;
 
 
     sf::RenderWindow window(sf::VideoMode::getDesktopMode(), "Avengers AntGame");
+    window.setTitle("Avengers AntGame");
+
     sf::Vector2u size = window.getSize();
 
     if (size.x < 3500)WIDTH = size.x;
@@ -33,33 +42,24 @@ int main() {
 
     fontsize = LENGTH * 3e-2;
 
-    sf::Clock clock;
-    sf::Clock drawing_clock;
-    sf::Clock updating_clock;
-    sf::Font font;
-    if (!font.loadFromFile("../ressources/pricedown.otf")) {
-        cout << "Could not load the font...";
-    }
-    window.setTitle("Avengers AntGame - @G0bel1n");
 
+    // Loading all ressources
+    font.loadFromFile("../ressources/pricedown.otf");
     ant_texture.loadFromFile("../ressources/ant.png");
     ant_texture_food.loadFromFile("../ressources/ant_food.png");
     hole_texture.loadFromFile("../ressources/Hole.PNG");
+    //Loading the grass background
+    SoilTex.loadFromFile("../ressources/soil.jpeg");
 
     //Generating the world
     World world = World(1);
 
-
-
-
-    //Loading the grass background
-    sf::Texture SoilTex;
-    SoilTex.loadFromFile("../ressources/soil.jpeg");
-
+    // Setting up the background
     sf::Sprite Background(SoilTex);
     Background.setPosition(0, 0);
     Background.setScale(WIDTH / 3448., LENGTH / 3448.);
 
+// Colony Info Panel
     sf::VertexArray colony_info_quad(sf::Quads, 4);
 
     colony_info_quad[0].position = sf::Vector2f(WIDTH * 0.75, 0.03 * LENGTH + fontsize);
@@ -73,6 +73,7 @@ int main() {
     colony_info_quad[2].color = sf::Color(255, 255, 255, 100);
     colony_info_quad[3].color = sf::Color(255, 255, 255, 100);
 
+    //Overall Info Panel
     sf::VertexArray simulation_info_quad(sf::Quads, 4);
 
     simulation_info_quad[0].position = sf::Vector2f(WIDTH / 2 - WIDTH / 3, LENGTH * 0.91);
@@ -86,6 +87,8 @@ int main() {
     simulation_info_quad[3].color = sf::Color(255, 255, 255, 100);
 
 
+    //Defining every text that is going to be drawn
+    // Positions are relatives
     sf::Text colony_active;
     colony_active.setFont(font);
     colony_active.setString(DEFAULT_COLORS_STR[0] + " colony");
@@ -107,8 +110,7 @@ int main() {
     colony_size.setCharacterSize(fontsize);
     colony_size.setFillColor(sf::Color::Black);
 
-    sf::Text
-            ant_generated;
+    sf::Text ant_generated;
     ant_generated.setFont(font);
     ant_generated.setString("Ants generated");
     ant_generated.setPosition(WIDTH * 0.76, 0.03 * LENGTH + 4 * (fontsize + 0.006 * LENGTH));
@@ -134,46 +136,35 @@ int main() {
     //Text SFML-Objects that will display :
 
     // the amount of food available
-    sf::Text
-            text;
-    text.setFont(font);
-    text.setString("Food available : 0");
-    text.setPosition((WIDTH / 2 - WIDTH / 3) * 5. / 2, LENGTH * 0.93);
-    text.setCharacterSize(fontsize);
-    text.setFillColor(sf::Color::Black);
-
-
+    sf::Text food_on_map;
+    food_on_map.setFont(font);
+    food_on_map.setString("Food available : 0");
+    food_on_map.setPosition((WIDTH / 2 - WIDTH / 3) * 5. / 2, LENGTH * 0.93);
+    food_on_map.setCharacterSize(fontsize);
+    food_on_map.setFillColor(sf::Color::Black);
 
     // The time elapsed
-    sf::Text text1;
-    text1.setFont(font);
-    text1.setString("time elapsed");
-    text1.setPosition((WIDTH / 2 - WIDTH / 3) * 11. / 3, LENGTH * 0.93);;
-    text1.setCharacterSize(fontsize);
-    text1.setFillColor(sf::Color::Black);
-
+    sf::Text time_elapsed;
+    time_elapsed.setFont(font);
+    time_elapsed.setString("time elapsed");
+    time_elapsed.setPosition((WIDTH / 2 - WIDTH / 3) * 11. / 3, LENGTH * 0.93);;
+    time_elapsed.setCharacterSize(fontsize);
+    time_elapsed.setFillColor(sf::Color::Black);
 
     // Basic commands
-    sf::Text text3;
-    text3.setFont(font);
-    text3.setString(
+    sf::Text basic_commands;
+    basic_commands.setFont(font);
+    basic_commands.setString(
             "SPACE to start/Pause \nLeft Click to add food \nRight click to add obstacles \nC to  clear the obstacles \nM to  clear the markers \nLeft/Right arrow to Erase/Create new ants \nDown/Up to reduce/increase the speed of the ants \nG to toggle marker graphics ");
-    text3.setCharacterSize(fontsize);
-    text3.setFillColor(sf::Color::White);
-    text3.setPosition(WIDTH / 3., LENGTH / 3.);
-
-    int active_colony = 0;
-
-
-    bool draw_obstacle = false;
+    basic_commands.setCharacterSize(fontsize);
+    basic_commands.setFillColor(sf::Color::White);
+    basic_commands.setPosition(WIDTH / 3., LENGTH / 3.);
 
     //Main Loop
     while (window.isOpen()) {
 
-
         // check all the window's events that were triggered since the last iteration of the loop
         sf::Event event;
-
 
         while (window.pollEvent(event)) {
             // "close requested" event: we close the window
@@ -282,13 +273,11 @@ int main() {
                                           LENGTH * MAP_OCCUPATION);
                         obstacle.texture.loadFromFile("../ressources/rock.jpeg");
                         world.obstacles.push_back(obstacle);
-
                     }
 
                     if (event.mouseButton.button == sf::Mouse::Left) {
 
                         draw_obstacle = false;
-
 
                         // The following for-loop is there to add a "block" of food, instead of a line
                         sf::Vector2f to_pos = sf::Vector2f(event.mouseButton.x - 20, event.mouseButton.y - 20);
@@ -300,7 +289,6 @@ int main() {
                                 world.AddFood(to_pos + sf::Vector2f(i * x_offset, j * x_offset));
                             }
                         }
-                        total_food += 10;
                     }
                     break;
 
@@ -312,7 +300,6 @@ int main() {
 
                 case sf::Event::MouseMoved:
                     if (draw_obstacle) {
-
 
                         Obstacle obstacle(sf::Vector2f(event.mouseMove.x,
                                                        event.mouseMove.y),
@@ -329,74 +316,56 @@ int main() {
         sf::Time dt = clock.restart();
         if (!pause) {
 
-            // Might need to decrease the number of markers when passing a critical value (aroud 3500)
-            /*if (world.markers.size() > 3000) {
-                for (int i = 0; i <= 100; i++)world.markers.erase(world.markers.begin());
-            }*/
-
             began = true;
 
-            text.setString("Food available: " + to_string(world.get_food_available()));
+            updating_clock.restart();
+            world.update(dt);
+            updating_delay = updating_clock.restart().asSeconds();
 
-            float time = world.colonies[0].ants[0].get_lifetime();
-
+            time = world.colonies[0].ants[0].get_lifetime();
             // To display a time in minutes
             int minutes = 0;
             while (time > 60.) {
                 time -= 60.;
                 minutes += 1;
             }
-
             //These objects need to be updated only when the simulation is running
-            text1.setString(
+            time_elapsed.setString(
                     "Time elapsed :  " + to_string(minutes) + "  min  " + to_string(time).substr(0, 3));
-
-
-            updating_clock.restart();
-            world.update(dt);
-            float updating_delay = updating_clock.restart().asSeconds();
-            if (updating_delay > 0.3)cout << "updating time" << updating_delay << "\n";
-
             nb_markers.setString("Number of Markers : " + to_string((int) total_markers));
+            ant_speed.setString(
+                    "ANTS SPEED : " + to_string((int) world.colonies[active_colony].ant_speed));
+            colony_size.setString(
+                    "Number of Ants : " + to_string((int) world.colonies[active_colony].get_nb_ants()));
+            food_in_col.setString("Food in colony : " +
+                                  to_string((int) world.colonies[active_colony].food_in_colony));
+            ant_generated.setString("Ants generated : " +
+                                    to_string((int) world.colonies[active_colony].ant_generated));
+            food_on_map.setString("Food available: " + to_string(world.get_food_available()));
 
+            // Saving updating data delay
             data_file
                     << to_string(minutes) + ":" + to_string(time) + ";" + to_string(dt.asSeconds()) + ";" +
                        to_string(updating_delay) + ";" + to_string(total_markers) << endl;
         }
 
-
-        ant_speed.setString(
-                "ANTS SPEED : " + to_string((int) world.colonies[active_colony].ant_speed));
-        colony_size.setString(
-                "Number of Ants : " + to_string((int) world.colonies[active_colony].get_nb_ants()));
-        food_in_col.setString("Food in colony : " +
-                              to_string((int) world.colonies[active_colony].food_in_colony));
-        ant_generated.setString("Ants generated : " +
-                                to_string((int) world.colonies[active_colony].ant_generated));
-
         window.clear();
-
-        drawing_clock.restart();
         // Drawing every object
         window.draw(Background);
         total_markers = 0;
 
 
         for (auto &colony: world.colonies) {
-
-
             for (auto &chunk: colony.chunks) {
                 for (auto &marker: chunk.getMarkers()) {
                     if (markerGraphics) { window.draw(marker.graphic); }
                     total_markers += 1;
-
                 }
             }
             window.draw(colony.colony_base);
             for (auto &ant: colony.ants) {
                 window.draw(ant.graphics);
             }
-
         }
 
         for (auto &food: world.foods) { window.draw(food.graphic); }
@@ -405,8 +374,8 @@ int main() {
         window.draw(colony_info_quad);
         window.draw(simulation_info_quad);
 
-        window.draw(text);
-        window.draw(text1);
+        window.draw(food_on_map);
+        window.draw(time_elapsed);
         window.draw(ant_speed);
         window.draw(colony_size);
         window.draw(nb_markers);
@@ -414,9 +383,7 @@ int main() {
         window.draw(ant_generated);
         window.draw(colony_active);
 
-        float drawing_delay = drawing_clock.restart().asSeconds();
-        if (drawing_delay > 0.2)cout << "drawing time" << drawing_delay << "\n";
-        if (pause) window.draw(text3);
+        if (pause) window.draw(basic_commands);
 
         window.display();
 
