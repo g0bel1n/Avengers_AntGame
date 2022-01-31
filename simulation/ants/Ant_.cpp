@@ -265,7 +265,7 @@ float Ant_::sampleWorld(std::vector<Chunk> &chunks) {
 
             if (marker.state == type) {
                 float distance_ = distance(marker.position, position);
-                if (distance_ <= DETECTION_RADIUS && distance_ > EATING_RADIUS) {
+                if (distance_ <= DETECTION_RADIUS) {
                     sf::Vector2f target_position = marker.position;
                     sf::Vector2f delta_vect = target_position - position;
                     float markers_angle = atan2(delta_vect.y, delta_vect.x);
