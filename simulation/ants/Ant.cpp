@@ -42,8 +42,8 @@ float Ant::get_lifetime() {
 
 bool Ant::is_valid(sf::Vector2f position, std::vector<Obstacle> &obstacles) {
     float offset = 5.f;
-    if (!((position.x > 0 + offset) && (position.x + offset < WIDTH) && (position.y > 0 + offset) &&
-          (position.y + offset < LENGTH))) {
+    if (!((position.x > 0 + offset) && (position.x + offset < (float)WIDTH) && (position.y > 0. + offset) &&
+          (position.y + offset < (float)LENGTH))) {
         return false;
     }
     for (auto &obstacle: obstacles) {
