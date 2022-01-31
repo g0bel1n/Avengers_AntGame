@@ -18,7 +18,7 @@ using namespace std;
 int main() {
 
     ofstream data_file("../data.csv");
-    data_file << "Time;dt loop;dt update;nb_markers;" + to_string(NB_ANTS) << endl;
+    data_file << "Time;dt loop;dt update;nb_markers;" + to_string(DEFAULT_NB_ANTS_PER_COLONY) << endl;
 
     bool pause = true;
     int total_food = 0;

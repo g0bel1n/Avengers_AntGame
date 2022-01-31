@@ -7,9 +7,6 @@ add_executable(Avengers_AntGame main.cpp simulation/ants/Ant_.cpp simulation/ant
 find_package(PkgConfig REQUIRED)
 
 
-
-
-
 pkg_check_modules(SFML REQUIRED sfml-graphics sfml-window)
 
 target_link_libraries(Avengers_AntGame PRIVATE ${SFML_LIBRARIES})
@@ -17,7 +14,5 @@ target_link_libraries(Avengers_AntGame PRIVATE ${SFML_LIBRARIES})
 # Add other flags to the compiler
 target_compile_definitions(Avengers_AntGame PRIVATE ${SFML_CFLAGS_OTHER})
 
-# Setup CMake to use GTK+, tell the compiler where to look for headers
-# and to the linker where to look for libraries
 target_include_directories(Avengers_AntGame PRIVATE ${SFML_INCLUDE_DIRS})
 target_link_directories(Avengers_AntGame PRIVATE ${SFML_LIBRARY_DIRS})
