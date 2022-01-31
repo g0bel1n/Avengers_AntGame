@@ -8,7 +8,7 @@
 #include <iostream>
 #include "../../common/utils.h"
 #include "../Colony.h"
-//#include "omp.h" Tried multithreading
+
 
 
 
@@ -17,7 +17,8 @@ using namespace parameters;
 #define PI 3.14159265
 
 float Ant_::RandomAngle() {
-    return (std::rand() % angular_width - angular_width / 2) * (PI / 180);
+
+    return ((float) rand()/RAND_MAX - 1.0/2.0) * angular_width  * (PI / 180);
 }
 
 Ant_::Ant_(sf::Vector2<float> position, sf::Color &color, float ant_speed) {
@@ -63,7 +64,7 @@ void Ant_::move_to(sf::Vector2<float> new_position, sf::Time dt, std::vector<Obs
     if (is_valid(new_position, obstacles)) {
         this->position = new_position;
     } else {
-        this->angle += PI / 2;
+        this->angle += PI + RandomAngle();
         this->direction = sf::Vector2<float>(cos(angle), sin(angle));
         this->position += direction * ant_speed * dt.asSeconds();
         times_wall_hit++;
@@ -76,6 +77,7 @@ Ant_::update(sf::Time dt, std::vector<Chunk> &chunks, std::vector<Obstacle> &obs
              int &food_in_colony, float ant_speed, sf::Vector2f colony_pos) {
 
     this->ant_speed = ant_speed;
+
 
 /* Kind of a decision tree to decide what is the next position */
     // To avoid changing direction too often...
@@ -103,7 +105,7 @@ Ant_::update(sf::Time dt, std::vector<Chunk> &chunks, std::vector<Obstacle> &obs
                     float new_angle = sampleWorld(chunks);
                     // if new_angle is a nan it is because there is no markers in the detection radius
                     if (!isnan(new_angle)) {
-                        this->angle = new_angle;
+                        this->angle = FREEDOM_COEFFICIENT * (RandomAngle() + angle) + (1.0 - FREEDOM_COEFFICIENT) * (TURN_COEFFICIENT * new_angle + (1.0 - TURN_COEFFICIENT) * angle);
                     } else {
                         this->angle += RandomAngle();
 
@@ -146,7 +148,7 @@ Ant_::update(sf::Time dt, std::vector<Chunk> &chunks, std::vector<Obstacle> &obs
         else {
             time_since_found_food += dt.asSeconds();
             //Let's look if we arrived
-            if (distance(colony_pos, position) <= EATING_RADIUS) {
+            if (distance(colony_pos, position) <= 2*dt.asSeconds()*ant_speed) {
 
                 // Changing skin
                 //texture.loadFromFile("../ressources/ant.png");
@@ -171,7 +173,7 @@ Ant_::update(sf::Time dt, std::vector<Chunk> &chunks, std::vector<Obstacle> &obs
                 sf::Vector2f delta_vect = colony_pos - position;
                 float new_angle = atan2(delta_vect.y, delta_vect.x);
                 last_changed = sf::Time::Zero;
-                this->angle = new_angle;
+                this->angle =  new_angle;
             }
 
                 //If we cannot see it, lets look for markers
@@ -179,7 +181,7 @@ Ant_::update(sf::Time dt, std::vector<Chunk> &chunks, std::vector<Obstacle> &obs
                 float new_angle = sampleWorld(chunks);
                 // if new_angle is a nan it is because there is no markers in the detection radius
                 if (!isnan(new_angle)) {
-                    this->angle = new_angle;
+                    this->angle = FREEDOM_COEFFICIENT * (RandomAngle() + angle) + (1.0 - FREEDOM_COEFFICIENT) * (TURN_COEFFICIENT * new_angle + (1.0 - TURN_COEFFICIENT) * angle);
                 } else {
                     this->angle += RandomAngle();
                 }
@@ -194,6 +196,7 @@ Ant_::update(sf::Time dt, std::vector<Chunk> &chunks, std::vector<Obstacle> &obs
 
     // Actually changing position according to the context-based new angle
     this->angle = normalise_angle(angle);
+
     this->direction = sf::Vector2<float>(cos(angle), sin(angle));
     sf::Vector2<float> new_position = this->position + this->direction * ant_speed * dt.asSeconds();
     move_to(new_position, dt, obstacles);
@@ -254,7 +257,6 @@ float Ant_::sampleWorld(std::vector<Chunk> &chunks) {
     std::vector<std::vector<int>> close_chunks = neighbour_chunks(
             {(int) (position.x / CHUNKSIZE), (int) (position.y / CHUNKSIZE)});
 
-//#pragma omp parallel for default(none) shared(chunks, close_chunks, bary_angle, total_intensity, type, position) private(thread_i) num_threads(10) // Tried multithreading
     for (auto &close_chunk: close_chunks) {
         std::vector<Marker> &markers = get_chunk_ij(chunks, close_chunk[0], close_chunk[1]).getMarkers();
 
