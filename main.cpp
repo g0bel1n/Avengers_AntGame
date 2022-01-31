@@ -30,6 +30,8 @@ int main() {
     WIDTH = size.x;
     LENGTH = size.y;
 
+    fontsize = WIDTH * LENGTH * 1e-5;
+
     sf::Clock clock;
     sf::Clock drawing_clock;
     sf::Clock updating_clock;
@@ -60,10 +62,11 @@ int main() {
 
     sf::VertexArray colony_info_quad(sf::Quads, 4);
 
-    colony_info_quad[0].position = sf::Vector2f(WIDTH - 720, 100);
-    colony_info_quad[1].position = sf::Vector2f(WIDTH - 100, 100);
-    colony_info_quad[2].position = sf::Vector2f(WIDTH - 100, 410);
-    colony_info_quad[3].position = sf::Vector2f(WIDTH - 720, 410);
+    colony_info_quad[0].position = sf::Vector2f(WIDTH * 0.75, 0.03 * LENGTH + fontsize);
+    colony_info_quad[1].position = sf::Vector2f(WIDTH * 0.75 + 12 * fontsize, 0.03 * LENGTH + fontsize);
+    colony_info_quad[2].position = sf::Vector2f(WIDTH * 0.75 + 12 * fontsize,
+                                                0.03 * LENGTH + 6 * (fontsize + 0.006 * LENGTH));
+    colony_info_quad[3].position = sf::Vector2f(WIDTH * 0.75, 0.03 * LENGTH + 6 * (fontsize + 0.006 * LENGTH));
 
     colony_info_quad[0].color = sf::Color(255, 255, 255, 100);
     colony_info_quad[1].color = sf::Color(255, 255, 255, 100);
@@ -72,10 +75,10 @@ int main() {
 
     sf::VertexArray simulation_info_quad(sf::Quads, 4);
 
-    simulation_info_quad[0].position = sf::Vector2f(WIDTH / 2 - WIDTH / 3, LENGTH - 150);
-    simulation_info_quad[1].position = sf::Vector2f(WIDTH / 2 + WIDTH / 3, LENGTH - 150);
-    simulation_info_quad[2].position = sf::Vector2f(WIDTH / 2 + WIDTH / 3, LENGTH - 50);
-    simulation_info_quad[3].position = sf::Vector2f(WIDTH / 2 - WIDTH / 3, LENGTH - 50);
+    simulation_info_quad[0].position = sf::Vector2f(WIDTH / 2 - WIDTH / 3, LENGTH * 0.91);
+    simulation_info_quad[1].position = sf::Vector2f(WIDTH / 2 + WIDTH / 3, LENGTH * 0.91);
+    simulation_info_quad[2].position = sf::Vector2f(WIDTH / 2 + WIDTH / 3, LENGTH * 0.97);
+    simulation_info_quad[3].position = sf::Vector2f(WIDTH / 2 - WIDTH / 3, LENGTH * 0.97);
 
     simulation_info_quad[0].color = sf::Color(255, 255, 255, 100);
     simulation_info_quad[1].color = sf::Color(255, 255, 255, 100);
@@ -86,38 +89,46 @@ int main() {
     sf::Text colony_active;
     colony_active.setFont(font);
     colony_active.setString(DEFAULT_COLORS_STR[0] + " colony");
-    colony_active.setPosition(WIDTH - 700, 100);
-    colony_active.setCharacterSize(50);
+    colony_active.setPosition(WIDTH * 0.76, 0.03 * LENGTH + (fontsize + 0.006 * LENGTH));
+    colony_active.setCharacterSize(fontsize);
     colony_active.setFillColor(sf::Color::Black);
 
     sf::Text ant_speed;
     ant_speed.setFont(font);
     ant_speed.setString("ANTS SPEED : " + to_string((int) DEFAULT_ANT_SPEED));
-    ant_speed.setPosition(WIDTH - 700, 160);
-    ant_speed.setCharacterSize(50);
+    ant_speed.setPosition(WIDTH * 0.76, 0.03 * LENGTH + 2 * (fontsize + 0.006 * LENGTH));
+    ant_speed.setCharacterSize(fontsize);
     ant_speed.setFillColor(sf::Color::Black);
 
     sf::Text colony_size;
     colony_size.setFont(font);
     colony_size.setString("Number of Ants : " + to_string((int) DEFAULT_NB_ANTS_PER_COLONY));
-    colony_size.setPosition(WIDTH - 700, 220);
-    colony_size.setCharacterSize(50);
+    colony_size.setPosition(WIDTH * 0.76, 0.03 * LENGTH + 3 * (fontsize + 0.006 * LENGTH));
+    colony_size.setCharacterSize(fontsize);
     colony_size.setFillColor(sf::Color::Black);
 
     sf::Text
             ant_generated;
     ant_generated.setFont(font);
     ant_generated.setString("Ants generated");
-    ant_generated.setPosition(WIDTH - 700, 280);
-    ant_generated.setCharacterSize(50);
+    ant_generated.setPosition(WIDTH * 0.76, 0.03 * LENGTH + 4 * (fontsize + 0.006 * LENGTH));
+    ant_generated.setCharacterSize(fontsize);
     ant_generated.setFillColor(sf::Color::Black);
+
+    // The amount of food in the colony
+    sf::Text food_in_col;
+    food_in_col.setFont(font);
+    food_in_col.setString("0");
+    food_in_col.setPosition(WIDTH * 0.76, 0.03 * LENGTH + 5 * (fontsize + 0.006 * LENGTH));;
+    food_in_col.setCharacterSize(fontsize);
+    food_in_col.setFillColor(sf::Color::Black);
 
     sf::Text nb_markers;
     nb_markers.setFont(font);
     int total_markers = 0;
     nb_markers.setString("Number of markers : 0");
-    nb_markers.setPosition(WIDTH / 2 - WIDTH / 3 + 10, LENGTH - 125);
-    nb_markers.setCharacterSize(50);
+    nb_markers.setPosition(WIDTH / 2 - WIDTH / 3 + 10, LENGTH * 0.93);
+    nb_markers.setCharacterSize(fontsize);
     nb_markers.setFillColor(sf::Color::Black);
 
     //Text SFML-Objects that will display :
@@ -127,8 +138,8 @@ int main() {
             text;
     text.setFont(font);
     text.setString("Food available : 0");
-    text.setPosition((WIDTH / 2 - WIDTH / 3) * 5. / 2, LENGTH - 125);
-    text.setCharacterSize(50);
+    text.setPosition((WIDTH / 2 - WIDTH / 3) * 5. / 2, LENGTH * 0.93);
+    text.setCharacterSize(fontsize);
     text.setFillColor(sf::Color::Black);
 
 
@@ -137,17 +148,11 @@ int main() {
     sf::Text text1;
     text1.setFont(font);
     text1.setString("time elapsed");
-    text1.setPosition((WIDTH / 2 - WIDTH / 3) * 11. / 3, LENGTH - 125);;
-    text1.setCharacterSize(50);
+    text1.setPosition((WIDTH / 2 - WIDTH / 3) * 11. / 3, LENGTH * 0.93);;
+    text1.setCharacterSize(fontsize);
     text1.setFillColor(sf::Color::Black);
 
-    // The amount of food in the colony
-    sf::Text food_in_col;
-    food_in_col.setFont(font);
-    food_in_col.setString("0");
-    food_in_col.setPosition(WIDTH - 700, 340);;
-    food_in_col.setCharacterSize(50);
-    food_in_col.setFillColor(sf::Color::Black);
+
 
 
 
@@ -156,7 +161,7 @@ int main() {
     text3.setFont(font);
     text3.setString(
             "SPACE to start/Pause \nLeft Click to add food \nRight click to add obstacles \nC to  clear the obstacles \nM to  clear the markers \nLeft/Right arrow to Erase/Create new ants \nDown/Up to reduce/increase the speed of the ants \nG to toggle marker graphics ");
-    text3.setCharacterSize(60);
+    text3.setCharacterSize(fontsize);
     text3.setFillColor(sf::Color::White);
     text3.setPosition(WIDTH / 3., LENGTH / 3.);
 

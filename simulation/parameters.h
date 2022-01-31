@@ -22,6 +22,7 @@ namespace parameters {
     inline bool markerGraphics{false};
     inline sf::Texture ant_texture;
     inline sf::Texture hole_texture;
+    inline int fontsize;
 
 
     //ANT PARAMETERS
