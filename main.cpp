@@ -45,7 +45,7 @@ int main() {
 
 
     //Generating the world
-    World world = World(2);
+    World world = World(1);
 
 
 
@@ -290,10 +290,10 @@ int main() {
 
                         // The following for-loop is there to add a "block" of food, instead of a line
                         sf::Vector2f to_pos = sf::Vector2f(event.mouseButton.x - 20, event.mouseButton.y - 20);
-                        float x_offset = 10.;
+                        float x_offset = 1.;
 
-                        for (int i = 0; i < 4; i++) {
-                            for (int j = 0; j < 4; j++) {
+                        for (int i = 0; i < 10; i++) {
+                            for (int j = 0; j < 10; j++) {
 
                                 world.AddFood(to_pos + sf::Vector2f(i * x_offset, j * x_offset));
                             }

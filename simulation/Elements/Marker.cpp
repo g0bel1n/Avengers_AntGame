@@ -20,7 +20,7 @@ float Marker::get_intensity() {
 Marker::Marker(sf::Vector2<float> position, int state, Chunk *myChunk, float time_offset = 0.) {
 
     this->position = position;
-    this->intensity = INTENSITY_INCREMENT * pow(1 - DECAY_RATE, time_offset);
+    this->intensity = INTENSITY_INCREMENT * pow(1 - DECAY_RATE, 30 * time_offset);
     this->myChunk = myChunk;
 
     this->state = state;
