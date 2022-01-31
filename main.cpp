@@ -43,6 +43,7 @@ int main() {
     window.setTitle("Avengers AntGame - @G0bel1n");
 
     ant_texture.loadFromFile("../ressources/ant.png");
+    ant_texture_food.loadFromFile("../ressources/ant_food.png");
     hole_texture.loadFromFile("../ressources/Hole.PNG");
 
 
