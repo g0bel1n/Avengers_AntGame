@@ -8,8 +8,6 @@
 #include <math.h>
 #include "../parameters.h"
 #include "../chunks/chunk.h"
-#include <iostream>
-
 
 using namespace parameters;
 
@@ -20,7 +18,7 @@ float Marker::get_intensity() {
 Marker::Marker(sf::Vector2<float> position, int state, Chunk *myChunk, float time_offset = 0.) {
 
     this->position = position;
-    this->intensity = INTENSITY_INCREMENT - 30 * time_offset * DECAY_RATE;
+    this->intensity = INTENSITY_INCREMENT * pow(1 - DECAY_RATE, MARGINAL_PENALISATION * time_offset);
     this->myChunk = myChunk;
 
     this->state = state;

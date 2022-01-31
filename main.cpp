@@ -27,10 +27,11 @@ int main() {
 
     sf::RenderWindow window(sf::VideoMode::getDesktopMode(), "Avengers AntGame");
     sf::Vector2u size = window.getSize();
-    WIDTH = size.x;
-    LENGTH = size.y;
 
-    fontsize = WIDTH * LENGTH * 1e-5;
+    if (size.x < 3500)WIDTH = size.x;
+    if (size.y < 2000)LENGTH = size.y;
+
+    fontsize = LENGTH * 3e-2;
 
     sf::Clock clock;
     sf::Clock drawing_clock;
@@ -282,7 +283,7 @@ int main() {
 
                         Obstacle obstacle(sf::Vector2f(event.mouseButton.x,
                                                        event.mouseButton.y),
-                                          LENGTH * MAP_OCCUPATION);
+                                          DETECTION_RADIUS);
                         obstacle.texture.loadFromFile("../ressources/rock.jpeg");
                         world.obstacles.push_back(obstacle);
 

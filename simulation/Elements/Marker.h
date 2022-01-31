@@ -25,7 +25,7 @@ public:
 
 
     sf::Vector2<float> position;
-    
+
     void update(sf::Time &dt) override;
 
 
@@ -33,7 +33,6 @@ private:
 
     Chunk *myChunk;
     float intensity;
-    float decayRate;
 
     const sf::Color &color();
 };

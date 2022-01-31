@@ -21,19 +21,6 @@ float distance(sf::Vector2f vect1, sf::Vector2f vect2) {
     return sqrt((vect2.x - vect1.x) * (vect2.x - vect1.x) + (vect2.y - vect1.y) * (vect2.y - vect1.y));
 }
 
-float normalise_angle(float angle) {
-
-    float n_angle = angle;
-    float sign = 1.;
-    if (angle < 0)sign = -1.;
-
-
-    while (abs(n_angle) > PI) {
-        n_angle -= sign * 2. * PI;
-    }
-    return n_angle;
-}
-
 
 double constrainAngle(double x) {
     x = fmod(x + PI, 2 * PI);
