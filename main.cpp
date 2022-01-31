@@ -52,7 +52,7 @@ int main() {
     SoilTex.loadFromFile("../ressources/soil.jpeg");
 
     //Generating the world
-    World world = World(1);
+    World world = World(2);
 
     // Setting up the background
     sf::Sprite Background(SoilTex);
