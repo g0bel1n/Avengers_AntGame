@@ -121,7 +121,7 @@ Ant_::update(sf::Time dt, std::vector<Chunk> &chunks, std::vector<Obstacle> &obs
                 // If we are looking for food but already going to the target...
             else {
                 // Just checking if arrived. If not, keep going...
-                if (target == check_env(foods, EATING_RADIUS)) {
+                if (check_env(foods, EATING_RADIUS) != -1) {
 
                     //foods[target].isEaten();
                     foods.pop_back();
@@ -130,22 +130,23 @@ Ant_::update(sf::Time dt, std::vector<Chunk> &chunks, std::vector<Obstacle> &obs
                     time_since_found_food = 0.;
                     //switchSkin = true;
                     last_changed = sf::Time::Zero;
-                    this->angle += PI;
+                    this->angle += PI + RandomAngle();;
 
                     //texture_with_food.loadFromFile("../ressources/ant_with_food.png");
                     //graphics.setTexture(texture_with_food);
                     //switchSkin = false;
 
                 }
-                //if we are not there yet, lets still check if it is available
-                /*else if (foods[target].state == 0) {
-                    target = -1;
+                    //if we are not there yet, lets still check if it is available
+                    /*else if (foods[target].state == 0) {
+                        target = -1;*/
 
-                } else if (check_env(foods, DETECTION_RADIUS) != target) {
+                    //}
+                else if (check_env(foods, DETECTION_RADIUS) == -1) {
 
-                    foods[target].HasBeenForgotten();
+                    //foods[target].HasBeenForgotten();
                     target = -1;
-                }*/
+                }
 
             }
         }
@@ -207,7 +208,7 @@ Ant_::update(sf::Time dt, std::vector<Chunk> &chunks, std::vector<Obstacle> &obs
     this->direction = sf::Vector2<float>(cos(angle), sin(angle));
     sf::Vector2<float> new_position = this->position + this->direction * ant_speed * dt.asSeconds();
     move_to(new_position, dt, obstacles);
-    if (last_dropped > .05) {
+    if (last_dropped > .005) {
         if (ToFood) {
             AddMarker(chunks, 1, time_since_quitted_home);
         } else { AddMarker(chunks, 2, time_since_found_food); }

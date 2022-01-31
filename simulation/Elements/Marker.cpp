@@ -22,11 +22,10 @@ Marker::Marker(sf::Vector2<float> position, int state, Chunk *myChunk, float tim
     this->myChunk = myChunk;
 
     this->state = state;
-    float next_intensity = INTENSITY_INCREMENT * pow(1 - DECAY_RATE, 30 * time_offset);
-    if (next_intensity > DETECTION_THRESHOLD) {this->intensity = next_intensity;}
-    else { this->intensity = 0.; this->state = 0; }
+    //float next_intensity = INTENSITY_INCREMENT * pow(1 - DECAY_RATE, 30 * time_offset);
+    //if (next_intensity > DETECTION_THRESHOLD) {this->intensity = next_intensity;}
+    //else { this->intensity = 0.; this->state = 0; }
     this->myChunk = myChunk;
-
 
 
     if (markerGraphics) {
