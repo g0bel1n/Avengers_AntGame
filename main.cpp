@@ -283,7 +283,7 @@ int main() {
 
                         Obstacle obstacle(sf::Vector2f(event.mouseButton.x,
                                                        event.mouseButton.y),
-                                          DETECTION_RADIUS);
+                                          LENGTH * MAP_OCCUPATION);
                         obstacle.texture.loadFromFile("../ressources/rock.jpeg");
                         world.obstacles.push_back(obstacle);
 
@@ -296,10 +296,10 @@ int main() {
 
                         // The following for-loop is there to add a "block" of food, instead of a line
                         sf::Vector2f to_pos = sf::Vector2f(event.mouseButton.x - 20, event.mouseButton.y - 20);
-                        float x_offset = 1.;
+                        float x_offset = 0.5;
 
-                        for (int i = 0; i < 10; i++) {
-                            for (int j = 0; j < 10; j++) {
+                        for (int i = 0; i < 30; i++) {
+                            for (int j = 0; j < 30; j++) {
 
                                 world.AddFood(to_pos + sf::Vector2f(i * x_offset, j * x_offset));
                             }
