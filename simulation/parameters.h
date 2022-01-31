@@ -23,6 +23,7 @@ namespace parameters {
     inline sf::Texture ant_texture;
     inline sf::Texture ant_texture_food;
     inline sf::Texture hole_texture;
+    inline int fontsize;
 
 
     //ANT PARAMETERS
@@ -39,6 +40,7 @@ namespace parameters {
     inline constexpr float INTENSITY_INCREMENT = 7;
     inline constexpr float RADIUS = 10.f;
     inline float DETECTION_THRESHOLD = 0.5;
+    inline constexpr double MARGINAL_PENALISATION = 20;
 
     inline constexpr float DECOMPOSITION_THRESHOLD = 120.;
 
