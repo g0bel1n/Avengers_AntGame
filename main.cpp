@@ -46,8 +46,6 @@ int main() {
     ant_texture_food.loadFromFile("../ressources/ant_food.png");
     hole_texture.loadFromFile("../ressources/Hole.PNG");
 
-
-
     //Generating the world
     World world = World(1);
 
@@ -153,9 +151,6 @@ int main() {
     text1.setPosition((WIDTH / 2 - WIDTH / 3) * 11. / 3, LENGTH * 0.93);;
     text1.setCharacterSize(fontsize);
     text1.setFillColor(sf::Color::Black);
-
-
-
 
 
     // Basic commands
@@ -284,7 +279,7 @@ int main() {
 
                         Obstacle obstacle(sf::Vector2f(event.mouseButton.x,
                                                        event.mouseButton.y),
-                                          DETECTION_RADIUS);
+                                          LENGTH * MAP_OCCUPATION);
                         obstacle.texture.loadFromFile("../ressources/rock.jpeg");
                         world.obstacles.push_back(obstacle);
 
@@ -299,8 +294,8 @@ int main() {
                         sf::Vector2f to_pos = sf::Vector2f(event.mouseButton.x - 20, event.mouseButton.y - 20);
                         float x_offset = 1.;
 
-                        for (int i = 0; i < 10; i++) {
-                            for (int j = 0; j < 10; j++) {
+                        for (int i = 0; i < 30; i++) {
+                            for (int j = 0; j < 30; j++) {
 
                                 world.AddFood(to_pos + sf::Vector2f(i * x_offset, j * x_offset));
                             }

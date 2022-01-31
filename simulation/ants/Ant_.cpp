@@ -94,7 +94,7 @@ Ant_::update(sf::Time dt, std::vector<Chunk> &chunks, std::vector<Obstacle> &obs
                 target = check_env(foods, DETECTION_RADIUS);
                 //If it detects valid food, let's go to it
                 if (target >= 0 && foods[target].state == 1) {
-                    foods[target].isTargeted();
+                    //foods[target].isTargeted();
                     sf::Vector2f delta_vect = foods[target].position - position;
                     float new_angle = atan2(delta_vect.y, delta_vect.x);
                     this->angle = new_angle;
@@ -123,7 +123,8 @@ Ant_::update(sf::Time dt, std::vector<Chunk> &chunks, std::vector<Obstacle> &obs
                 // Just checking if arrived. If not, keep going...
                 if (target == check_env(foods, EATING_RADIUS)) {
 
-                    foods[target].isEaten();
+                    //foods[target].isEaten();
+                    foods.pop_back();
                     target = -1;
                     ToFood = false;
                     time_since_found_food = 0.;
@@ -136,15 +137,15 @@ Ant_::update(sf::Time dt, std::vector<Chunk> &chunks, std::vector<Obstacle> &obs
                     //switchSkin = false;
 
                 }
-                    //if we are not there yet, lets still check if it is available
-                else if (foods[target].state == 0) {
+                //if we are not there yet, lets still check if it is available
+                /*else if (foods[target].state == 0) {
                     target = -1;
 
                 } else if (check_env(foods, DETECTION_RADIUS) != target) {
 
                     foods[target].HasBeenForgotten();
                     target = -1;
-                }
+                }*/
 
             }
         }
