@@ -33,6 +33,7 @@ private:
 
     Chunk *myChunk;
     float intensity;
+    float decayRate;
 
     const sf::Color &color();
 };
