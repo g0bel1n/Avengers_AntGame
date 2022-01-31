@@ -382,7 +382,7 @@ int main() {
 
         for (auto &colony: world.colonies) {
 
-            window.draw(colony.colony_base);
+
             for (auto &chunk: colony.chunks) {
                 for (auto &marker: chunk.getMarkers()) {
                     if (markerGraphics) { window.draw(marker.graphic); }
@@ -390,7 +390,7 @@ int main() {
 
                 }
             }
-
+            window.draw(colony.colony_base);
             for (auto &ant: colony.ants) {
                 window.draw(ant.graphics);
             }
