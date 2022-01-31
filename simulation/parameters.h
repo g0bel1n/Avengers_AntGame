@@ -15,7 +15,7 @@ namespace parameters {
     inline int WIDTH{1400};
     inline int CHUNKSIZE{250};
     inline int DEFAULT_NB_COLONIES{2};
-    inline int DEFAULT_NB_ANTS_PER_COLONY{200};
+    inline int DEFAULT_NB_ANTS_PER_COLONY{100};
     inline constexpr int FOOD_FOR_GENERATION{10};
     inline std::vector<sf::Color> DEFAULT_COLORS{sf::Color::White, sf::Color::Black, sf::Color::Green};
     inline std::vector<std::string> DEFAULT_COLORS_STR{"White", "Black", "Green"};
@@ -28,18 +28,18 @@ namespace parameters {
     //ANT PARAMETERS
     inline float DEFAULT_ANT_SPEED{300.};
     inline sf::Vector2f DEFAULT_COLONY_POSITION(LENGTH / 2., 50.);
-    inline constexpr float DETECTION_RADIUS{480.};
+    inline constexpr float DETECTION_RADIUS{300.};
     inline constexpr float EATING_RADIUS{30.};
     inline float FREEDOM_COEFFICIENT{0.4};
     inline float TURN_COEFFICIENT{0.9};
 
 
 //MARKER PARAMETERS
-    inline constexpr float DECAY_RATE{.1}; // Percentage of intensity decrease per second
+    inline constexpr float DECAY_RATE{.2}; // Percentage of intensity decrease per second
     inline constexpr float INTENSITY_INCREMENT = 10;
     inline constexpr float RADIUS = 10.f;
     inline float DETECTION_THRESHOLD = 1.5;
-    inline constexpr double MARGINAL_PENALISATION = 20;
+    inline constexpr double MARGINAL_PENALISATION = 2;
 
     inline constexpr float DECOMPOSITION_THRESHOLD = 120.;
 

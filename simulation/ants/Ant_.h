@@ -58,7 +58,7 @@ private:
     float angle = 0.f;
     int times_wall_hit = 0;
     int angular_width = 45; // Angular range in wich the ant can go when random moving
-    float direction_change_delta = .1f; // Time to wait before changing direction to avoid epileptic behaviour
+    float direction_change_delta = .05f; // Time to wait before changing direction to avoid epileptic behaviour
     sf::Time last_changed = sf::Time::Zero; // Time since last change of direction
 
 

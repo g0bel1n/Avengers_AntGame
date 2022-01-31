@@ -77,12 +77,15 @@ Ant_::update(sf::Time dt, std::vector<Chunk> &chunks, std::vector<Obstacle> &obs
     this->ant_speed = ant_speed;
 
     if (distance(colony_pos, position) <= DETECTION_RADIUS) { time_since_quitted_home = 0; }
-    //if (check_env(foods, DETECTION_RADIUS) != -1) { time_since_found_food = 0; }
+    if (check_env(foods, DETECTION_RADIUS) != -1) {
+        //time_since_found_food = 0;
+        //time_since_quitted_home = 10;
+    }
 
 
 /* Kind of a decision tree to decide what is the next position */
     // To avoid changing direction too often...
-    if (last_changed > sf::seconds(direction_change_delta + (std::rand() % 5) / 100.)) {
+    if (last_changed > sf::seconds(direction_change_delta + (std::rand() % 5) / 1000.)) {
         //If looking for food...
         if (ToFood) {
             time_since_quitted_home += dt.asSeconds();
@@ -94,7 +97,7 @@ Ant_::update(sf::Time dt, std::vector<Chunk> &chunks, std::vector<Obstacle> &obs
                 target = check_env(foods, DETECTION_RADIUS);
                 //If it detects valid food, let's go to it
                 if (target >= 0 && foods[target].state == 1) {
-                    foods[target].isTargeted();
+                    //foods[target].isTargeted();
                     sf::Vector2f delta_vect = foods[target].position - position;
                     float new_angle = atan2(delta_vect.y, delta_vect.x);
                     this->angle = new_angle;
@@ -121,9 +124,10 @@ Ant_::update(sf::Time dt, std::vector<Chunk> &chunks, std::vector<Obstacle> &obs
                 // If we are looking for food but already going to the target...
             else {
                 // Just checking if arrived. If not, keep going...
-                if (target == check_env(foods, EATING_RADIUS)) {
+                if (check_env(foods, EATING_RADIUS) != -1) {
 
-                    foods[target].isEaten();
+                    //foods[target].isEaten();
+                    foods.pop_back();
                     target = -1;
                     ToFood = false;
                     time_since_found_food = 0.;
@@ -136,15 +140,16 @@ Ant_::update(sf::Time dt, std::vector<Chunk> &chunks, std::vector<Obstacle> &obs
                     //switchSkin = false;
 
                 }
-                    //if we are not there yet, lets still check if it is available
-                else if (foods[target].state == 0) {
-                    target = -1;
+                //if we are not there yet, lets still check if it is available
+                //else if (foods[target].state == 0 || foods[target].state == 1) {
+                // target = -1;
 
-                } else if (check_env(foods, DETECTION_RADIUS) != target) {
+                //}
+                /*else if (check_env(foods, DETECTION_RADIUS) != target) {
 
                     foods[target].HasBeenForgotten();
                     target = -1;
-                }
+                }*/
 
             }
         }
