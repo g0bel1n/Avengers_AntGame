@@ -70,13 +70,17 @@ void Ant_::move_to(sf::Vector2<float> new_position, sf::Time dt, std::vector<Obs
 
 }
 
+float dist_to_colony;
+
 void
 Ant_::update(sf::Time dt, std::vector<Chunk> &chunks, std::vector<Obstacle> &obstacles, std::vector<Food> &foods,
              int &food_in_colony, float ant_speed, sf::Vector2f colony_pos) {
 
     this->ant_speed = ant_speed;
 
-    if (distance(colony_pos, position) <= DETECTION_RADIUS) { time_since_quitted_home = 0; }
+    dist_to_colony = distance(colony_pos, position);
+
+    if (dist_to_colony <= DETECTION_RADIUS) { time_since_quitted_home = 0; }
     //if (check_env(foods, DETECTION_RADIUS) != -1) { time_since_found_food = 0; }
 
 
@@ -128,6 +132,7 @@ Ant_::update(sf::Time dt, std::vector<Chunk> &chunks, std::vector<Obstacle> &obs
                     ToFood = false;
                     time_since_found_food = 0.;
                     //switchSkin = true;
+                    graphics.setTexture(ant_texture_food);
                     last_changed = sf::Time::Zero;
                     this->angle += PI;
 
@@ -152,7 +157,8 @@ Ant_::update(sf::Time dt, std::vector<Chunk> &chunks, std::vector<Obstacle> &obs
         else {
             time_since_found_food += dt.asSeconds();
             //Let's look if we arrived
-            if (distance(colony_pos, position) <= 2 * dt.asSeconds() * ant_speed) {
+            std::cout<<"Distance to col : "<<dist_to_colony<<", pas :"<<dt.asSeconds() * ant_speed<<std::endl;
+            if (dist_to_colony <= 2 * dt.asSeconds() * ant_speed + EATING_RADIUS) {
 
                 // Changing skin
                 //texture.loadFromFile("../ressources/ant.png");
@@ -163,9 +169,9 @@ Ant_::update(sf::Time dt, std::vector<Chunk> &chunks, std::vector<Obstacle> &obs
 
                 //Changing Objective
                 ToFood = true;
-
+                graphics.setTexture(ant_texture);
                 //Going away
-                this->angle += PI + RandomAngle();
+                this->angle += PI;
                 last_changed = sf::Time::Zero;
                 time_since_quitted_home = 0.;
 
@@ -173,7 +179,7 @@ Ant_::update(sf::Time dt, std::vector<Chunk> &chunks, std::vector<Obstacle> &obs
             }
 
                 //If we are not arrived, we might at least see it
-            else if (distance(colony_pos, position) <= DETECTION_RADIUS) {
+            else if (dist_to_colony <= DETECTION_RADIUS) {
                 sf::Vector2f delta_vect = colony_pos - position;
                 float new_angle = atan2(delta_vect.y, delta_vect.x);
                 last_changed = sf::Time::Zero;

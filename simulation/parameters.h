@@ -15,12 +15,13 @@ namespace parameters {
     inline int WIDTH{1400};
     inline int CHUNKSIZE{250};
     inline int DEFAULT_NB_COLONIES{2};
-    inline int DEFAULT_NB_ANTS_PER_COLONY{200};
+    inline int DEFAULT_NB_ANTS_PER_COLONY{500};
     inline constexpr int FOOD_FOR_GENERATION{10};
     inline std::vector<sf::Color> DEFAULT_COLORS{sf::Color::White, sf::Color::Black, sf::Color::Green};
     inline std::vector<std::string> DEFAULT_COLORS_STR{"White", "Black", "Green"};
     inline bool markerGraphics{false};
     inline sf::Texture ant_texture;
+    inline sf::Texture ant_texture_food;
     inline sf::Texture hole_texture;
 
 
@@ -34,10 +35,10 @@ namespace parameters {
 
 
 //MARKER PARAMETERS
-    inline constexpr float DECAY_RATE{.1}; // Percentage of intensity decrease per second
-    inline constexpr float INTENSITY_INCREMENT = 10;
+    inline constexpr float DECAY_RATE{.03}; // Percentage of intensity decrease per second
+    inline constexpr float INTENSITY_INCREMENT = 7;
     inline constexpr float RADIUS = 10.f;
-    inline float DETECTION_THRESHOLD = 1.5;
+    inline float DETECTION_THRESHOLD = 0.5;
 
     inline constexpr float DECOMPOSITION_THRESHOLD = 120.;
 
