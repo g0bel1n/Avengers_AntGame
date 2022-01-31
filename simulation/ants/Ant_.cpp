@@ -79,6 +79,13 @@ Ant_::update(sf::Time dt, std::vector<Chunk> &chunks, std::vector<Obstacle> &obs
     if (distance(colony_pos, position) <= DETECTION_RADIUS) { time_since_quitted_home = 0; }
     //if (check_env(foods, DETECTION_RADIUS) != -1) { time_since_found_food = 0; }
 
+    if (last_dropped > DROPPING_RATE) {
+        if (ToFood) {
+            AddMarker(chunks, 1, time_since_quitted_home);
+        } else { AddMarker(chunks, 2, time_since_found_food); }
+        last_dropped = 0.;
+    }
+
 
 /* Kind of a decision tree to decide what is the next position */
     // To avoid changing direction too often...
@@ -206,12 +213,7 @@ Ant_::update(sf::Time dt, std::vector<Chunk> &chunks, std::vector<Obstacle> &obs
     this->direction = sf::Vector2<float>(cos(angle), sin(angle));
     sf::Vector2<float> new_position = this->position + this->direction * ant_speed * dt.asSeconds();
     move_to(new_position, dt, obstacles);
-    if (last_dropped > .005) {
-        if (ToFood) {
-            AddMarker(chunks, 1, time_since_quitted_home);
-        } else { AddMarker(chunks, 2, time_since_found_food); }
-        last_dropped = 0.;
-    }
+
 
     lifetime += dt.asSeconds();
     last_changed += dt;

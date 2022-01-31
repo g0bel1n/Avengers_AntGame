@@ -33,6 +33,7 @@ namespace parameters {
     inline constexpr float EATING_RADIUS{30.};
     inline float FREEDOM_COEFFICIENT{0.4};
     inline float TURN_COEFFICIENT{0.9};
+    inline constexpr float DROPPING_RATE{0.01};
 
 
 //MARKER PARAMETERS
