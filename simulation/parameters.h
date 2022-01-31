@@ -34,7 +34,7 @@ namespace parameters {
 
 
 //MARKER PARAMETERS
-    inline constexpr float DECAY_RATE{.1}; //Percentage of intensity decrease per second
+    inline constexpr float DECAY_RATE{.1}; // Percentage of intensity decrease per second
     inline constexpr float INTENSITY_INCREMENT = 10;
     inline constexpr float RADIUS = 10.f;
     inline float DETECTION_THRESHOLD = 1.5;
