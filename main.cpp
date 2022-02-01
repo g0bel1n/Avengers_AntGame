@@ -19,7 +19,6 @@ int main() {
     sf::Font font;
     sf::Texture SoilTex;
 
-
     ofstream data_file("../data.csv");
     data_file << "Time;dt loop;dt update;nb_markers;" + to_string(DEFAULT_NB_ANTS_PER_COLONY) << endl;
 
@@ -49,7 +48,8 @@ int main() {
     ant_texture_food.loadFromFile("../ressources/ant_food.png");
     hole_texture.loadFromFile("../ressources/Hole.PNG");
     //Loading the grass background
-    SoilTex.loadFromFile("../ressources/soil.jpeg");
+    SoilTex.loadFromFile("../ressources/ground.jpeg");
+    SoilTex.setRepeated(true);
 
     //Generating the world
     World world = World(2);
@@ -57,7 +57,7 @@ int main() {
     // Setting up the background
     sf::Sprite Background(SoilTex);
     Background.setPosition(0, 0);
-    Background.setScale(WIDTH / 3448., LENGTH / 3448.);
+    Background.setTextureRect({0, 0, WIDTH, LENGTH});
 
 // Colony Info Panel
     sf::VertexArray colony_info_quad(sf::Quads, 4);
@@ -271,7 +271,7 @@ int main() {
                         Obstacle obstacle(sf::Vector2f(event.mouseButton.x,
                                                        event.mouseButton.y),
                                           LENGTH * MAP_OCCUPATION);
-                        obstacle.texture.loadFromFile("../ressources/rock.jpeg");
+                        obstacle.texture.loadFromFile("../ressources/cobble.jpeg");
                         world.obstacles.push_back(obstacle);
                     }
 
@@ -304,7 +304,7 @@ int main() {
                         Obstacle obstacle(sf::Vector2f(event.mouseMove.x,
                                                        event.mouseMove.y),
                                           LENGTH * MAP_OCCUPATION);
-                        obstacle.texture.loadFromFile("../ressources/rock.jpeg");
+                        obstacle.texture.loadFromFile("../ressources/cobble.jpeg");
                         world.obstacles.push_back(obstacle);
 
                     }
