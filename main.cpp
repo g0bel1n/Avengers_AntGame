@@ -48,7 +48,7 @@ int main() {
     ant_texture_food.loadFromFile("../ressources/ant_food.png");
     hole_texture.loadFromFile("../ressources/Hole.PNG");
     //Loading the grass background
-    SoilTex.loadFromFile("../ressources/ground.jpeg");
+    SoilTex.loadFromFile("../ressources/s_ground.png");
     SoilTex.setRepeated(true);
 
     //Generating the world
