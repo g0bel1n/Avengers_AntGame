@@ -15,7 +15,7 @@ namespace parameters {
     inline int WIDTH{1400};
     inline int CHUNKSIZE{250};
     inline int DEFAULT_NB_COLONIES{2};
-    inline int DEFAULT_NB_ANTS_PER_COLONY{40};
+    inline int DEFAULT_NB_ANTS_PER_COLONY{100};
     inline constexpr int FOOD_FOR_GENERATION{10};
     inline std::vector<sf::Color> DEFAULT_COLORS{sf::Color::White, sf::Color::Black, sf::Color::Green, sf::Color::Blue,
                                                  sf::Color::Red, sf::Color::Yellow};
@@ -45,11 +45,11 @@ namespace parameters {
     inline float DETECTION_THRESHOLD = 0.5;
     inline constexpr double MARGINAL_PENALISATION = 7.;
 
-    inline constexpr float DECOMPOSITION_THRESHOLD = 120.;
+    inline constexpr float DECOMPOSITION_THRESHOLD = 240.;
 
 
 // OBSTACLE PARAMETERS
-    inline constexpr float MAP_OCCUPATION{0.05};
+    inline constexpr float MAP_OCCUPATION{0.08};
 }
 
 #endif //AVENGERS_ANTGAME_SIMULATION_PARAMETERS_H
